@@ -1,0 +1,21 @@
+[
+    {
+        "embarque": {
+            "numero": "0370115",
+            "serie": "1",
+            "chave": "31210712744404000500550010003701151103651320"
+        },
+        "embarcador": {
+            "cnpj": "12744404000500"
+        },
+        "transportadora": {
+            "cnpj": "11552312002097"
+        },
+        "ocorrencia": {
+            "tipoEntrega": 26,
+            "dtOcorrencia": "03-08-2021",
+            "hrOcorrencia": "09:45:03",
+            "comentario": "NOTA FISCAL RETIDA PELA FISCALIZACAO"
+        }
+    }
+]

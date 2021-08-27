@@ -1,0 +1,37 @@
+2021-07-23T16:55:42-03:00 - (embarque.js) FALHA - API EMBARQUE: (CODE:400, ERROR:Erro ao importar todos os dados, PATH:/v2/embarque, ERR:Request failed with status code 400)
+2021-07-23T16:55:42-03:00 - (updFlagsErros.js) Lista: [ { message: 'Não existe trecho com a ordem informada', posicao: 0 } ]
+2021-07-23T16:55:42-03:00 - Lista - STATUS BD (UPD SUCESSO): ID: 8630 MSG: Não existe trecho com a ordem informada
+2021-07-23T16:55:43-03:00 - (embarque.js) FALHA - API EMBARQUE: (CODE:400, ERROR:Erro ao importar todos os dados, PATH:/v2/embarque, ERR:Request failed with status code 400)
+2021-07-23T16:55:43-03:00 - (updFlagsErros.js) Lista: [
+  { message: 'Não existe trecho com a ordem informada', posicao: 0 },
+  { message: 'Não existe trecho com a ordem informada', posicao: 1 },
+  { message: 'Embarcador não encontrado.', posicao: 2 }
+]
+2021-07-23T16:55:43-03:00 - Lista - STATUS BD (UPD SUCESSO): ID: 8184 MSG: Não existe trecho com a ordem informada
+2021-07-23T16:55:43-03:00 - Lista - STATUS BD (UPD SUCESSO): ID: 8444 MSG: Não existe trecho com a ordem informada
+2021-07-23T16:55:43-03:00 - Lista - STATUS BD (UPD SUCESSO): ID: 8631 MSG: Embarcador não encontrado.
+
+
+
+
+---
+
+
+SELECT * FROM CONFIRMAFACIL WHERE ID= 1274
+SELECT * FROM CONFIRMAFACILOCORRENCIA WHERE CONFIRMAFACIL_ID= 1274
+
+SELECT * FROM CARGASSQL.dbo.CLI WHERE CGCCPF='05346644004066'  --- REMETENTE / EMBARCADOR
+SELECT * FROM CARGASSQL.dbo.CLI WHERE CGCCPF='12744404000500'  --- DESTINATARIO / RECEBEDOR
+SELECT * FROM CARGASSQL.dbo.CLI WHERE CGCCPF='12744404000500'  --- PAGADOR / TOMADOR
+
+SELECT * FROM CARGASSQL.dbo.CNH WHERE EMP_CODIGO='THE' AND SERIE='E' AND CTRC=21151
+
+---- Reenvio: ()
+
+select * from CONFIRMAFACIL where NUMERO=365375
+select * from CONFIRMAFACILOCORRENCIA where CONFIRMAFACIL_ID=1041
+
+UPDATE CONFIRMAFACILOCORRENCIA
+SET FLAG_SEND = 0
+WHERE CONFIRMAFACIL_ID = 1041 
+  AND OCORRENCIA_ID = 1

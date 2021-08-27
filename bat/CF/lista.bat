@@ -1,0 +1,1 @@
+tail -n30 -s3 -f ./logs/NODE_ROBO_CONFIRMAFACIL.log
