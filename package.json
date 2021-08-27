@@ -1,0 +1,33 @@
+{
+  "name": "robot_senior",
+  "version": "1.0.0",
+  "description": "Robôs CF,ORION,iTrack",
+  "main": "ConfirmaFacil.js",
+  "scripts": {
+    "run": "node ConfirmaFacil.js",
+    "start": "npx nodemon --inspect=9230 ConfirmaFacil.js"    
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jurandir/Robot_Senior.git"
+  },
+  "author": "Jurandir Ferreira",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jurandir/Robot_Senior/issues"
+  },
+  "homepage": "https://github.com/Jurandir/Robot_Senior#readme",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "colors": "^1.4.0",
+    "crypto": "^1.0.1",
+    "dotenv": "^10.0.0",
+    "fs": "^0.0.1-security",
+    "moment": "^2.29.1",
+    "mssql": "^6.3.2",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}
