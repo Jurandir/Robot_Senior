@@ -1,8 +1,9 @@
-const sqlExec       = require('../connection/sqlExec')
+// 30/08/2021 10:10
+const sqlExec       = require('../../connection/sqlExSENIOR')
 
 const fs            = require('fs')
 const path          = require('path')
-const sqlFileName   =  path.join(__dirname, '../../sql/consultas/montaConfirmaFacil.SQL')
+const sqlFileName   =  path.join(__dirname, '../../sql/CF/consultas/montaConfirmaFacil.SQL')
 const sqlInitNF     = fs.readFileSync(sqlFileName, "utf8")
 
 const faixa_down = '-15'
@@ -15,26 +16,19 @@ const initNFs = async (cli) => {
    let sql = `
     INSERT INTO SIC.dbo.CONFIRMAFACIL ( EMBARCADOR,	NUMERO, SERIE,
      CHAVE, DT_EMISSAO, DT_EMBARQUE, DT_CHEGADA, DT_ENTREGA, DT_PREVISAO, DT_PREV_ORIGINAL,
-     VALOR, CTRC, DESTINATARIO, TRANSPORTADOR, DT_UPDATE, FASE_ID )
+     VALOR, CTRC, DESTINATARIO, TRANSPORTADOR, DT_UPDATE, CdEmpresa, NrSeqControle, FASE_ID )
     ${sqlInitNF}
     WHERE 
-	 (SUBSTRING(CNH.CLI_CGCCPF_PAG,1,8)   = '${raiz}' OR 
-	  SUBSTRING(CNH.CLI_CGCCPF_DEST,1,8)  = '${raiz}' OR
-	  SUBSTRING(CNH.CLI_CGCCPF_REMET,1,8) = '${raiz}' )
-      AND CNH.DATATU BETWEEN (CURRENT_TIMESTAMP${faixa_down}) AND (CURRENT_TIMESTAMP${faixa_up})
-      AND CNH.VALORNF>0
-      AND CNH.STATUS='I'
-      AND NFR.CHAVENFE IS NOT NULL  
-      AND CTE.PROTOCOLOCTE IS NOT NULL
-      AND NFE.ID IS NULL
+         CNH.InTipoEmissao = 0 
+     AND (SUBSTRING(CNH.CdRemetente,1,8)    = '${raiz}' OR 
+          SUBSTRING(CNH.CdDestinatario,1,8) = '${raiz}' OR
+          SUBSTRING(CNH.CdInscricao,1,8)    = '${raiz}' )
+     AND CNH.DtEmissao  BETWEEN (CURRENT_TIMESTAMP${faixa_down}) AND (CURRENT_TIMESTAMP${faixa_up})
+     AND CNH.InImpressao = 1
+     AND NFR.NrChaveAcessoNFe IS NOT NULL  
+     AND CTE.insituacaosefaz = 100
+     AND NFE.ID IS NULL
    `
-    /* 
-      -- (CNH.STATUS) --
-        C-CANCELADO
-        A-ANULADO
-        S-SUBSTITUIDO
-        I-IMPRESSO
-    */
     if(!flag_livre) { return { success: false, message: 'Processo ocupado !!!' }} 
     flag_livre = false
    

@@ -1,14 +1,14 @@
-const sqlExec       = require('../connection/sqlExec')
+const sqlExec       = require('../../connection/sqlExSENIOR')
 
 const fs                   = require('fs')
 const path                 = require('path')
-const sqlFileName          =  path.join(__dirname, '../../sql/rotinas/geraProcessoEntrega.SQL')
-const sqlInitEntrega        = fs.readFileSync(sqlFileName, "utf8")
+const sqlFileName          =  path.join(__dirname, '../../sql/CF/rotinas/geraEncerramento.SQL')
+const sqlEncerraProcessos  = fs.readFileSync(sqlFileName, "utf8")
 
 let flag_livre = true
 
-const initEntrega = async () => {
-    let sql = sqlInitEntrega
+const encerraProcessos = async () => {
+    let sql = sqlEncerraProcessos
 
     if(!flag_livre) { return { success: false, message: 'Processo ocupado !!!' }} 
     flag_livre = false
@@ -24,7 +24,7 @@ const initEntrega = async () => {
             success: false,
             message: err.message,
             rowsAffected: -1,
-            rotine: 'initEntrega',
+            rotine: 'encerraProcessos',
             sql: sql,
             err: err
         }
@@ -34,4 +34,4 @@ const initEntrega = async () => {
 
 }
 
-module.exports = initEntrega
+module.exports = encerraProcessos

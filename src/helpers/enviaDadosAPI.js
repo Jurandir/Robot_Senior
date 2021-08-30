@@ -1,8 +1,9 @@
-const sqlQuery             = require('../connection/sqlQuery')
+// 30/08/2021 15:54
+const sqlQuery             = require('../connection/sqlSENIOR')
 const montaJSON            = require('./montaJSON')
-const embarque             = require('../metodsAPI/embarque')
-const updFlagsEnvio        = require('../metodsDB/updFlagsEnvio')
-const updFlagsErros        = require('../metodsDB/updFlagsErros')
+const embarque             = require('../metodsAPI/CF/embarque')
+const updFlagsEnvio        = require('../metodsDB/CF/updFlagsEnvio')
+const updFlagsErros        = require('../metodsDB/CF/updFlagsErros')
 
 const enviaDadosAPI = async (cfg,cli,base,sql) => {
     let resposta = { success: false, rowsAffected: 0 }

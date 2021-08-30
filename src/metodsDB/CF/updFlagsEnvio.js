@@ -1,5 +1,5 @@
 const moment  = require('moment')
-const sqlExec = require('../connection/sqlExec')
+const sqlExec = require('../../connection/sqlExSENIOR')
 
 const updFlagsEnvio = async (dados,response) => {
     let IDs = dados.map( item => item.FLAG_ID).join()

@@ -1,4 +1,5 @@
-BEGIN
+BEGIN 
+  /*
     UPDATE CF
     SET DT_EMBARQUE = CNH.DATAEMBARQUE
     FROM SIC.dbo.CONFIRMAFACIL CF
@@ -7,6 +8,18 @@ BEGIN
                                      CNH.CTRC       = SUBSTRING(CF.CTRC,5,10)
     WHERE
     DT_EMBARQUE IS NULL AND CNH.DATAEMBARQUE IS NOT NULL AND CNH.VALORNF>0
+    */
+
+    UPDATE CF
+    SET DT_EMBARQUE = CAST(CONCAT(FORMAT(MOV.DtMovimento,'yyyy-MM-dd'),' ', FORMAT(MOV.hrMovimento,'HH:mm:ss')) as datetime)
+    FROM SIC.dbo.CONFIRMAFACIL CF
+    JOIN softran_termaco.dbo.GTCMovEn MOV   ON MOV.CdEmpresa = CF.CdEmpresa AND MOV.NrSeqControle = CF.NrSeqControle
+    WHERE MOV.CdOcorrencia = 128
+      AND CF.DT_EMBARQUE IS NULL 
+
+
+    ---- verificar ocorrencia 110 x 128
+
 END   
 ;
 BEGIN TRY

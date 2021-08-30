@@ -1,12 +1,12 @@
-
-const preparaDownload = require('../metodsAPI/preparaDownload')
-const updDownload     = require('../metodsDB/updDownloadOK')
+// 30/08/2021 16:11
+const preparaDownload = require('../metodsAPI/CF/preparaDownload')
+const updDownload     = require('../metodsDB/CF/updDownloadOK')
 const logEventos      = require('../helpers/logEventos')
 
-const sqlQuery        = require('../connection/sqlQuery')
+const sqlQuery        = require('../connection/sqlSENIOR')
 const fs              = require('fs')
 const path            = require('path')
-const sqlFileName     = path.join(__dirname, '../../sql/consultas/prepararDownloadComprovantes.SQL')
+const sqlFileName     = path.join(__dirname, '../../src/sql/CF/consultas/prepararDownloadComprovantes.SQL')
 const sqlPendentes    = fs.readFileSync(sqlFileName, "utf8")
 
 const preparaLinkComprovante = async (cfg) => {

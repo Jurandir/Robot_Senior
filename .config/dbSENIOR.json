@@ -1,0 +1,10 @@
+{  
+ "user": "sa",  
+ "password": "!@t3rm4c0l0g",  
+ "server": "192.168.0.155",  
+ "database": "softran_modelo",
+ "options": {
+    "encrypt": false,
+    "enableArithAbort": true 
+ }        
+}

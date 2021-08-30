@@ -1,5 +1,5 @@
 const moment  = require('moment')
-const sqlExec = require('../connection/sqlExec')
+const sqlExec = require('../../connection/sqlExSENIOR')
 
 const updDownload = async (par_ctrc) => {
     let flag = 1

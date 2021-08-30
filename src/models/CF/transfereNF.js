@@ -1,8 +1,9 @@
+// 30/08/2021 15:57
 const fs             = require('fs')
 const path           = require('path')
-const sqlFileName    =  path.join(__dirname, '../../sql/consultas/entrega_realizada.SQL')
+const sqlFileName    =  path.join(__dirname, '../../sql/CF/consultas/processo_de_transferencia_entre_filiais.SQL')
 const sql            = fs.readFileSync(sqlFileName, "utf8")
-const enviaDadosAPI  = require('../helpers/enviaDadosAPI')
+const enviaDadosAPI  = require('../../helpers/enviaDadosAPI')
 
 const base = () => {
     return {
@@ -16,8 +17,8 @@ const base = () => {
     }
 }
 
-const entregaNF = async (cfg,cli) => {
+const transfereNF = async (cfg,cli) => {
     return await enviaDadosAPI(cfg,cli,base,sql)
 }
 
-module.exports = entregaNF
+module.exports = transfereNF

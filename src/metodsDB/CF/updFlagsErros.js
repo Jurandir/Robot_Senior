@@ -1,5 +1,5 @@
 const moment  = require('moment')
-const sqlExec = require('../connection/sqlExec')
+const sqlExec = require('../../connection/sqlExSENIOR')
 
 const updFlagsErros = async (dados,response) => {
     let result = {success: false, message:'updFlagsErros' ,rowsAffected: 0 , embarque: response }

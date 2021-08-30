@@ -1,4 +1,4 @@
-//-- Versão Inicial ( 27/08/2021 )
+//-- Versão Inicial Sênior ( 30/08/2021 )
 //-- By : Jurandir Ferreira
 
 require('dotenv').config()
@@ -7,23 +7,13 @@ const moment = require('moment')
 moment.locale('pt-br')        
 
 const colors    = require('colors')
-const clientes  = require('./config/clientes.json')
-const login     = require('./src/metodsAPI/login')
-const robot     = require('./src/controllers/robot')
+const config    = require('./.config/confirmaFacil.json') 
+const clientes  = require('./.config/clientes.json')
+const login     = require('./src/metodsAPI/CF/login')
+const robot     = require('./src/controllers/CF/robot')
 
-const config  = { 
-    versao: process.env.VERSAO,
-    time: process.env.TIME_INTERVALO * 1000,          // Intervalo de execução do robô ( TIME_INTERVALO = 10s )
-    validade: process.env.TIME_VALIDADE_TOKEN * 1000, // Validade do token na API ( TIME_VALIDADE_TOKEN = 5400s )
-    loginURL: process.env.URL_LOGIN, 
-    embarqueURL: process.env.URL_EMBARQUE , 
-    comprovanteURL: process.env.URL_COMPROVANTE,
-    debug: process.env.DEBUG,
-    user: process.env.USUARIO,
-    pwd: process.env.SENHA
-}
 
-const titulo  = ` Robô - ConfirmaFacil - ${config.versao} `.yellow.bgBlue.bold 
+const titulo  = ` Robô - ConfirmaFacil - Sênior - ${config.versao} `.yellow.bgBlue.bold 
 
 process.stdout.write('\x1B[2J\x1B[0f')
 console.log(titulo)

@@ -5,7 +5,7 @@
   "main": "ConfirmaFacil.js",
   "scripts": {
     "run": "node ConfirmaFacil.js",
-    "start": "npx nodemon --inspect=9230 ConfirmaFacil.js"    
+    "start": "npx nodemon --inspect=9231 ConfirmaFacil.js"    
   },
   "repository": {
     "type": "git",

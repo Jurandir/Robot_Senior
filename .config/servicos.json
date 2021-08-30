@@ -1,0 +1,6 @@
+{
+    "comprovantes": {
+        "server": "http://201.49.34.12:5000",
+        "endpoint": "/api/downloadAgileProcess"
+    }
+}

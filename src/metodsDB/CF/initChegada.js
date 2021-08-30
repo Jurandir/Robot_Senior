@@ -1,8 +1,8 @@
-const sqlExec       = require('../connection/sqlExec')
+const sqlExec       = require('../../connection/sqlExSENIOR')
 
 const fs                   = require('fs')
 const path                 = require('path')
-const sqlFileName          =  path.join(__dirname, '../../sql/rotinas/geraProcessoChegadaFilial.SQL')
+const sqlFileName          =  path.join(__dirname, '../../sql/CF/rotinas/geraProcessoChegadaFilial.SQL')
 const sqlInitChegada       = fs.readFileSync(sqlFileName, "utf8")
 
 let flag_livre = true

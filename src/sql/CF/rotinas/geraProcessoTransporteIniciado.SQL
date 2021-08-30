@@ -1,3 +1,4 @@
+-- 30/08/2021 15:00
 SET XACT_ABORT ON
 
 BEGIN TRY
@@ -10,12 +11,11 @@ BEGIN TRY
           CF.ID                             AS CONFIRMAFACIL_ID,
           000                               AS OCORRENCIA_ID,
           'PROCESSO DE TRANSPORTE INICIADO' AS OCORRENCIA_NOME,
-          CNH.DATA                          AS OCORRENCIA_DATA
+          CNH.DtEmissao                     AS OCORRENCIA_DATA
         FROM SIC.dbo.CONFIRMAFACIL CF
-          JOIN CARGASSQL.dbo.CNH ON CNH.EMP_CODIGO=SUBSTRING(CF.CTRC,1,3) AND CNH.SERIE = SUBSTRING(CF.CTRC,4,1) AND CNH.CTRC = SUBSTRING(CF.CTRC,5,10)
+          JOIN softran_termaco.dbo.gtcconhe CNH ON CNH.CdEmpresa = CF.CdEmpresa   AND CNH.NrSeqControle = CF.NrSeqControle
         WHERE FASE_ID = 0
           AND NOT EXISTS ( SELECT 1 FROM SIC.dbo.CONFIRMAFACILOCORRENCIA CO WHERE CO.CONFIRMAFACIL_ID = CF.ID AND CO.OCORRENCIA_ID = 0 )         
-          AND CNH.VALORNF>0
         -- CASO A (FASE = 0) E  NÃO EXISTIR OCORRENCIA = 0 GERADA, INCLUI OCORRENCIA
         ;
         UPDATE CF 

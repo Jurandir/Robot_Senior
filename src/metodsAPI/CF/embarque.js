@@ -1,11 +1,13 @@
 const moment  = require('moment')
-const loadAPI = require('../helpers/loadAPI')
+const loadAPI = require('../../helpers/loadAPI')
 
 const embarque = async (cfg,cli,body) => {
     let method   = 'POST'
     let endpoint = ''
-    //let server   =  'http://localhost:5000/test/showTest' 
     let server   = cfg.embarqueURL
+    if(cfg.run=='Test') {
+       server  = 'http://localhost:5000/test/showTest' 
+    } 
     let params   = body
     let token    = cli.login.resposta.token
     
