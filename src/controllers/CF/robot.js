@@ -39,7 +39,7 @@ const robot = async (cli,cfg,uptime) =>{
 
     let retInitNFs = await captura_nfs() 
 
-    console.log('retInitNFs:',retInitNFs)
+    // console.log('retInitNFs:',retInitNFs)
     
     await transporte_iniciado()
 
@@ -54,9 +54,15 @@ const robot = async (cli,cfg,uptime) =>{
 
     await transferencia_entre_filiais()
 
-    /*
     await chegada_filial_destino()
+
+    /*
+    
     await em_rota_entrega()
+
+
+
+
     let ret_ocorrencias = await ocorrencias_manuais()
 
     if(ret_ocorrencias.retInitOcorrencias.rowsAffected>0) {

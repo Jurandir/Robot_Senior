@@ -6,11 +6,12 @@ BEGIN TRY
 
         ;
         INSERT INTO SIC.dbo.CONFIRMAFACILOCORRENCIA
-          ( CONFIRMAFACIL_ID, OCORRENCIA_ID, OCORRENCIA_NOME, OCORRENCIA_DATA )
+          ( CONFIRMAFACIL_ID, OCORRENCIA_ID, OCORRENCIA_NOME,OCORRENCIA_OBS, OCORRENCIA_DATA )
         SELECT
           CF.ID                             AS CONFIRMAFACIL_ID,
           000                               AS OCORRENCIA_ID,
           'PROCESSO DE TRANSPORTE INICIADO' AS OCORRENCIA_NOME,
+          'PROCESSO INICIADO'               AS OCORRENCIA_OBS,
           CNH.DtEmissao                     AS OCORRENCIA_DATA
         FROM SIC.dbo.CONFIRMAFACIL CF
           JOIN softran_termaco.dbo.gtcconhe CNH ON CNH.CdEmpresa = CF.CdEmpresa   AND CNH.NrSeqControle = CF.NrSeqControle

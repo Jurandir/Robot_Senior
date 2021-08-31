@@ -1,3 +1,4 @@
+-- 31/08/2021 14:28
 SELECT DISTINCT  
 	 SUBSTRING(isnull(NFR.CdRemetente,'')+CNH.CdRemetente,1,14)    as EMBARCADOR
 	,RIGHT(REPLICATE('0',7) + CAST(NFR.NrNotaFiscal AS VARCHAR),7) as NUMERO
@@ -5,10 +6,10 @@ SELECT DISTINCT
 	,NFR.NrChaveAcessoNFe                                          as CHAVE
 	,NFR.DtEmissao                                                 as DT_EMISSAO
 	,(SELECT TOP 1 CAST(CONCAT(FORMAT(d.DtMovimento,'yyyy-MM-dd'),' ', FORMAT(d.hrMovimento,'HH:mm:ss')) as datetime) 
-     FROM softran_termaco.dbo.GTCMovEn d WHERE d.CdEmpresa = CNH.CdEmpresa AND d.NrSeqControle = CNH.NrSeqControle AND d.CdOcorrencia = 101	) -- 101 - "EM TRANSFERENCIA ENTRE FILIAIS"
+     FROM softran_termaco.dbo.GTCMovEn d WHERE d.CdEmpresa = CNH.CdEmpresa AND d.NrSeqControle = CNH.NrSeqControle AND d.CdOcorrencia = 101	) -- 101 codigo Sênior - "EM TRANSFERENCIA ENTRE FILIAIS"
 	                                                               as DT_EMBARQUE
 	,(SELECT TOP 1 CAST(CONCAT(FORMAT(d.DtMovimento,'yyyy-MM-dd'),' ', FORMAT(d.hrMovimento,'HH:mm:ss')) as datetime) 
-      FROM softran_termaco.dbo.GTCMovEn d WHERE d.CdEmpresa = CNH.CdEmpresa AND d.NrSeqControle = CNH.NrSeqControle AND d.CdOcorrencia = 98	) --  98 - "CHEGADA NA CIDADE OU FILIAL DESTINO"
+      FROM softran_termaco.dbo.GTCMovEn d WHERE d.CdEmpresa = CNH.CdEmpresa AND d.NrSeqControle = CNH.NrSeqControle AND d.CdOcorrencia = 98	) --  98 codigo Sênior - "CHEGADA NA CIDADE OU FILIAL DESTINO"
 	                                                               as DT_CHEGADA
 	,CNH.DtEntrega                                                 as DT_ENTREGA
 	,softran_termaco.dbo.SP_CalculaDtPrevisaoEntregaPercurso(CNH.DtEmissao, CNH.CdEmpresaDestino, CNH.CdPercurso, CNH.CdTransporte, CNH.CdRemetente, CNH.CdDestinatario, CNH.cdempresa, CNH.nrseqcontrole) 

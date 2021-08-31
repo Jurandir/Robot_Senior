@@ -1,9 +1,29 @@
+-- 31/08/2021 17:23 - OCORRENCIAS DIVERSAS - MANUAIS
 DECLARE @CONFIRMAFACILOCORRENCIA_ID as INT
 DECLARE @CONFIRMAFACIL_ID           as INT
 DECLARE @OCORRENCIA_DATA            as DATETIME
 DECLARE @DATAOCO                    as DATETIME
 DECLARE @OCORRENCIA_ID              as INT
 DECLARE @OCORRENCIA_NOME            as NVARCHAR(60)
+
+
+
+SELECT 
+     CO.ID            AS CONFIRMAFACILOCORRENCIA_ID
+    ,CF.ID            AS CONFIRMAFACIL_ID
+	,OUN.DtMovimento  AS OCORRENCIA_DATA
+	,OUN.HRMovimento  AS OCORRENCIA_DATA1
+	,OUN.CdOcorrencia AS OCORRENCOA_ID
+    ,OUN.* 
+FROM softran_termaco.dbo.gtcmoven         OUN  
+     JOIN SIC.dbo.CONFIRMAFACIL           CF  ON CF.CdEmpresa = OUN.CdEmpresa AND CF.NrSeqControle = OUN.NrSeqControle 
+LEFT JOIN SIC.dbo.CONFIRMAFACILOCORRENCIA CO  ON CF.CdEmpresa = OUN.CdEmpresa AND CF.NrSeqControle = OUN.NrSeqControle 
+LEFT JOIN softran_termaco.dbo.gtchisen    OCO ON OCO.cdhistoricoentrega = OUN.cdocorrencia     -- Ocorrencias
+--WHERE
+    --OUN.CdEmpresa = a.cdempresa   AND d.nrseqcontrole = a.nrseqcontrole  -- Movimento de Ocorrencias
+
+
+
 
 DECLARE Ocorrencia_Cursor CURSOR FOR 
 SELECT TOP 10
@@ -25,6 +45,10 @@ WHERE
 ORDER BY
    OUN.DATA
 ;	
+
+
+
+
 
 OPEN Ocorrencia_Cursor;  
 
