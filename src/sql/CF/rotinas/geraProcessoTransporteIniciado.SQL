@@ -1,4 +1,4 @@
--- 30/08/2021 15:00
+-- 30/08/2021 15:00 / 01/09/2021 11:15
 SET XACT_ABORT ON
 
 BEGIN TRY
@@ -6,13 +6,16 @@ BEGIN TRY
 
         ;
         INSERT INTO SIC.dbo.CONFIRMAFACILOCORRENCIA
-          ( CONFIRMAFACIL_ID, OCORRENCIA_ID, OCORRENCIA_NOME,OCORRENCIA_OBS, OCORRENCIA_DATA )
+          ( CONFIRMAFACIL_ID, OCORRENCIA_ID, OCORRENCIA_NOME,OCORRENCIA_OBS, OCORRENCIA_DATA, CdEmpresa, NrSeqControle )
         SELECT
-          CF.ID                             AS CONFIRMAFACIL_ID,
-          000                               AS OCORRENCIA_ID,
-          'PROCESSO DE TRANSPORTE INICIADO' AS OCORRENCIA_NOME,
-          'PROCESSO INICIADO'               AS OCORRENCIA_OBS,
-          CNH.DtEmissao                     AS OCORRENCIA_DATA
+          CF.ID                              AS CONFIRMAFACIL_ID
+          ,000                               AS OCORRENCIA_ID
+          ,'PROCESSO DE TRANSPORTE INICIADO' AS OCORRENCIA_NOME
+          ,CONCAT('INICIADO VIA CTRC: ',CF.CTRC)      
+                                             AS OCORRENCIA_OBS
+          ,CNH.DtEmissao                     AS OCORRENCIA_DATA
+	        ,CNH.CdEmpresa                     AS CdEmpresa
+	        ,CNH.NrSeqControle                 AS NrSeqControle
         FROM SIC.dbo.CONFIRMAFACIL CF
           JOIN softran_termaco.dbo.gtcconhe CNH ON CNH.CdEmpresa = CF.CdEmpresa   AND CNH.NrSeqControle = CF.NrSeqControle
         WHERE FASE_ID = 0

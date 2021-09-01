@@ -42,6 +42,10 @@ const robot = async (cli,cfg,uptime) =>{
     // console.log('retInitNFs:',retInitNFs)
     
     await transporte_iniciado()
+    await ocorrencias_manuais()
+    await transferencia_entre_filiais()
+    await chegada_filial_destino()
+    await em_rota_entrega()
 
     /*
     
@@ -52,22 +56,22 @@ const robot = async (cli,cfg,uptime) =>{
     */
 
 
-    await transferencia_entre_filiais()
 
-    await chegada_filial_destino()
+    // let ret_ocorrencias = await ocorrencias_manuais()
+
+   // if(ret_ocorrencias.retInitOcorrencias.rowsAffected>0) {
+   //     return 
+   // }
+
+
+    
+    // await em_rota_entrega()
+
+
 
     /*
-    
-    await em_rota_entrega()
 
 
-
-
-    let ret_ocorrencias = await ocorrencias_manuais()
-
-    if(ret_ocorrencias.retInitOcorrencias.rowsAffected>0) {
-        return 
-    }
 
     await confirmacao_entrega()
     await comprovante_entrega_BD()
@@ -103,6 +107,19 @@ const robot = async (cli,cfg,uptime) =>{
       logEventos(cfg,'(BD - PROCESSO DE TRANSPORTE INICIADO) - retInitTransporte:',retInitTransporte)
       return retInitTransporte
     }
+
+    // OCORRENCIAS MANUAIS
+    async function ocorrencias_manuais() {
+      let retInitOcorrencias
+      let retOcorrencias
+
+       retInitOcorrencias = await initOcorrencias()
+       logEventos(cfg,'(BD - OCORRENCIAS MANUAIS) - retInitOcorrencias:',retInitOcorrencias)
+
+      // retOcorrencias = await ocorrencias(cfg,cli)
+      // logEventos(cfg,'(API - OCORRÊNCIAS MANUAIS) - retOcorrencias:',retOcorrencias)
+       return { retInitOcorrencias, retOcorrencias }
+    }   
 
     return
 
@@ -142,16 +159,6 @@ const robot = async (cli,cfg,uptime) =>{
       return { retInitEmRota, retRotaEntrega }
     }
     
-    // OCORRENCIAS MANUAIS
-    async function ocorrencias_manuais() {
-      let retInitOcorrencias = await initOcorrencias()
-       logEventos(cfg,'(BD - OCORRENCIAS MANUAIS) - retInitOcorrencias:',retInitOcorrencias)
-
-       let retOcorrencias = await ocorrencias(cfg,cli)
-       logEventos(cfg,'(API - OCORRÊNCIAS MANUAIS) - retOcorrencias:',retOcorrencias)
-       return { retInitOcorrencias, retOcorrencias }
-    }   
-
     // ENTREGA REALIZADA NORMALMENTE
     async function confirmacao_entrega() {
       let retInitEntrega = await initEntrega()

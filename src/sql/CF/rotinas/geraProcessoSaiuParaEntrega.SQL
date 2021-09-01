@@ -1,37 +1,37 @@
+-- 01/09/2021 13:56 - EM ROTA PARA ENTREGA
 BEGIN TRY
     BEGIN TRANSACTION
 
     BEGIN
-        ;
-        INSERT INTO SIC.dbo.CONFIRMAFACILOCORRENCIA
-          ( CONFIRMAFACIL_ID, OCORRENCIA_ID, OCORRENCIA_NOME, OCORRENCIA_DATA )
-
-        SELECT
-            CF.ID                                           AS CONFIRMAFACIL_ID,
-            110                                             AS OCORRENCIA_ID,
-            'EM ROTA PARA ENTREGA'                          AS OCORRENCIA_NOME,
-            MEG.DATA                                        AS OCORRENCIA_DATA
-        FROM SIC.dbo.CONFIRMAFACIL CF
-        JOIN CARGASSQL.dbo.CNH      ON CNH.EMP_CODIGO = SUBSTRING(CF.CTRC,1,3) AND CNH.SERIE  = SUBSTRING(CF.CTRC,4,1) AND CNH.CTRC = SUBSTRING(CF.CTRC,5,10)
-        LEFT JOIN CARGASSQL.dbo.IME ON IME.CNH_CTRC   = CNH.CTRC	       AND IME.CNH_SERIE  = CNH.SERIE	    AND IME.EMP_CODIGO_CNH = CNH.EMP_CODIGO
-        LEFT JOIN CARGASSQL.dbo.MEG ON MEG.CODIGO     = IME.MEG_CODIGO	   AND MEG.EMP_CODIGO = IME.EMP_CODIGO
-        WHERE CF.FASE_ID <= 3 AND IME.MEG_CODIGO IS NOT NULL 
-          AND MEG.DATA IS NOT NULL AND CNH.DATAENTREGA IS NULL
-          AND NOT EXISTS ( SELECT 1 FROM SIC.dbo.CONFIRMAFACILOCORRENCIA CO WHERE CO.CONFIRMAFACIL_ID = CF.ID AND CO.OCORRENCIA_ID = 110 ) 
-        -- CASO A (FASE < OU = 3) E  NÃO EXISTIR OCORRENCIA = 110 GERADA, INCLUI OCORRENCIA
-
-        ;
         UPDATE CF
           SET CF.FASE_ID = 4,
               CF.DT_UPDATE = CURRENT_TIMESTAMP
-        FROM SIC.dbo.CONFIRMAFACIL CF      
+        FROM SIC.dbo.CONFIRMAFACIL CF
+        JOIN SIC.dbo.CONFIRMAFACILDEPARA DP ON DP.ID_SENIOR = 100 -- Codigo no Sênior      
         WHERE CF.FASE_ID = 3 AND CF.DT_CHEGADA IS NOT NULL 
           AND EXISTS (SELECT 1 FROM SIC.dbo.CONFIRMAFACILOCORRENCIA CO 
                WHERE CO.CONFIRMAFACIL_ID = CF.ID 
-                 AND CO.OCORRENCIA_ID = 110 )
-        -- CASO A (FASE < OU = 3) E EXISTIR OCORRENCIA = 110 GERADA, MUDA PARA FASE = 4        
+                 AND CO.OCORRENCIA_ID = DP.ID_CONFIRMAFACIL )
+        -- CASO A (FASE < OU = 3) E EXISTIR OCORRENCIA = (DP.ID_CONFIRMAFACIL) GERADA, MUDA PARA FASE = 4        
         ;
     END
+    ;
+
+    BEGIN
+        UPDATE CO
+           SET OCORRENCIA_OBS =  
+                              (SELECT TOP 1 CONCAT('A CAMINHO, DESTINATÁRIO EM : ',n.DsLocal,' / ',n.DsUF)
+                                 FROM softran_termaco.dbo.GTCConhe a
+                            LEFT JOIN softran_termaco.dbo.siscep   n ON n.nrcep = a.nrcepentrega  -- CEP Local Entrega
+                                WHERE a.CdEmpresa = CO.CdEmpresa 
+                                  AND a.NrSeqControle = CO.NrSeqControle )
+        FROM SIC.dbo.CONFIRMAFACILOCORRENCIA CO
+        JOIN SIC.dbo.CONFIRMAFACILDEPARA DP ON DP.ID_SENIOR = 100 -- Codigo no Sênior
+       WHERE CO.OCORRENCIA_OBS IS NULL 
+         AND CO.OCORRENCIA_ID = DP.ID_CONFIRMAFACIL
+    END
+    ;
+
 
     COMMIT TRANSACTION
 

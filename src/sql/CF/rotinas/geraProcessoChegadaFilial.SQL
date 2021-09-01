@@ -20,11 +20,29 @@ BEGIN TRY
           SET FASE_ID = 3,
               DT_UPDATE = CURRENT_TIMESTAMP
         FROM SIC.dbo.CONFIRMAFACIL CF
+        JOIN SIC.dbo.CONFIRMAFACILDEPARA DP ON DP.ID_SENIOR = 098 -- Codigo no Sênior
         WHERE CF.FASE_ID <= 2 AND CF.DT_CHEGADA IS NOT NULL
-          AND EXISTS ( SELECT 1 FROM SIC.dbo.CONFIRMAFACILOCORRENCIA CO WHERE CO.CONFIRMAFACIL_ID = CF.ID AND CO.OCORRENCIA_ID = 098 ) -- ( 098 passou para manual)
+          AND EXISTS ( SELECT 1 FROM SIC.dbo.CONFIRMAFACILOCORRENCIA CO WHERE CO.CONFIRMAFACIL_ID = CF.ID AND CO.OCORRENCIA_ID = DP.ID_CONFIRMAFACIL ) 
         -- CASO A (FASE < OU = 2) E EXISTIR OCORRENCIA = 098 GERADA, MUDA PARA FASE = 3        
         ;
     END
+    ;
+
+    BEGIN
+        UPDATE CO
+           SET OCORRENCIA_OBS =  
+                              (SELECT TOP 1 CONCAT('CHEGADA EM : ',n.DsLocal,' / ',n.DsUF)
+                                 FROM softran_termaco.dbo.GTCConhe a
+                            LEFT JOIN softran_termaco.dbo.sisempre m ON m.cdempresa = a.cdempresadestino -- Filial Destino
+                            LEFT JOIN softran_termaco.dbo.siscep   n ON n.nrcep     = m.nrcep
+                                WHERE a.CdEmpresa = CO.CdEmpresa 
+                                  AND a.NrSeqControle = CO.NrSeqControle )
+        FROM SIC.dbo.CONFIRMAFACILOCORRENCIA CO
+        JOIN SIC.dbo.CONFIRMAFACILDEPARA DP ON DP.ID_SENIOR = 098 -- Codigo no Sênior
+       WHERE CO.OCORRENCIA_OBS IS NULL 
+         AND CO.OCORRENCIA_ID = DP.ID_CONFIRMAFACIL
+    END
+    ;
 
     COMMIT TRANSACTION
 

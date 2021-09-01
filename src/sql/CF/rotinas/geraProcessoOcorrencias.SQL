@@ -1,70 +1,88 @@
--- 31/08/2021 17:23 - OCORRENCIAS DIVERSAS - MANUAIS
-DECLARE @CONFIRMAFACILOCORRENCIA_ID as INT
+-- 01/09/2021 10:48 - OCORRENCIAS DIVERSAS - MANUAIS
 DECLARE @CONFIRMAFACIL_ID           as INT
 DECLARE @OCORRENCIA_DATA            as DATETIME
 DECLARE @DATAOCO                    as DATETIME
 DECLARE @OCORRENCIA_ID              as INT
 DECLARE @OCORRENCIA_NOME            as NVARCHAR(60)
-
-
-
-SELECT 
-     CO.ID            AS CONFIRMAFACILOCORRENCIA_ID
-    ,CF.ID            AS CONFIRMAFACIL_ID
-	,OUN.DtMovimento  AS OCORRENCIA_DATA
-	,OUN.HRMovimento  AS OCORRENCIA_DATA1
-	,OUN.CdOcorrencia AS OCORRENCOA_ID
-    ,OUN.* 
-FROM softran_termaco.dbo.gtcmoven         OUN  
-     JOIN SIC.dbo.CONFIRMAFACIL           CF  ON CF.CdEmpresa = OUN.CdEmpresa AND CF.NrSeqControle = OUN.NrSeqControle 
-LEFT JOIN SIC.dbo.CONFIRMAFACILOCORRENCIA CO  ON CF.CdEmpresa = OUN.CdEmpresa AND CF.NrSeqControle = OUN.NrSeqControle 
-LEFT JOIN softran_termaco.dbo.gtchisen    OCO ON OCO.cdhistoricoentrega = OUN.cdocorrencia     -- Ocorrencias
---WHERE
-    --OUN.CdEmpresa = a.cdempresa   AND d.nrseqcontrole = a.nrseqcontrole  -- Movimento de Ocorrencias
-
-
+DECLARE @OCORRENCIA_OBS             as NVARCHAR(2000)
+DECLARE @RECEBEDOR_NOME             as NVARCHAR(60)
+DECLARE @RECEBEDOR_DOC              as NVARCHAR(40)
+DECLARE @CdEmpresa                  as INT
+DECLARE @NrSeqControle              as BIGINT
+DECLARE @CdSequencia                as INT
 
 
 DECLARE Ocorrencia_Cursor CURSOR FOR 
 SELECT TOP 10
-      CO.ID               CONFIRMAFACILOCORRENCIA_ID,
-      CF.ID               CONFIRMAFACIL_ID,
-	   OUN.DATAOCO         OCORRENCIA_DATA,
-	   OUN.OCO_CODIGO      OCORRENCOA_ID,
-	   OCO.NOME            OCORRENCIA_NOME,
-      OUN.DATAOCO         DATAOCO 
-FROM CARGASSQL.dbo.OUN
-    JOIN CARGASSQL.dbo.OCO                       ON OCO.CODIGO  = OUN.OCO_CODIGO
-    JOIN SIC.dbo.CONFIRMAFACIL CF                ON CF.CTRC     = OUN.CHAVE 
-    LEFT JOIN SIC.dbo.CONFIRMAFACILOCORRENCIA CO ON CO.CONFIRMAFACIL_ID = CF.ID AND CO.OCORRENCIA_ID = OUN.OCO_CODIGO AND CO.OCORRENCIA_DATA = OUN.DATAOCO                                          
-WHERE 
-   OUN.TABELA='CNH' AND
-   OUN.OCO_CODIGO NOT IN (000,001,110,128,801) AND  -- ( 098 passou para manual)
-   (OCO.NAOENVIAEDI = 0 OR OUN.OCO_CODIGO=219) AND CO.ID IS NULL AND --- 219 = AGUARDANDO AGENDAMENTO/SOLICITADO AGENDA
-   CF.FASE_ID < 5
-ORDER BY
-   OUN.DATA
+    CF.ID                   AS CONFIRMAFACIL_ID
+	,CAST(CONCAT(FORMAT(OUN.DtMovimento,'yyyy-MM-dd'),' ', FORMAT(OUN.HRMovimento,'HH:mm:ss')) as datetime) 
+	                         AS OCORRENCIA_DATA
+	,ISNULL(DP.ID_CONFIRMAFACIL,OUN.CdOcorrencia)
+	                         AS OCORRENCOA_ID
+	,OCO.DsHistoricoEntrega  AS OCORRENCIA_NOME
+	,OUN.DsComplementoOcorr  AS OCORRENCIA_OBS
+    ,OUN.NrDoctoIdentPessoal AS RECEBEDOR_DOC
+    ,OUN.DsContato           AS RECEBEDOR_NOME
+	,OUN.CdEmpresa           AS CdEmpresa
+	,OUN.NrSeqControle       AS NrSeqControle
+	,OUN.CdSequencia         AS CdSequencia
+
+FROM softran_termaco.dbo.gtcmoven         OUN                                                  -- Movimento das Ocorrencias
+     JOIN softran_termaco.dbo.gtchisen    OCO ON OCO.cdhistoricoentrega = OUN.cdocorrencia     -- Ocorrencias
+     JOIN SIC.dbo.CONFIRMAFACIL           CF  ON CF.CdEmpresa = OUN.CdEmpresa AND CF.NrSeqControle = OUN.NrSeqControle 
+LEFT JOIN SIC.dbo.CONFIRMAFACILDEPARA     DP  ON DP.ID_SENIOR = OUN.CdOcorrencia               -- DE PARA ( SENIOR -> CONFIRMAFACIL )
+LEFT JOIN SIC.dbo.CONFIRMAFACILOCORRENCIA CO  ON CO.CdEmpresa = OUN.CdEmpresa AND CO.NrSeqControle = OUN.NrSeqControle AND CO.CdSequencia  = OUN.CdSequencia 
+WHERE (isnull(OCO.InExibehist, 0) = 0 OR OUN.CdOcorrencia=219)               -- 219 = AGUARDANDO AGENDAMENTO/SOLICITADO AGENDA
+  AND NOT EXISTS ( SELECT 1 FROM SIC.dbo.CONFIRMAFACILOCORRENCIA CO WHERE CO.CdEmpresa = OUN.CdEmpresa AND CO.NrSeqControle = OUN.NrSeqControle  AND CO.CdSequencia = OUN.CdSequencia )
+
+  AND CF.FASE_ID < 5
+ORDER BY 
+   CAST(CONCAT(FORMAT(OUN.DtMovimento,'yyyy-MM-dd'),' ', FORMAT(OUN.HRMovimento,'HH:mm:ss')) as datetime) 
+
 ;	
-
-
-
-
 
 OPEN Ocorrencia_Cursor;  
 
 FETCH NEXT FROM Ocorrencia_Cursor INTO 
-	     @CONFIRMAFACILOCORRENCIA_ID , @CONFIRMAFACIL_ID , @OCORRENCIA_DATA , @OCORRENCIA_ID , @OCORRENCIA_NOME , @DATAOCO ;  
-
+         @CONFIRMAFACIL_ID, 
+         @OCORRENCIA_DATA, 
+         @OCORRENCIA_ID, 
+         @OCORRENCIA_NOME,
+         @OCORRENCIA_OBS,
+         @RECEBEDOR_DOC,
+         @RECEBEDOR_NOME,
+         @CdEmpresa,
+         @NrSeqControle,
+         @CdSequencia
+         ;
+          
 WHILE @@FETCH_STATUS = 0  
 BEGIN      
       BEGIN TRANSACTION;
 
-      IF ( @CONFIRMAFACILOCORRENCIA_ID IS NULL )
-      BEGIN
-         INSERT INTO SIC.dbo.CONFIRMAFACILOCORRENCIA ( CONFIRMAFACIL_ID, OCORRENCIA_ID, OCORRENCIA_NOME, OCORRENCIA_DATA )
-         VALUES ( @CONFIRMAFACIL_ID, @OCORRENCIA_ID, @OCORRENCIA_NOME, @DATAOCO )
-      END
-      ;
+         INSERT INTO SIC.dbo.CONFIRMAFACILOCORRENCIA ( 
+             CONFIRMAFACIL_ID, 
+             OCORRENCIA_ID, 
+             OCORRENCIA_NOME, 
+             OCORRENCIA_DATA,
+             OCORRENCIA_OBS,
+             RECEBEDOR_DOC,
+             RECEBEDOR_NOME,
+             CdEmpresa,
+             NrSeqControle,
+             CdSequencia 
+        ) VALUES ( 
+            @CONFIRMAFACIL_ID, 
+            @OCORRENCIA_ID, 
+            @OCORRENCIA_NOME,  
+            @OCORRENCIA_DATA,  
+            @OCORRENCIA_OBS,
+            @RECEBEDOR_DOC,
+            @RECEBEDOR_NOME,
+            @CdEmpresa,
+            @NrSeqControle,
+            @CdSequencia 
+        )
 
       -- Print @@ROWCOUNT
       ; 
@@ -77,8 +95,17 @@ BEGIN
       -- Print @OCORRENCIA_DATA ;
 
       FETCH NEXT FROM Ocorrencia_Cursor INTO 
-	     @CONFIRMAFACILOCORRENCIA_ID , @CONFIRMAFACIL_ID , @OCORRENCIA_DATA , @OCORRENCIA_ID , @OCORRENCIA_NOME , @DATAOCO 
-      ;  
+         @CONFIRMAFACIL_ID, 
+         @OCORRENCIA_DATA, 
+         @OCORRENCIA_ID, 
+         @OCORRENCIA_NOME,
+         @OCORRENCIA_OBS,
+         @RECEBEDOR_DOC,
+         @RECEBEDOR_NOME,
+         @CdEmpresa,
+         @NrSeqControle,
+         @CdSequencia
+         ;
 
 END
 ;
