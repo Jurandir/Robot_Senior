@@ -1,13 +1,15 @@
+// 02/09/2021 09:32 - ENTREGA PROGRAMADA
+
 const sqlExec       = require('../../connection/sqlExSENIOR')
 
 const fs                   = require('fs')
 const path                 = require('path')
-const sqlFileName          =  path.join(__dirname, '../../sql/CF/rotinas/geraProcessoSaiuParaEntrega.SQL')
+const sqlFileName          =  path.join(__dirname, '../../sql/CF/rotinas/geraProcessoEntregaProgramada.SQL')
 const sqlInitEmRota        = fs.readFileSync(sqlFileName, "utf8")
 
 let flag_livre = true
 
-const initEmRota = async () => {
+const initEntregaProgramada = async () => {
     let sql = sqlInitEmRota
 
     if(!flag_livre) { return { success: false, message: 'Processo ocupado !!!' }} 
@@ -24,7 +26,7 @@ const initEmRota = async () => {
             success: false,
             message: err.message,
             rowsAffected: -1,
-            rotine: 'initEmRota',
+            rotine: 'initEntregaProgramada',
             sql: sql,
             err: err
         }
@@ -34,6 +36,4 @@ const initEmRota = async () => {
 
 }
 
-module.exports = initEmRota
-
-// initEntregaProgramada
+module.exports = initEntregaProgramada

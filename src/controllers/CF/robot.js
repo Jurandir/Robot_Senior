@@ -1,27 +1,26 @@
-// By: Jurandir Ferreira
-// Em Produção em : 30/08/2021
-// ----------------------------
-const moment            = require('moment')
-const initNFs           = require('../../metodsDB/CF/initNFs')                 // 30/08/2021 10:03
-const initTransporte    = require('../../metodsDB/CF/initTransporte')
-const initTransferencia = require('../../metodsDB/CF/initTransferencia')
-const initChegada       = require('../../metodsDB/CF/initChegada')
-const initEmRota        = require('../../metodsDB/CF/initEmRota')
-const initEntrega       = require('../../metodsDB/CF/initEntrega')
-const initOcorrencias   = require('../../metodsDB/CF/initOcorrencias')
-const initComprovante   = require('../../metodsDB/CF/initComprovante')
-const encerraProcessos  = require('../../metodsDB/CF/encerraProcessos')
-const registraNF        = require('../../models/CF/registraNF')
-const transfereNF       = require('../../models/CF/transfereNF')
-const chegadaNF         = require('../../models/CF/chegadaNF')
-const rotaEntrega       = require('../../models/CF/rotaEntrega')
-const entregaNF         = require('../../models/CF/entregaNF')
-const ocorrencias       = require('../../models/CF/ocorrencias')
-const comprovante       = require('../../models/CF/comprovante')
-const logEventos        = require('../../helpers/logEventos')
+// 02/09/2021 09:34 - Versão Sênior - By: Jurandir Ferreira
+
+const moment                = require('moment')
+const initNFs               = require('../../metodsDB/CF/initNFs')                 // 30/08/2021 10:03
+const initTransporte        = require('../../metodsDB/CF/initTransporte')
+const initTransferencia     = require('../../metodsDB/CF/initTransferencia')
+const initChegada           = require('../../metodsDB/CF/initChegada')
+const initEntregaProgramada = require('../../metodsDB/CF/initEntregaProgramada')
+const initEmRota            = require('../../metodsDB/CF/initEmRota')
+const initEntrega           = require('../../metodsDB/CF/initEntrega')
+const initOcorrencias       = require('../../metodsDB/CF/initOcorrencias')
+const initComprovante       = require('../../metodsDB/CF/initComprovante')
+const encerraProcessos      = require('../../metodsDB/CF/encerraProcessos')
+const registraNF            = require('../../models/CF/registraNF')
+const transfereNF           = require('../../models/CF/transfereNF')
+const chegadaNF             = require('../../models/CF/chegadaNF')
+const rotaEntrega           = require('../../models/CF/rotaEntrega')
+const entregaNF             = require('../../models/CF/entregaNF')
+const ocorrencias           = require('../../models/CF/ocorrencias')
+const comprovante           = require('../../models/CF/comprovante')
+const logEventos            = require('../../helpers/logEventos')
 
 const preparaLinkComprovante = require('../../helpers/preparaLinkComprovante')
-
 
 const robot = async (cli,cfg,uptime) =>{
    let timeOUT = Math.ceil((process.uptime()-2) - uptime)
@@ -45,7 +44,9 @@ const robot = async (cli,cfg,uptime) =>{
     await ocorrencias_manuais()
     await transferencia_entre_filiais()
     await chegada_filial_destino()
+    await entrega_programada()
     await em_rota_entrega()
+    await confirmacao_entrega()
 
     /*
     
@@ -55,38 +56,23 @@ const robot = async (cli,cfg,uptime) =>{
     }
     */
 
-
-
     // let ret_ocorrencias = await ocorrencias_manuais()
 
    // if(ret_ocorrencias.retInitOcorrencias.rowsAffected>0) {
    //     return 
    // }
-
-
     
-    // await em_rota_entrega()
-
-
-
     /*
 
-
-
-    await confirmacao_entrega()
     await comprovante_entrega_BD()
     await comprovante_entrega_FILE()
     await API_comprovante_entrega()
     await encerra_processo()
 
-
     */
-
 
     let time_final = process.uptime()
     let time_total = Math.ceil(time_final-time_inicio)
-
-
  
     console.log('Fim - Exec - Robô.',time_total,'s')
 
@@ -121,6 +107,26 @@ const robot = async (cli,cfg,uptime) =>{
        return { retInitOcorrencias, retOcorrencias }
     }   
 
+    // ENTREGA PROGRAMADA
+    async function entrega_programada() {
+      let retInitEntregaProgamada = await initEntregaProgramada()
+      logEventos(cfg,'(BD - ENTREGA PROGRAMADA) - retInitEntregaProgamada:',retInitEntregaProgamada)
+
+      // let retEntregaProgramada = await entregaProgramada(cfg,cli)
+      // logEventos(cfg,'(API - EM ROTA DE ENTREGA) - retRotaEntrega:',retEntregaProgramada)
+      // return { retInitEntregaProgamada, retEntregaProgramada }
+    }
+
+    // EM ROTA PARA ENTREGA
+    async function em_rota_entrega() {
+      let retInitEmRota = await initEmRota()
+      logEventos(cfg,'(BD - EM ROTA PARA ENTREGA) - retInitEmRota:',retInitEmRota)
+
+      // let retRotaEntrega = await rotaEntrega(cfg,cli)
+      // logEventos(cfg,'(API - EM ROTA DE ENTREGA) - retRotaEntrega:',retRotaEntrega)
+      // return { retInitEmRota, retRotaEntrega }
+    }
+
     return
 
     async function api_registra_NFs() {
@@ -148,25 +154,15 @@ const robot = async (cli,cfg,uptime) =>{
       logEventos(cfg,'(API - CHEGADA NA FILIAL) - retChegadaNF:',retChegadaNF.message)
       return { retInitChegada, retChegadaNF }
     }
-
-    // EM ROTA PARA ENTREGA
-    async function em_rota_entrega() {
-      let retInitEmRota = await initEmRota()
-      logEventos(cfg,'(BD - EM ROTA PARA ENTREGA) - retInitEmRota:',retInitEmRota)
-
-      let retRotaEntrega = await rotaEntrega(cfg,cli)
-      logEventos(cfg,'(API - EM ROTA DE ENTREGA) - retRotaEntrega:',retRotaEntrega)
-      return { retInitEmRota, retRotaEntrega }
-    }
     
     // ENTREGA REALIZADA NORMALMENTE
     async function confirmacao_entrega() {
       let retInitEntrega = await initEntrega()
       logEventos(cfg,'(BD - ENTREGA REALIZADA NORMALMENTE) - retInitEntrega:',retInitEntrega)
 
-      let retEntregaNF = await entregaNF(cfg,cli)
-      logEventos(cfg,'(API - REGISTRO DE ENTREGA) - retEntregaNF:',retEntregaNF.message)
-      return { retInitEntrega, retEntregaNF }
+      //let retEntregaNF = await entregaNF(cfg,cli)
+      //logEventos(cfg,'(API - REGISTRO DE ENTREGA) - retEntregaNF:',retEntregaNF.message)
+      //return { retInitEntrega, retEntregaNF }
     }
 
     // COMPROVANTE DE ENTREGA

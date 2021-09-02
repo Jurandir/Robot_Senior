@@ -1,5 +1,6 @@
 -- 31/08/2021 14:25 - EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS
 SET XACT_ABORT ON
+
 BEGIN 
     UPDATE CF
     SET DT_EMBARQUE = CAST(CONCAT(FORMAT(MOV.DtMovimento,'yyyy-MM-dd'),' ', FORMAT(MOV.hrMovimento,'HH:mm:ss')) as datetime),
@@ -27,9 +28,12 @@ BEGIN TRY
         ;
 
         UPDATE CO
-           SET OCORRENCIA_OBS = 'EM TRÂNSITO ENTRE FILIAIS' 
+           SET OCORRENCIA_OBS = CONCAT('EM TRÂNSITO ENTRE FILIAIS: ',ORIG.dsApelido,'/',DEST.dsApelido) 
           FROM SIC.dbo.CONFIRMAFACILOCORRENCIA CO
-          JOIN SIC.dbo.CONFIRMAFACILDEPARA DP ON DP.ID_SENIOR = 101 -- Codigo no Sênior
+          JOIN SIC.dbo.CONFIRMAFACILDEPARA     DP ON DP.ID_SENIOR   = 101 -- Codigo no Sênior
+          JOIN softran_termaco.dbo.gtcconhe   CNH ON CNH.CdEmpresa  = CO.CdEmpresa AND CNH.NrSeqControle = CO.NrSeqControle
+          JOIN softran_termaco.dbo.sisempre  ORIG ON ORIG.CdEmpresa = CNH.CdEmpresa        -- Filial Origem
+          JOIN softran_termaco.dbo.sisempre  DEST ON DEST.CdEmpresa = CNH.CdEmpresaDestino -- Filial Destino
          WHERE CO.OCORRENCIA_OBS IS NULL 
            AND CO.OCORRENCIA_ID = DP.ID_CONFIRMAFACIL
         ;        
