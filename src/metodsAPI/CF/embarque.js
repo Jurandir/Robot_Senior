@@ -6,13 +6,17 @@ const embarque = async (cfg,cli,body) => {
     let endpoint = ''
     let server   = cfg.embarqueURL
     if(cfg.run=='Test') {
-       server  = 'http://localhost:5000/test/showTest' 
+       server  = 'http://localhost:4999/test/embarque' 
     } 
     let params   = body
     let token    = cli.login.resposta.token
     
     let ret  = await loadAPI(method,endpoint,server,params,token)
     let base = ret
+    
+    if(!ret.success) {
+        console.log('FALHA (embarque.js) RET:',ret)
+    }    
 
     try {
           base = ret.data

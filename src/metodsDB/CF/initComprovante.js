@@ -1,3 +1,4 @@
+// 02/09/2021 15:44 - COMPROVANTE DE ENTREGA
 const sqlExec       = require('../../connection/sqlExSENIOR')
 
 const fs                 = require('fs')

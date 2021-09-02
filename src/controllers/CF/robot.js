@@ -37,20 +37,23 @@ const robot = async (cli,cfg,uptime) =>{
     cli.count--
 
     let retInitNFs = await captura_nfs() 
-
-    // console.log('retInitNFs:',retInitNFs)
-    
+   
     await transporte_iniciado()
+    await api_registra_NFs()
+    
     await ocorrencias_manuais()
+
     await transferencia_entre_filiais()
-    await chegada_filial_destino()
-    await entrega_programada()
-    await em_rota_entrega()
-    await confirmacao_entrega()
+
+    //await chegada_filial_destino()
+    //await entrega_programada()
+    //await em_rota_entrega()
+    //await confirmacao_entrega()
+    //await comprovante_entrega_BD()
 
     /*
     
-    await api_registra_NFs()
+    
     if(retInitNFs.rowsAffected>0) {
        return 
     }
@@ -64,7 +67,7 @@ const robot = async (cli,cfg,uptime) =>{
     
     /*
 
-    await comprovante_entrega_BD()
+    
     await comprovante_entrega_FILE()
     await API_comprovante_entrega()
     await encerra_processo()
@@ -167,7 +170,11 @@ const robot = async (cli,cfg,uptime) =>{
 
     // COMPROVANTE DE ENTREGA
     async function comprovante_entrega_BD() {
+
+      console.log('comprovante_entrega_BD')
       let retInitComprovante = await initComprovante(cfg,cli)
+      console.log('comprovante_entrega_BD',retInitComprovante)
+
       logEventos(cfg,'(BD - COMPROVANTE) - retInitComprovante:',retInitComprovante)
       return retInitComprovante
     }

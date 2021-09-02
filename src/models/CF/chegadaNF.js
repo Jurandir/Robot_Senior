@@ -3,7 +3,7 @@ const fs             = require('fs')
 const path           = require('path')
 const sqlFileName    =  path.join(__dirname, '../../sql/CF/consultas/chegada_na_cidade_ou_filial_destino.SQL')
 const sql            = fs.readFileSync(sqlFileName, "utf8")
-const enviaDadosAPI  = require('../../helpers/enviaDadosAPI')
+const enviaDadosAPI  = require('../../helpers/enviaDadosAPI_CF')
 
 const base = () => {
     return {
