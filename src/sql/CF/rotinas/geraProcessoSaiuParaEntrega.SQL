@@ -1,4 +1,5 @@
 -- 01/09/2021 13:56 - EM ROTA PARA ENTREGA
+
 BEGIN TRY
     BEGIN TRANSACTION
 
@@ -20,7 +21,7 @@ BEGIN TRY
     BEGIN
         UPDATE CO
            SET OCORRENCIA_OBS =  
-                              (SELECT TOP 1 CONCAT('A CAMINHO, DESTINATÁRIO EM : ',n.DsLocal,' / ',n.DsUF)
+                              (SELECT TOP 1 CONCAT('A CAMINHO DO DESTINATÁRIO EM : ',n.DsLocal,' / ',n.DsUF)
                                  FROM softran_termaco.dbo.GTCConhe a
                             LEFT JOIN softran_termaco.dbo.siscep   n ON n.nrcep = a.nrcepentrega  -- CEP Local Entrega
                                 WHERE a.CdEmpresa = CO.CdEmpresa 
@@ -31,7 +32,6 @@ BEGIN TRY
          AND CO.OCORRENCIA_ID = DP.ID_CONFIRMAFACIL
     END
     ;
-
 
     COMMIT TRANSACTION
 

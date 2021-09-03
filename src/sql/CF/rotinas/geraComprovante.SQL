@@ -6,12 +6,14 @@ BEGIN TRY
 
         ;
         INSERT INTO SIC.dbo.CONFIRMAFACILOCORRENCIA
-          ( CONFIRMAFACIL_ID, OCORRENCIA_ID, OCORRENCIA_NOME, OCORRENCIA_DATA )
+          ( CONFIRMAFACIL_ID, OCORRENCIA_ID, OCORRENCIA_NOME, OCORRENCIA_DATA , CdEmpresa, NrSeqControle )
         SELECT
-          CF.ID                             AS CONFIRMAFACIL_ID,
-          999                               AS OCORRENCIA_ID,
-          'COMPROVANTE DE ENTREGA'          AS OCORRENCIA_NOME,
-          CO.OCORRENCIA_DATA                AS OCORRENCIA_DATA
+           CF.ID                             AS CONFIRMAFACIL_ID
+          ,999                               AS OCORRENCIA_ID
+          ,'COMPROVANTE DE ENTREGA'          AS OCORRENCIA_NOME
+          ,CO.OCORRENCIA_DATA                AS OCORRENCIA_DATA
+          ,CF.CdEmpresa
+          ,CF.NrSeqControle
         FROM SIC.dbo.CONFIRMAFACIL CF
 		    JOIN SIC.dbo.CONFIRMAFACILOCORRENCIA CO ON CO.CONFIRMAFACIL_ID = CF.ID AND CO.OCORRENCIA_ID = 1 AND CO.FLAG_SEND = 1
         WHERE FASE_ID = 5

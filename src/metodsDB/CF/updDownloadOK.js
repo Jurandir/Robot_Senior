@@ -11,7 +11,7 @@ const updDownload = async (par_ctrc) => {
 
         let result = await sqlExec(sql)         
         if( result.success ) {
-            console.log(moment().format(),'- SUCCESS - PREPARAÇÃO DOWNLOAD',par_ctrc )
+            console.log(moment().format(),'- SUCCESS - PREPARAÇÃO DOWNLOAD PARA CTRC:',par_ctrc )
         } else {
             console.log(moment().format(),'- FALHA UPD FLAG - PREPARAÇÃO:',par_ctrc,'-',result.message )
         }

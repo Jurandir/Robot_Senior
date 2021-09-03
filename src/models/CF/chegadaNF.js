@@ -1,4 +1,5 @@
-// 30/08/2021 16:01
+// 30/08/2021 16:01 - CHEGADA NA CIDADE OU FILIAL DE DESTINO
+
 const fs             = require('fs')
 const path           = require('path')
 const sqlFileName    =  path.join(__dirname, '../../sql/CF/consultas/chegada_na_cidade_ou_filial_destino.SQL')

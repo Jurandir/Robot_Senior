@@ -14,6 +14,7 @@ const encerraProcessos      = require('../../metodsDB/CF/encerraProcessos')
 const registraNF            = require('../../models/CF/registraNF')
 const transfereNF           = require('../../models/CF/transfereNF')
 const chegadaNF             = require('../../models/CF/chegadaNF')
+const entregaProgramada     = require('../../models/CF/entregaProgramada')
 const rotaEntrega           = require('../../models/CF/rotaEntrega')
 const entregaNF             = require('../../models/CF/entregaNF')
 const ocorrencias           = require('../../models/CF/ocorrencias')
@@ -40,16 +41,21 @@ const robot = async (cli,cfg,uptime) =>{
    
     await transporte_iniciado()
     await api_registra_NFs()
-    
     await ocorrencias_manuais()
-
     await transferencia_entre_filiais()
+    await chegada_filial_destino()
+    await entrega_programada()
+    await em_rota_entrega()
+    await confirmacao_entrega()
+    await comprovante_entrega_BD()
 
-    //await chegada_filial_destino()
-    //await entrega_programada()
-    //await em_rota_entrega()
-    //await confirmacao_entrega()
-    //await comprovante_entrega_BD()
+    await comprovante_entrega_FILE()
+
+    await API_comprovante_entrega()    ////// <------- 03/09/2021 17:36 INICIO
+
+//    await encerra_processo()
+
+
 
     /*
     
@@ -68,9 +74,6 @@ const robot = async (cli,cfg,uptime) =>{
     /*
 
     
-    await comprovante_entrega_FILE()
-    await API_comprovante_entrega()
-    await encerra_processo()
 
     */
 
@@ -115,9 +118,9 @@ const robot = async (cli,cfg,uptime) =>{
       let retInitEntregaProgamada = await initEntregaProgramada()
       logEventos(cfg,'(BD - ENTREGA PROGRAMADA) - retInitEntregaProgamada:',retInitEntregaProgamada)
 
-      // let retEntregaProgramada = await entregaProgramada(cfg,cli)
-      // logEventos(cfg,'(API - EM ROTA DE ENTREGA) - retRotaEntrega:',retEntregaProgramada)
-      // return { retInitEntregaProgamada, retEntregaProgramada }
+      let retEntregaProgramada = await entregaProgramada(cfg,cli)
+      logEventos(cfg,'(API - ENTREGA PROGRAMADA) - retEntregaProgramada:',retEntregaProgramada)
+      return { retInitEntregaProgamada, retEntregaProgramada }
     }
 
     // EM ROTA PARA ENTREGA
@@ -125,9 +128,9 @@ const robot = async (cli,cfg,uptime) =>{
       let retInitEmRota = await initEmRota()
       logEventos(cfg,'(BD - EM ROTA PARA ENTREGA) - retInitEmRota:',retInitEmRota)
 
-      // let retRotaEntrega = await rotaEntrega(cfg,cli)
-      // logEventos(cfg,'(API - EM ROTA DE ENTREGA) - retRotaEntrega:',retRotaEntrega)
-      // return { retInitEmRota, retRotaEntrega }
+      let retRotaEntrega = await rotaEntrega(cfg,cli)
+      logEventos(cfg,'(API - EM ROTA DE ENTREGA) - retRotaEntrega:',retRotaEntrega)
+      return { retInitEmRota, retRotaEntrega }
     }
 
     return
@@ -163,26 +166,22 @@ const robot = async (cli,cfg,uptime) =>{
       let retInitEntrega = await initEntrega()
       logEventos(cfg,'(BD - ENTREGA REALIZADA NORMALMENTE) - retInitEntrega:',retInitEntrega)
 
-      //let retEntregaNF = await entregaNF(cfg,cli)
-      //logEventos(cfg,'(API - REGISTRO DE ENTREGA) - retEntregaNF:',retEntregaNF.message)
-      //return { retInitEntrega, retEntregaNF }
+      let retEntregaNF = await entregaNF(cfg,cli)
+      logEventos(cfg,'(API - REGISTRO DE ENTREGA) - retEntregaNF:',retEntregaNF.message)
+      return { retInitEntrega, retEntregaNF }
     }
 
     // COMPROVANTE DE ENTREGA
     async function comprovante_entrega_BD() {
-
-      console.log('comprovante_entrega_BD')
       let retInitComprovante = await initComprovante(cfg,cli)
-      console.log('comprovante_entrega_BD',retInitComprovante)
-
       logEventos(cfg,'(BD - COMPROVANTE) - retInitComprovante:',retInitComprovante)
       return retInitComprovante
     }
   
-    // AVISA A API PARA DOWNLOAD DO COMPROVANTE
+    // AVISA A API PARA DOWNLOAD DO COMPROVANTE - PREPARA API LOCAL
     async function comprovante_entrega_FILE() {
       let retInitPreparaDownload = await preparaLinkComprovante(cfg)
-      logEventos(cfg,'(FILE - COMPROVANTE) - retInitPreparaDownload:',retInitPreparaDownload)
+      logEventos(cfg,'(FILE - COMPROVANTE - PREPARA API LOCAL) - retInitPreparaDownload:',retInitPreparaDownload)
       return retInitPreparaDownload
     }
 
