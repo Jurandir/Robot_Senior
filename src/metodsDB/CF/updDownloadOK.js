@@ -1,13 +1,15 @@
 const moment  = require('moment')
 const sqlExec = require('../../connection/sqlExSENIOR')
 
-const updDownload = async (par_ctrc) => {
+const updDownload = async (par_ctrc,data) => {
     let flag = 1
-
-    let sql = `UPDATE SIC.dbo.CONFIRMAFACIL 
-                SET FLAG_COMPROVANTE  = ${flag}
-                WHERE CTRC = '${par_ctrc}'`
     try {
+        let jComprovantes = JSON.stringify( data.map(i=>i.url) )
+
+        let sql = `UPDATE SIC.dbo.CONFIRMAFACIL 
+                    SET FLAG_COMPROVANTE  = ${flag},
+                        JSON_COMPROVANTE  = '${jComprovantes}'
+                    WHERE CTRC = '${par_ctrc}'`
 
         let result = await sqlExec(sql)         
         if( result.success ) {

@@ -1,7 +1,7 @@
 -- 03/09/2021 17:37 - COMPROVANTE DE ENTREGA
 
 SELECT TOP 10
-	CO.ID                                        AS FLAG_ID
+	 CO.ID                                        AS FLAG_ID
 	,CF.NUMERO                                    AS embarque_numero
 	,CF.SERIE                                     AS embarque_serie
 	,CF.CHAVE                                     AS embarque_chave
@@ -13,8 +13,8 @@ SELECT TOP 10
 	,FORMAT(CO.OCORRENCIA_DATA,'dd-MM-yyyy')      AS ocorrencia_dtOcorrencia
 	,FORMAT(CO.OCORRENCIA_DATA,'HH:mm:ss')        AS ocorrencia_hrOcorrencia       
     ,CONCAT('ENTREGUE EM ',FORMAT(CF.DT_ENTREGA,'dd-MM-yyyy'),' / ',ISNULL(CO.RECEBEDOR_NOME,'CONFORME COMPROVANTE.' ))
-                                                 AS ocorrencia_comentario
-	,CONCAT('${server}/Img_',CF.CTRC,'.png')     AS ocorrencia_fotos
+                                                  AS ocorrencia_comentario
+	,JSON_COMPROVANTE                             AS ocorrencia_fotos
 FROM SIC.dbo.CONFIRMAFACILOCORRENCIA CO
 JOIN SIC.dbo.CONFIRMAFACIL           CF ON CF.ID           = CO.CONFIRMAFACIL_ID
 WHERE CO.FLAG_SEND     = 0

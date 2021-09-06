@@ -1,4 +1,4 @@
-// 30/08/2021 15:00
+// 30/08/2021 15:00 - PROCESSO DE TRANSPORTE INICIADO
 const sqlExec       = require('../../connection/sqlExSENIOR')
 
 const fs                 = require('fs')

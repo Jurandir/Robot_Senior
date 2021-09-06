@@ -37,45 +37,20 @@ const robot = async (cli,cfg,uptime) =>{
     }
     cli.count--
 
-    let retInitNFs = await captura_nfs() 
-   
-    await transporte_iniciado()
-    await api_registra_NFs()
-    await ocorrencias_manuais()
-    await transferencia_entre_filiais()
-    await chegada_filial_destino()
-    await entrega_programada()
-    await em_rota_entrega()
-    await confirmacao_entrega()
-    await comprovante_entrega_BD()
-
-    await comprovante_entrega_FILE()
-
-    await API_comprovante_entrega()    ////// <------- 03/09/2021 17:36 INICIO
-
-//    await encerra_processo()
-
-
-
-    /*
-    
-    
-    if(retInitNFs.rowsAffected>0) {
-       return 
-    }
-    */
-
-    // let ret_ocorrencias = await ocorrencias_manuais()
-
-   // if(ret_ocorrencias.retInitOcorrencias.rowsAffected>0) {
-   //     return 
-   // }
-    
-    /*
-
-    
-
-    */
+    await captura_nfs()                   // XXX - INICIA PROCESSO DE MONITORAMENTO (BD)
+    await transporte_iniciado()           // 000 - PROCESSO DE TRANSPORTE INICIADO (BD)
+    await api_registra_NFs()              // 000 - PROCESSO DE TRANSPORTE INICIADO (API)
+    await ocorrencias_manuais()           // XXX - OCORRENCIAS MANUAIS (BD) 
+    await transferencia_entre_filiais()   // 101 - EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS (BD,API)
+    await chegada_filial_destino()        // 098 - CHEGADA NA CIDADE OU FILIAL DE DESTINO (BD,API)
+    await entrega_programada()            // 091 - ENTREGA PROGRAMADA (BD,API)
+    await em_rota_entrega()               // 100 - EM ROTA PARA ENTREGA (BD,API)
+    await confirmacao_entrega()           // 001 - ENTREGA REALIZADA NORMALMENTE (BD,API)
+    await comprovante_entrega_BD()        // 999 - COMPROVANTE DE ENTREGA (BD)
+    await comprovante_entrega_FILE()      // 999 - COMPROVANTE DE ENTREGA (FILE,API LOCAL)
+    await API_comprovante_entrega()       // 999 - COMPROVANTE DE ENTREGA (API)
+    await API_ocorrencias_manuais()       // XXX - OCORRENCIAS MANUAIS (API)
+    await encerra_processo()              // XXX - ENCERRA PROCESSO DE MONITORAMENTO (BD)
 
     let time_final = process.uptime()
     let time_total = Math.ceil(time_final-time_inicio)
@@ -91,8 +66,6 @@ const robot = async (cli,cfg,uptime) =>{
        return retInitNFs
     }
 
-    
-
     // PROCESSO DE TRANSPORTE INICIADO
     async function transporte_iniciado() {
       let retInitTransporte = await initTransporte()
@@ -100,17 +73,19 @@ const robot = async (cli,cfg,uptime) =>{
       return retInitTransporte
     }
 
-    // OCORRENCIAS MANUAIS
+    // OCORRENCIAS MANUAIS BD
     async function ocorrencias_manuais() {
-      let retInitOcorrencias
-      let retOcorrencias
-
-       retInitOcorrencias = await initOcorrencias()
+       let retInitOcorrencias = await initOcorrencias()
        logEventos(cfg,'(BD - OCORRENCIAS MANUAIS) - retInitOcorrencias:',retInitOcorrencias)
 
-      // retOcorrencias = await ocorrencias(cfg,cli)
-      // logEventos(cfg,'(API - OCORRÊNCIAS MANUAIS) - retOcorrencias:',retOcorrencias)
-       return { retInitOcorrencias, retOcorrencias }
+       return { retInitOcorrencias }
+    }   
+
+    // OCORRENCIAS MANUAIS API
+    async function API_ocorrencias_manuais() {
+       let retOcorrencias = await ocorrencias(cfg,cli)
+       logEventos(cfg,'(API - OCORRÊNCIAS MANUAIS) - retOcorrencias:',retOcorrencias)
+       return { retOcorrencias }
     }   
 
     // ENTREGA PROGRAMADA
@@ -132,8 +107,6 @@ const robot = async (cli,cfg,uptime) =>{
       logEventos(cfg,'(API - EM ROTA DE ENTREGA) - retRotaEntrega:',retRotaEntrega)
       return { retInitEmRota, retRotaEntrega }
     }
-
-    return
 
     async function api_registra_NFs() {
       let retRegistraNF = await registraNF(cfg,cli)
@@ -185,13 +158,14 @@ const robot = async (cli,cfg,uptime) =>{
       return retInitPreparaDownload
     }
 
+    // ENVIA LINKS DOS COMPROVANTES DE ENTREGA
     async function API_comprovante_entrega() {
       let retComprovante = await comprovante(cfg,cli)
       logEventos(cfg,'(API - COMPROVANTE) - retComprovante:',retComprovante.message)
       return retComprovante
     }
 
-    // ENCERRA PROCESSOS
+    // ENCERRA PROCESSOS DE MONITORAMENTO
     async function encerra_processo() {
       let retEncerraProcessos = await encerraProcessos()
       logEventos(cfg,'(BD - ENCERRA PROCESSOS) - retEncerraProcessos:',retEncerraProcessos)

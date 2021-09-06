@@ -1,3 +1,5 @@
+// 06/09/2021 09:50 - EM ROTA PARA ENTREGA
+
 const sqlExec       = require('../../connection/sqlExSENIOR')
 
 const fs                   = require('fs')

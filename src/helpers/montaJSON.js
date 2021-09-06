@@ -9,7 +9,7 @@ const montaJSON = async (lista,base) => {
 
         if(campo=='ocorrencia_fotos') {
             chaves=0
-            dados[chave[0]][chave[1]] = [valor]
+            dados[chave[0]][chave[1]] = JSON.parse(valor)
         }
 
         if(chaves==1) { dados[chave[0]] = valor }

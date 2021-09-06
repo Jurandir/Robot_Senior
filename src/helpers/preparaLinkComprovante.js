@@ -32,7 +32,7 @@ const preparaLinkComprovante = async (cfg) => {
                     if(api.success){
 
                         resposta  = { success: true, message: 'Sucesso na solicitação !!!',  rowsAffected: api.rows }
-                        await updDownload( itn.CTRC )
+                        await updDownload( itn.CTRC, resp.data )
                         logEventos(cfg,`SUCCESS LINK :${api.message} - ${api.url}`,resp.data)
                     } else {
                         resposta  = { success: false, message: 'Solicitação sem sucesso !!!',  rowsAffected: 0 }

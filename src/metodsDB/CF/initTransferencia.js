@@ -1,3 +1,5 @@
+// 06/09/2021 09:38 - EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS
+
 const sqlExec       = require('../../connection/sqlExSENIOR')
 
 const fs                   = require('fs')
