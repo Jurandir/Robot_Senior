@@ -107,7 +107,8 @@ const robot = async (cli,cfg,uptime) =>{
       logEventos(cfg,'(API - EM ROTA DE ENTREGA) - retRotaEntrega:',retRotaEntrega)
       return { retInitEmRota, retRotaEntrega }
     }
-
+    
+    // REGISTRA INICIO NA API
     async function api_registra_NFs() {
       let retRegistraNF = await registraNF(cfg,cli)
       logEventos(cfg,'(API - REGISTRO NF) - retRegistraNF:',retRegistraNF.message)

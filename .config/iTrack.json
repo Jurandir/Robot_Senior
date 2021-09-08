@@ -1,0 +1,12 @@
+{
+    "run": "Test",
+    "versao": "1.0",
+    "time": 30000,
+    "validade": 5400000,
+    "testeURL": "http://beta.martinlabs.com.br/iTrackServer-1.0-SNAPSHOT/ws",
+    "producaoURL": "https://integracao.itrackbrasil.com.br/ws",
+    "comprovanteURL": "http://201.49.34.12:5000/downloads/images",
+    "debug": "OFF",
+    "user": "11552312000710",
+    "pwd": "TERMACO789"
+}

@@ -2,10 +2,10 @@
   "name": "robot_senior",
   "version": "1.0.0",
   "description": "Robôs CF,ORION,iTrack",
-  "main": "ConfirmaFacil.js",
+  "main": "iTrack.js",
   "scripts": {
-    "run": "node ConfirmaFacil.js",
-    "start": "npx nodemon --inspect=9231 ConfirmaFacil.js"    
+    "run": "node iTrack.js",
+    "start": "npx nodemon --inspect=9231 iTrack.js"    
   },
   "repository": {
     "type": "git",
