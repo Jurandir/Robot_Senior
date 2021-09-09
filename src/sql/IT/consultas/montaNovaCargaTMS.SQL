@@ -71,7 +71,7 @@ LEFT JOIN softran_termaco.dbo.CCEColet o  ON o.CdEmpresa          = a.CdEmpresa 
 LEFT JOIN softran_termaco.dbo.GTCSITCG p  ON p.CdSituacaoCarga    = a.CdSituacaoCarga  -- Situação Atual da Carga
      JOIN SIC.dbo.ITRACK_TOKEN     TOKEN  ON TOKEN.CNPJ           = aa.NrCGCCPF
 WHERE 1=1
-	-- AND b.nrnotafiscal=1517772 -- NUMERO NF
-	AND a.nrdoctofiscal = 4183    -- CTRC / Conhecimento
-  --  AND NFR1.CHAVENFE = '${danfe}'
+     AND a.CdEmpresa        = ${CdEmpresa}
+	 AND a.NrSeqControle    = ${NrSeqControle}
+     AND c.NrChaveAcessoNFe = '${danfe}'
   

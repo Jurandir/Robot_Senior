@@ -1,32 +1,31 @@
-// 08/09/2021 14:47 - REGISTRA INCIO DE ACOMPANHAMENTO NA API
+// 08/09/2021 18:34 - REGISTRA INCIO DE ACOMPANHAMENTO NA API
 
-const fs             = require('fs')
-const path           = require('path')
-const sqlFileName    = path.join(__dirname, '../../sql/IT/consultas/processo_de_transporte_iniciado.SQL')
-const sql            = fs.readFileSync(sqlFileName, "utf8")
-const enviaDadosAPI  = require('../../helpers/enviaDadosAPI_CF')
+const fs                   = require('fs')
+const path                 = require('path')
+const sqlFileName          = path.join(__dirname, '../../sql/IT/consultas/processo_de_transporte_iniciado.SQL')
+const sql                  = fs.readFileSync(sqlFileName, "utf8")
+const enviaOcorrencias     = require('../../metodsAPI/IT/enviaOcorrencias')
+const sqlQuery             = require('../../connection/sqlSENIOR')
+const dataSetToJson        = require('../../helpers/dataSetToJson')
+const grava_MsgApiResponse = require('../../metodsDB/IT/grava_MsgApiResponse')
 
-const base = () => {
-    return {
-      "embarque": { },
-      "embarcador": { },
-      "destinatario": { "endereco": { } },
-      "transportadora": { },
-      "pedido": { },
-      "ocorrencia": { },
+const registraNF = async () => {
+
+  let ret = []
+  let oco  = await sqlQuery(sql)
+  let bodys = dataSetToJson(oco)
+
+  for await (let body of bodys ){
+    console.log(body)
+    let env = await enviaOcorrencias(body)
+    if(env.success){
+      grava_MsgApiResponse( env.data, body.content.idTrackingCliente )
+      ret.push(env)
     }
-}
+  }
 
-const registraNF = async (cfg,cli) => {
-    let ret = await enviaDadosAPI(cfg,cli,base,sql)
-    
-    if(!ret.success) {
-       if(ret.rowsAffected == -1 ) {
-          console.log('FALHA (registraNF.js) RET:',ret)    
-       }   
-    }   
+  return ret
 
-    return ret
 }
 
 module.exports = registraNF

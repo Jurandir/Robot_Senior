@@ -12,10 +12,10 @@ const get_IdCargaPK = async (danfe,token) => {
         danfe: danfe,
     }
 
-    let temp = 'https://integracao.itrackbrasil.com.br/ws'
-  
-//    return await loadAPI(method,endpoint,server,params)
-    return await loadAPI(method,endpoint,temp,params)
+    return await loadAPI(method,endpoint,server,params)
+
+//   let temp = 'https://integracao.itrackbrasil.com.br/ws' 
+//   return await loadAPI(method,endpoint,temp,params)
 
 }
 

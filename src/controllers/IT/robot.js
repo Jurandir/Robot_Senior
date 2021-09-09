@@ -42,7 +42,7 @@ const robot = async (cli,cfg,uptime) =>{
    cli.count--   
 
    await captura_nfs()                   // XXX - INICIA PROCESSO DE MONITORAMENTO (BD CLIENTES ITRACK)
-   await valida_idCargaPK()              // XXX - PESQUISA NA API ITRACK O "IDCARGAPK" OU REGISTRA NOVA CARGA
+   await valida_idCargaPK(cfg)           // XXX - PESQUISA NA API ITRACK O "IDCARGAPK" OU REGISTRA NOVA CARGA
    await transporte_iniciado()           // 000 - PROCESSO DE TRANSPORTE INICIADO (BD)
    await api_registra_NFs()              // 000 - PROCESSO DE TRANSPORTE INICIADO (API)
 
@@ -71,7 +71,7 @@ const robot = async (cli,cfg,uptime) =>{
     // REGISTRA INICIO NA API
     async function api_registra_NFs() {
         let retRegistraNF = await registraNF(cfg,cli)
-        logEventos(cfg,'(API - REGISTRO NF) - retRegistraNF:',retRegistraNF.message)
+        logEventos(cfg,'(API - REGISTRO NF) - Robô -> API iTrack:',retRegistraNF.message)
         return retRegistraNF
       }
   
