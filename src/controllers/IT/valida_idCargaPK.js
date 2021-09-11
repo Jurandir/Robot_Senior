@@ -7,9 +7,9 @@ const insertNewCarga  = require('../../metodsAPI/IT/insertNewCarga')
 
 const logEventos      = require('../../helpers/logEventos')
 
-const valida_idCargaPK = async (cfg) => {      ////   TESTE (TOP 1)
+const valida_idCargaPK = async (cfg) => {                                                ////   TESTE (TOP 20)
     let sql = `
-    SELECT TOP 1 DF.* ,TK.TOKEN
+    SELECT TOP 20 DF.* ,TK.TOKEN
 	,(SELECT TOP 1 1 FROM SIC.dbo.ITRACK_CLIENTE CL 
 	  WHERE (CL.RAIZ_CNPJ=SUBSTRING(DF.EMBARCADOR,1,8) 
 	     OR CL.RAIZ_CNPJ=SUBSTRING(DF.DESTINATARIO,1,8)
@@ -45,7 +45,13 @@ const valida_idCargaPK = async (cfg) => {      ////   TESTE (TOP 1)
                     api.data.data.rowsAffected = -1
                     logEventos(cfg,`Falha na validação : "${itn.CHAVE}", (${itn.CdEmpresa},${itn.NrSeqControle})`,api.data.data)
 
-                    console.log('itn.FLAG_ADDCARGA:',itn.FLAG_ADDCARGA)
+                    console.log('>>> FLAG_ADDCARGA:',itn.FLAG_ADDCARGA)
+
+
+                    //================================================ PARA TESTES (INCLUIR CARGA)
+                    itn.FLAG_ADDCARGA = 1
+                    //============================================================================
+
 
                     if(itn.FLAG_ADDCARGA) {
                         params = {

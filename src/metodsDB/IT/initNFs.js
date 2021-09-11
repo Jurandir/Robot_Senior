@@ -7,8 +7,8 @@ const path          = require('path')
 const sqlFileName   =  path.join(__dirname, '../../sql/IT/consultas/montaITRACK.SQL')
 const sqlInitNF     = fs.readFileSync(sqlFileName, "utf8")
 
-const faixa_down = '-15'
-const faixa_up   = '+01'
+const faixa_down = '-70'
+const faixa_up   = '-40'
 
 let flag_livre      = true
 

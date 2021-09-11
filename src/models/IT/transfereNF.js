@@ -1,15 +1,15 @@
-// 08/09/2021 18:34 - REGISTRA INCIO DE ACOMPANHAMENTO NA API - SÊNIOR - ITRACK
+// 10/09/2021 15:39 - TRANSFERENCIA ENTRE FILIAIS - SÊNIOR - ITRACK
 
 const fs                   = require('fs')
 const path                 = require('path')
-const sqlFileName          = path.join(__dirname, '../../sql/IT/consultas/processo_de_transporte_iniciado.SQL')
+const sqlFileName          =  path.join(__dirname, '../../sql/IT/consultas/processo_de_transferencia_entre_filiais.SQL')
 const sql                  = fs.readFileSync(sqlFileName, "utf8")
 const enviaOcorrencias     = require('../../metodsAPI/IT/enviaOcorrencias')
 const sqlQuery             = require('../../connection/sqlSENIOR')
 const dataSetToJson        = require('../../helpers/dataSetToJson')
 const grava_MsgApiResponse = require('../../metodsDB/IT/grava_MsgApiResponse')
 
-const registraNF = async () => {
+const transfereNF = async () => {
   let ret = []
   try {
       let oco  = await sqlQuery(sql)
@@ -32,4 +32,4 @@ const registraNF = async () => {
   }
 }
 
-module.exports = registraNF
+module.exports = transfereNF

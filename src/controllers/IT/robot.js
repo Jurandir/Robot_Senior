@@ -8,23 +8,23 @@ const initNFs               = require('../../metodsDB/IT/initNFs')
 const valida_idCargaPK      = require('./valida_idCargaPK')      
 const initTransporte        = require('../../metodsDB/IT/initTransporte')
 const registraNF            = require('../../models/IT/registraNF')
+const initOcorrencias       = require('../../metodsDB/IT/initOcorrencias')
+const initTransferencia     = require('../../metodsDB/IT/initTransferencia')
+const transfereNF           = require('../../models/IT/transfereNF')
+const initChegada           = require('../../metodsDB/IT/initChegada')
+const chegadaNF             = require('../../models/IT/chegadaNF')
 
 
-// const initTransferencia     = require('../../metodsDB/CF/initTransferencia')
-// const initChegada           = require('../../metodsDB/CF/initChegada')
-// const initEntregaProgramada = require('../../metodsDB/CF/initEntregaProgramada')
-// const initEmRota            = require('../../metodsDB/CF/initEmRota')
-// const initEntrega           = require('../../metodsDB/CF/initEntrega')
-// const initOcorrencias       = require('../../metodsDB/CF/initOcorrencias')
-// const initComprovante       = require('../../metodsDB/CF/initComprovante')
-// const encerraProcessos      = require('../../metodsDB/CF/encerraProcessos')
-// const transfereNF           = require('../../models/CF/transfereNF')
-// const chegadaNF             = require('../../models/CF/chegadaNF')
-// const entregaProgramada     = require('../../models/CF/entregaProgramada')
-// const rotaEntrega           = require('../../models/CF/rotaEntrega')
-// const entregaNF             = require('../../models/CF/entregaNF')
-// const ocorrencias           = require('../../models/CF/ocorrencias')
-// const comprovante           = require('../../models/CF/comprovante')
+// const initEntregaProgramada = require('../../metodsDB/IT/initEntregaProgramada')
+// const initEmRota            = require('../../metodsDB/IT/initEmRota')
+// const initEntrega           = require('../../metodsDB/IT/initEntrega')
+// const initComprovante       = require('../../metodsDB/IT/initComprovante')
+// const encerraProcessos      = require('../../metodsDB/IT/encerraProcessos')
+// const entregaProgramada     = require('../../models/IT/entregaProgramada')
+// const rotaEntrega           = require('../../models/IT/rotaEntrega')
+// const entregaNF             = require('../../models/IT/entregaNF')
+// const ocorrencias           = require('../../models/IT/ocorrencias')
+// const comprovante           = require('../../models/IT/comprovante')
 // const preparaLinkComprovante = require('../../helpers/preparaLinkComprovante')
 
 const robot = async (cli,cfg,uptime) =>{
@@ -45,12 +45,19 @@ const robot = async (cli,cfg,uptime) =>{
    await valida_idCargaPK(cfg)           // XXX - PESQUISA NA API ITRACK O "IDCARGAPK" OU REGISTRA NOVA CARGA
    await transporte_iniciado()           // 000 - PROCESSO DE TRANSPORTE INICIADO (BD)
    await api_registra_NFs()              // 000 - PROCESSO DE TRANSPORTE INICIADO (API)
+   await ocorrencias_manuais()           // XXX - OCORRENCIAS MANUAIS - SÊNIOR (DB)
+   await transferencia_entre_filiais()   // 101 - EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS (BD)
+   await api_transferencia_NFs()         // 101 - EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS (API)
+   await chegada_filial_destino()        // 098 - CHEGADA NA CIDADE OU FILIAL DE DESTINO (BD)
+   await api_chegada_filial()            // 098 - CHEGADA NA CIDADE OU FILIAL DE DESTINO (API)
 
 
    let time_final = process.uptime()
    let time_total = Math.ceil(time_final-time_inicio)
 
    console.log('Fim - Exec - Robô.',time_total,'s')
+
+   
 
    // ======================== ROTINAS ===============================
 
@@ -70,11 +77,84 @@ const robot = async (cli,cfg,uptime) =>{
 
     // REGISTRA INICIO NA API
     async function api_registra_NFs() {
-        let retRegistraNF = await registraNF(cfg,cli)
-        logEventos(cfg,'(API - REGISTRO NF) - Robô -> API iTrack:',retRegistraNF.message)
-        return retRegistraNF
-      }
-  
+        let ret = await registraNF()
+        ret.forEach(itn => {
+             let log = {
+                 success: itn.success,
+                 message: `API: ${itn.data.message ? itn.data.message : 'OK' }, UPD: ${itn.upd.message}`,
+                 idCargaFk: itn.body.content.idCargaFk,
+                 api: itn.data.success,
+                 upd: itn.upd.success
+             }
+             logEventos(cfg,'(API - REGISTRO NF) - Robô -> API iTrack:',log)
+        })
+        return 1
+     }
+
+    // OCORRENCIAS MANUAIS BD
+    async function ocorrencias_manuais() {
+          let retInitOcorrencias = await initOcorrencias()
+          logEventos(cfg,'(BD - OCORRENCIAS MANUAIS) - retInitOcorrencias:',retInitOcorrencias)
+          return { retInitOcorrencias }
+     }   
+
+
+     // DB - (101) - EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS
+     async function transferencia_entre_filiais() {
+          let retInitTransferencia = await initTransferencia()
+          logEventos(cfg,'(BD - EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS) - iTrack:',retInitTransferencia)
+          return 1
+     }
+
+     // API - (101) - EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS 
+     async function api_transferencia_NFs() {
+          let ret = await transfereNF()
+          ret.forEach(itn => {
+               let log = {
+                   success: itn.success,
+                   message: `API: ${itn.data.message ? itn.data.message : 'OK' }, UPD: ${itn.upd.message}`,
+                   idCargaFk: itn.body.content.idCargaFk,
+                   api: itn.data.success,
+                   upd: itn.upd.success
+               }
+               logEventos(cfg,'(API - TRANSFERENCIA ENTRE FILIAIS) - iTrack:',log)
+          })
+          return 1
+     }
+
+     // DB - (098) - CHEGADA NA CIDADE OU FILIAL DE DESTINO 
+     async function chegada_filial_destino() {
+          let retInitChegada = await initChegada()
+          logEventos(cfg,'(BD - CHEGADA NA CIDADE OU FILIAL DE DESTINO) - iTrack:',retInitChegada)
+          return 1
+     }  
+     
+     // API - (098) - CHEGADA NA CIDADE OU FILIAL DE DESTINO      
+     async function api_chegada_filial() {
+          let ret = await chegadaNF()
+          ret.forEach(itn => {
+               let log = {
+                   success: itn.success,
+                   message: `API: ${itn.data.message ? itn.data.message : 'OK' }, UPD: ${itn.upd.message}`,
+                   idCargaFk: itn.body.content.idCargaFk,
+                   api: itn.data.success,
+                   upd: itn.upd.success
+               }
+               logEventos(cfg,`(API - CHEGADA NA CIDADE OU FILIAL DE DESTINO) - iTrack:`,log)
+          })
+          return 1
+     }
+
+
+/*     
+  // OCORRENCIAS MANUAIS API
+  async function API_ocorrencias_manuais() {
+     let retOcorrencias = await ocorrencias(cfg,cli)
+     logEventos(cfg,'(API - OCORRÊNCIAS MANUAIS) - retOcorrencias:',retOcorrencias)
+     return { retOcorrencias }
+  }         
+*/
+
   
 }
 

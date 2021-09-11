@@ -1,6 +1,6 @@
 -- 08/09/2021 15:14 - MONTA ESTRUTURA DE INSERT NOVA CARGA NA API (ITRACK) 
 
-SELECT TOP 1
+SELECT TOP 10
      CONCAT(aa.dsapelido,'E',a.nrdoctofiscal)              AS content_observacao,
      aa.dsapelido                                          AS content_sigla,
 	 b.nrnotafiscal                                        AS content_nroNotaFiscal,
