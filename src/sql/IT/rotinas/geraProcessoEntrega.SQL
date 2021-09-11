@@ -1,0 +1,51 @@
+-- 11/09/2021 09:35 - (001) - ENTREGA REALIZADA NORMALMENTE - ITRACK
+
+SET XACT_ABORT ON
+
+BEGIN
+    UPDATE IT
+       SET DT_ENTREGA = CAST(CONCAT(FORMAT(MOV.DtMovimento,'yyyy-MM-dd'),' ', FORMAT(MOV.HrMovimento,'HH:mm:ss')) as datetime)
+      FROM SIC.dbo.ITRACK_DANFE IT
+      JOIN softran_termaco.dbo.GTCMovEn MOV   ON MOV.CdEmpresa = IT.CdEmpresa AND MOV.NrSeqControle = IT.NrSeqControle
+     WHERE MOV.CdOcorrencia = 1 -- Codigo no Sênior (ENTREGA REALIZADA NORMALMENTE)      
+       AND IT.DT_ENTREGA IS NULL 
+END   
+;
+BEGIN TRY
+    BEGIN TRANSACTION
+
+    UPDATE IT
+       SET FASE_ID = 5,
+           DT_UPDATE = CURRENT_TIMESTAMP
+      FROM SIC.dbo.ITRACK_DANFE IT
+     WHERE FASE_ID <= 4 AND DT_ENTREGA IS NOT NULL
+       AND EXISTS ( SELECT 1 FROM SIC.dbo.ITRACK_OCORRENCIA CO WHERE CO.ITRACK_DANFE_ID = IT.ID AND CO.OCORRENCIA_ID = 1 ) 
+        -- CASO A (FASE < OU = 4) E EXISTIR OCORRENCIA = 1 GERADA, MUDA PARA FASE = 3        
+    ;
+
+    UPDATE CO
+       SET RECEBEDOR_NOME  = UPPER( ISNULL(MOV.DsContato,'ENCARREGADO RESPONSÁVEL') ),
+           RECEBEDOR_DOC   = ISNULL(MOV.NrDoctoIdentPessoal,'N.INFO'),
+           OCORRENCIA_OBS  = CONCAT('RECEBIDO POR :',UPPER( ISNULL(MOV.DsContato,'ENCARREGADO RESPONSÁVEL') ),'/',ISNULL(MOV.NrDoctoIdentPessoal,'N.INFO'))
+      FROM SIC.dbo.ITRACK_OCORRENCIA     CO
+      JOIN SIC.dbo.ITRACK_DANFE          IT ON IT.ID = CO.ITRACK_DANFE_ID
+      JOIN softran_termaco.dbo.GTCMovEn MOV ON MOV.CdEmpresa = CO.CdEmpresa AND MOV.NrSeqControle = CO.NrSeqControle AND MOV.CdSequencia = CO.CdSequencia
+     WHERE IT.FASE_ID = 5 
+       AND CO.OCORRENCIA_ID = 1
+       AND CO.OCORRENCIA_OBS IS NULL
+    ;
+
+    COMMIT TRANSACTION
+
+END TRY
+BEGIN CATCH
+    IF @@TRANCOUNT > 0
+        ROLLBACK TRANSACTION
+
+    DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE()
+    DECLARE @ErrorSeverity INT = ERROR_SEVERITY()
+    DECLARE @ErrorState INT = ERROR_STATE()
+
+    RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState);
+END CATCH
+;

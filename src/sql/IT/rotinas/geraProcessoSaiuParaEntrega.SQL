@@ -1,17 +1,16 @@
--- 01/09/2021 13:56 - (100) - EM ROTA PARA ENTREGA - ITRACK
+-- 11/09/2021 08:03 - (100) - EM ROTA PARA ENTREGA - ITRACK
 
 BEGIN TRY
     BEGIN TRANSACTION
 
     BEGIN
         UPDATE IT
-          SET IT.FASE_ID = 4,
+          SET IT.FASE_ID   = 4,
               IT.DT_UPDATE = CURRENT_TIMESTAMP
-        FROM SIC.dbo.ITRACK_ IT
+        FROM SIC.dbo.ITRACK_DANFE IT
         WHERE IT.FASE_ID = 3 AND IT.DT_CHEGADA IS NOT NULL 
-          AND EXISTS (SELECT 1 FROM SIC.dbo.ITTRACK_OCORRENCIA CO 
-               WHERE CO.ITTRACK__ID = IT.ID AND CO.OCORRENCIA_ID = 100 -- Codigo no Sênior       )
-        -- CASO A (FASE < OU = 3) E EXISTIR OCORRENCIA = (DP.ID_ITTRACK_) GERADA, MUDA PARA FASE = 4        
+          AND EXISTS (SELECT 1 FROM SIC.dbo.ITRACK_OCORRENCIA CO  WHERE CO.ITRACK_DANFE_ID = IT.ID AND CO.OCORRENCIA_ID = 100 )  -- Codigo no Sênior
+        -- CASO A (FASE < OU = 3) E EXISTIR OCORRENCIA = 100 GERADA, MUDA PARA FASE = 4        
         ;
     END
     ;
@@ -24,10 +23,9 @@ BEGIN TRY
                             LEFT JOIN softran_termaco.dbo.siscep   n ON n.nrcep = a.nrcepentrega  -- CEP Local Entrega
                                 WHERE a.CdEmpresa = CO.CdEmpresa 
                                   AND a.NrSeqControle = CO.NrSeqControle )
-        FROM SIC.dbo.ITTRACK_OCORRENCIA CO
-        JOIN SIC.dbo.ITTRACK_DEPARA DP ON DP.ID_SENIOR = 100 -- Codigo no Sênior
+        FROM SIC.dbo.ITRACK_OCORRENCIA CO
        WHERE CO.OCORRENCIA_OBS IS NULL 
-         AND CO.OCORRENCIA_ID = DP.ID_ITTRACK_
+         AND CO.OCORRENCIA_ID = 100 -- Codigo no Sênior
     END
     ;
 
