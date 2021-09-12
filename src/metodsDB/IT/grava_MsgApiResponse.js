@@ -31,7 +31,6 @@ const grava_MsgApiResponse = async (resposta,id) => {
 
             UPDATE SIC.dbo.ITRACK_DANFE
             SET DT_UPDATE          = CURRENT_TIMESTAMP
-            ,FASE_ID               = 1
             WHERE FASE_ID <= 1
               AND ID = (SELECT ITRACK_DANFE_ID FROM SIC.dbo.ITRACK_OCORRENCIA WHERE ID=${ID})
             ;
