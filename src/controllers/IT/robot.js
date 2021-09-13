@@ -43,23 +43,24 @@ const robot = async (cli,cfg,uptime) =>{
 
                                          /// ENTREGA PROGRAMADA NÃO FEITA ROTINA ESPECIFICA (91)
 
-   await captura_nfs()                   // XXX - INICIA PROCESSO DE MONITORAMENTO (BD CLIENTES ITRACK)
-   await valida_idCargaPK(cfg)           // XXX - PESQUISA NA API ITRACK O "IDCARGAPK" OU REGISTRA NOVA CARGA
-   await transporte_iniciado()           // 000 - PROCESSO DE TRANSPORTE INICIADO (BD)
-   await api_registra_NFs()              // 000 - PROCESSO DE TRANSPORTE INICIADO (API)
-   await ocorrencias_manuais()           // XXX - OCORRENCIAS MANUAIS - SÊNIOR (DB)
-   await transferencia_entre_filiais()   // 101 - EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS (BD)
-   await api_transferencia_NFs()         // 101 - EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS (API)
-   await chegada_filial_destino()        // 098 - CHEGADA NA CIDADE OU FILIAL DE DESTINO (BD)
-   await api_chegada_filial()            // 098 - CHEGADA NA CIDADE OU FILIAL DE DESTINO (API)
-   await em_rota_entrega()               // 100 - EM ROTA PARA ENTREGA (BD)
-   await api_em_rota_entrega()           // 100 - EM ROTA PARA ENTREGA (API)
-   await confirmacao_entrega()           // 001 - ENTREGA REALIZADA NORMALMENTE (BD)
-   await api_confirmacao_entrega()       // 001 - ENTREGA REALIZADA NORMALMENTE (API)
-   await API_ocorrencias_manuais()       // XXX - OCORRENCIAS MANUAIS (API) 
-   await comprovante_entrega_BD()        // 999 - COMPROVANTE DE ENTREGA (BD)
-   await comprovante_entrega_FILE()      // 999 - COMPROVANTE DE ENTREGA (FILE - API LOCAL)
-   await API_comprovante_entrega()       // 999 - COMPROVANTE DE ENTREGA (API)
+//   await captura_nfs()                   // XXX - INICIA PROCESSO DE MONITORAMENTO (BD CLIENTES ITRACK)
+//   await valida_idCargaPK(cfg)           // XXX - PESQUISA NA API ITRACK O "IDCARGAPK" OU REGISTRA NOVA CARGA
+//   await transporte_iniciado()           // 000 - PROCESSO DE TRANSPORTE INICIADO (BD)
+//   await api_registra_NFs()              // 000 - PROCESSO DE TRANSPORTE INICIADO (API)
+//   await ocorrencias_manuais()           // XXX - OCORRENCIAS MANUAIS - SÊNIOR (DB)
+//   await transferencia_entre_filiais()   // 101 - EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS (BD)
+//   await api_transferencia_NFs()         // 101 - EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS (API)
+//   await chegada_filial_destino()        // 098 - CHEGADA NA CIDADE OU FILIAL DE DESTINO (BD)
+//   await api_chegada_filial()            // 098 - CHEGADA NA CIDADE OU FILIAL DE DESTINO (API)
+//   await API_ocorrencias_manuais()       // XXX - OCORRENCIAS MANUAIS (API) 
+//   await em_rota_entrega()               // 100 - EM ROTA PARA ENTREGA (BD)
+//   await api_em_rota_entrega()           // 100 - EM ROTA PARA ENTREGA (API)
+//   await confirmacao_entrega()           // 001 - ENTREGA REALIZADA NORMALMENTE (BD)
+//   await api_confirmacao_entrega()       // 001 - ENTREGA REALIZADA NORMALMENTE (API)
+
+//   await comprovante_entrega_BD()        // 999 - COMPROVANTE DE ENTREGA (BD)
+//   await comprovante_entrega_FILE()      // 999 - COMPROVANTE DE ENTREGA (FILE - API LOCAL)
+//   await API_comprovante_entrega()       // 999 - COMPROVANTE DE ENTREGA (API)
    await encerra_processo()              // XXX - ENCERRA PROCESSO DE MONITORAMENTO (BD)
 
 
@@ -83,9 +84,9 @@ const robot = async (cli,cfg,uptime) =>{
 
    // CAPTURA NFs 
    async function captura_nfs() {
-        let retInitNFs = await initNFs(cli)
-        logEventos(cfg,'(BD - CAPTURA NFs) - Sênior -> iTrack:',retInitNFs) 
-        return retInitNFs
+        let ret = await initNFs(cli)
+        logEventos(cfg,'(BD - CAPTURA NFs) - Sênior -> iTrack:',ret) 
+        return ret
    }
 
    // PROCESSO DE TRANSPORTE INICIADO
@@ -108,7 +109,7 @@ const robot = async (cli,cfg,uptime) =>{
     // OCORRENCIAS MANUAIS BD
     async function ocorrencias_manuais() {
           let retInitOcorrencias = await initOcorrencias()
-          logEventos(cfg,'(BD - OCORRENCIAS MANUAIS) - retInitOcorrencias:',retInitOcorrencias)
+          logEventos(cfg,'(BD - OCORRENCIAS MANUAIS) - iTrack:',retInitOcorrencias)
           return { retInitOcorrencias }
      } 
 
@@ -175,7 +176,7 @@ const robot = async (cli,cfg,uptime) =>{
           let ret = await entregaNF()
           ret.forEach(itn => {
                let log = jsonLOG(itn)
-               logEventos(cfg,`(API - REGISTRO DE ENTREGA) - iTrack:`,log)
+               logEventos(cfg,`(API - REGISTRO DA OCORRENCIA DE ENTREGA) - iTrack:`,log)
           })
           return 1
      }   
@@ -189,7 +190,7 @@ const robot = async (cli,cfg,uptime) =>{
  
      // AVISA A API PARA DOWNLOAD DO COMPROVANTE - PREPARA API LOCAL
      async function comprovante_entrega_FILE() {
-          let ret = await preparaComprovante(cfg)
+          let ret = await preparaComprovante()
           ret.dados.forEach(itn => {
                let log = {
                     success: true,
@@ -225,7 +226,7 @@ const robot = async (cli,cfg,uptime) =>{
      // ENCERRA PROCESSOS DE MONITORAMENTO
      async function encerra_processo() {
           let retEncerraProcessos = await encerraProcessos()
-          logEventos(cfg,'(BD - ENCERRA PROCESSOS) - retEncerraProcessos:',retEncerraProcessos)
+          logEventos(cfg,'(BD - ENCERRA PROCESSOS) - iTrack:',retEncerraProcessos)
           return 1
      }
 

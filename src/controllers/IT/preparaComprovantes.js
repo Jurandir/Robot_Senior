@@ -1,3 +1,4 @@
+// 13/09/2021 17:50 - Avisa API - Prepara links dos comprovantes - iTrack
 
 const downloadComprovante = require('../../metodsAPI/IT/downloadComprovante')
 const sqlQuery            = require('../../connection/sqlSENIOR')
@@ -11,10 +12,12 @@ const preparaComprovantes = async () => {
         dados: [],
     }
     async function upd_status(id,links) {
+        let flag = ( !links || links=='[]' ) ? 0  : 1
+        let sJson = flag ? `'${links}'` : 'null'
         let sqlEx = `
             UPDATE SIC.dbo.ITRACK_DANFE 
-            SET  FLAG_COMPROVANTE = 1
-               , JSON_COMPROVANTE = '${links}'
+            SET  FLAG_COMPROVANTE = ${ flag  }
+               , JSON_COMPROVANTE = ${ sJson }
                , DT_UPDATE = CURRENT_TIMESTAMP
             WHERE ID = ${id}     
         `
@@ -27,6 +30,7 @@ const preparaComprovantes = async () => {
         WHERE IDCARGA > 0
         AND FASE_ID = 6 
         AND FLAG_COMPROVANTE = 0
+        AND ( IT.DT_UPDATE IS NULL OR DATEDIFF(minute,IT.DT_UPDATE, CURRENT_TIMESTAMP) > 3) --- depois de 3min da ultima tentativa
     `
     try {
         let dadosComp =  await sqlQuery( sqlComp ) 

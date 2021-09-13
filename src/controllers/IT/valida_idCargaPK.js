@@ -24,11 +24,13 @@ const valida_idCargaPK = async (cfg) => {                                       
         let grv
         let ret = await sqlQuery(sql)
 
+        /// console.log('RET SQL',ret)       /////////   teste
+
         for await (let itn of ret) {
 
             let api = await get_IdCargaPK(itn.CHAVE,itn.TOKEN)
 
-            //console.log('API:',api)
+            /// console.log('RET API:',api)     ////// teste
 
             if(api.success) {
                 if(api.data.data.count) {
@@ -45,7 +47,8 @@ const valida_idCargaPK = async (cfg) => {                                       
                     api.data.data.rowsAffected = -1
                     logEventos(cfg,`Falha na validação : "${itn.CHAVE}", (${itn.CdEmpresa},${itn.NrSeqControle})`,api.data.data)
 
-                    console.log('>>> FLAG_ADDCARGA:',itn.FLAG_ADDCARGA)
+                    
+                    console.log('>>> FLAG_ADDCARGA:',itn.FLAG_ADDCARGA)    //// teste
 
 
                     //================================================ PARA TESTES (INCLUIR CARGA)
@@ -62,7 +65,11 @@ const valida_idCargaPK = async (cfg) => {                                       
                         }
                         let nova = await insertNewCarga(params)
 
+                        //console.log('para API (insertNewCarga):',params)     ////// teste
+                        //console.log('RET API (insertNewCarga):',nova)        ////// teste
+
                         params.idCargaPK = nova.success ? (nova.data.success ? nova.data.data : 0 ) : 0
+                        logEventos(cfg,`Retorno API (InsertCarga) : (${params.CdEmpresa},${params.NrSeqControle}): CODE:${nova.data.code || params.idCargaPK}, MSG:"${nova.data.message || '' }", OK:${nova.data.success}, CALL:`,{success:true})
 
                         grv = await grava_IdCargaPK(params)
                         logEventos(cfg,`Nova CARGA : ${params.idCargaPK}, (${params.CdEmpresa},${params.NrSeqControle}) - OK: ${grv.success}`,grv)
@@ -79,36 +86,3 @@ const valida_idCargaPK = async (cfg) => {                                       
 }
 
 module.exports = valida_idCargaPK
-
-/*
-  {
-    ID: 1,
-    IDCARGA: 0,
-    EMBARCADOR: '01844555001235',
-    NUMERO: '0656781',
-    SERIE: '1',
-    CHAVE: '35210801844555001235550010006567811023404850',
-    DT_EMISSAO: 2021-08-24T00:00:00.000Z,
-    DT_EMBARQUE: null,
-    DT_CHEGADA: null,
-    DT_ENTREGA: null,
-    DT_PREVISAO: 2021-09-01T00:00:00.000Z,
-    DT_PREV_ORIGINAL: 2021-09-01T00:00:00.000Z,
-    DT_AGENDAMENTO: null,
-    VALOR: 784,
-    CTRC: 'SPOE15216',
-    CTRC_OLD: null,
-    DESTINATARIO: '34939001000118',
-    TRANSPORTADOR: '11552312000710',
-    FLAG_COMPROVANTE: 0,
-    JSON_COMPROVANTE: null,
-    DT_ENVIO: null,
-    DT_VALIDACAO: null,
-    DT_UPDATE: 2021-09-08T14:41:20.540Z,
-    CdEmpresa: 2,
-    NrSeqControle: '15260',
-    FASE_ID: 1,
-    TOKEN: '41YIzpld%2B3rFKIwbpy9g%2FFvMKv%2Buaro8badWdwkVonqe9yUjdfBSUutNg36zKyPI9XtWT7mICJQsTFpfiYlo%2FQpoZ0NFbv1lAqAskvbtJlMqF7o1Qfc3UCx%2BRfzG4m%2FH'
-  },
-
-*/

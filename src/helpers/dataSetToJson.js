@@ -12,6 +12,11 @@ const dataSetToJson = (data) => {
                 let elementos = `${campo}`.split('_')
                 let len = elementos.length
 
+                if(campo=='content_fotosComprovantes') {
+                    let sVal = campos[campo]
+                    campos[campo] = JSON.parse(sVal)
+                }
+
                 if (len == 1) {
                     newobj[elementos[0]] = campos[campo]
                 } else

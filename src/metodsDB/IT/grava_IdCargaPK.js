@@ -7,6 +7,7 @@ const grava_IdCargaPK = async (params) => {
    let sql = `
    UPDATE SIC.dbo.ITRACK_DANFE
       SET IDCARGA = ${idCargaPK}
+        , DT_VALIDACAO = CURRENT_TIMESTAMP
     WHERE CdEmpresa = ${CdEmpresa}
       AND NrSeqControle = ${NrSeqControle}
       AND CHAVE = '${danfe}'

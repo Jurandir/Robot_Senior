@@ -8,8 +8,8 @@ const grava_MsgApiResponse = async (resposta,id) => {
    message = message ? message : success ? 'OK' : 'ERR'
 
    let FLAG_SEND          = success ? 1 : 0
-   let RESPOSTA_STATUS    = success ? 200 : -1
    let RESPOSTA_PROTOCOLO = `${code ? code : 0}`
+   let RESPOSTA_STATUS    = success ? 200 : RESPOSTA_PROTOCOLO==0 ? -1 : 400
    let RESPOSTA_MSG       = `'${message} - ${data ? data :'ERRO' }'` 
    let ID                 = id
    

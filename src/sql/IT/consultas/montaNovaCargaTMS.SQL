@@ -25,7 +25,8 @@ SELECT TOP 10
 	 h.DsNumero                                            AS content_destinatario_endereco_nro,
 	 h.NrCEP                                               AS content_destinatario_endereco_cep,
 	 h.DsEntidade                                          AS content_destinatario_nome,
-	 h.CdInscricao                                         AS content_destinatario_cpfCnpj, 
+    CASE WHEN SUBSTRING(h.CdInscricao,1,3)='000' THEN SUBSTRING(h.CdInscricao,4,11) ELSE h.CdInscricao END	 -- IDENTIFICA CPF
+	                                                       AS content_destinatario_cpfCnpj, 
 
 	 j.DsUF                                                AS content_transportador_endereco_uf,
 	 j.DsLocal                                             AS content_transportador_endereco_cidade,

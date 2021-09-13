@@ -11,12 +11,19 @@ const downloadComprovante = async (par_ctrc) => {
         ctrc: par_ctrc,
         retTipo: 1
     }
+
     let ret = await loadAPI(method,endpoint,server,params)
 
-//    if(servicos.localtest) {
-//        let obs = ret.data[0].message
-//        console.error(moment().format(),'-','DOWNLOAD COMPROVANTE',`CTRC ${par_ctrc}, Local Test ${server}/${endpoint} - ${obs}`)
-//    }
+    if(servicos.localtest) {
+        let obs = ret.success ? ret.data[0].message : ret.data.code
+        console.error(moment().format(),'-','DOWNLOAD COMPROVANTE',`CTRC ${par_ctrc}, Local Test ${server}/${endpoint} - ${obs}`)
+    }
+
+    if(!ret.success) {
+        ret.message = ret.data.code
+        ret.err = ret.data
+        ret.data = []
+    }
 
     return ret
 }

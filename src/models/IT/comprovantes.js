@@ -15,13 +15,14 @@ const comrovantes = async () => {
         let oco   = await sqlQuery(sql)
         let bodys = dataSetToJson(oco)
 
-        //console.log('oco:',oco)
-        //console.log('bodys:',bodys)
+        //console.log('oco:',oco)                             //////// teste
+        //console.log('bodys:',bodys)                         //////// teste
   
         for await (let body of bodys ){
           let env = await enviaComprovantes(body)
           let grv = []
-          ///console.log('env:',env)
+          
+          //console.log('env:',env)   /////// teste      ENV
 
           if(env.success){
             grv  = await grava_MsgApiResponse( env.data, body.content.idTrackingCliente )
@@ -31,10 +32,11 @@ const comrovantes = async () => {
           } else { 
             let erro = { success:false , message: env.err, data: [], code: env.data.response.status }
 
-            console.log('body:',body)
+            //console.log('body:',body)                 /////////// teste
+
             grv = await grava_MsgApiResponse( erro, body.content.idTrackingCliente )
 
-            console.log('GRV:',grv)
+            //console.log('GRV:',grv)             ////// teste
 
             env.body = body
             env.upd  = grv
