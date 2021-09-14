@@ -1,0 +1,15 @@
+API externo
+http://200.217.161.8:4999/api/login
+
+
+
+
+"Latin1_General_CI_AS"
+"Latin1_General_CI_AI"
+
+
+-- 14/09/2021 10:38
+
+Ajustar intervalo de pesquisa idCargaPK
+gravar DT_UPDATE quando pesuisar idCargaPK (valida_idCargaPK)
+

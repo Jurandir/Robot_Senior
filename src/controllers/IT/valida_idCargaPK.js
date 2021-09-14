@@ -16,7 +16,8 @@ const valida_idCargaPK = async (cfg) => {                                       
 		 AND CL.FLAG_ADDCARGA=1)) FLAG_ADDCARGA
     FROM SIC.dbo.ITRACK_DANFE DF
     JOIN SIC.dbo.ITRACK_TOKEN TK ON TK.CNPJ = DF.TRANSPORTADOR
-    WHERE DF.IDCARGA = 0
+   WHERE DF.IDCARGA = 0
+     AND ( DF.DT_UPDATE IS NULL OR DATEDIFF(minute,DF.DT_UPDATE, CURRENT_TIMESTAMP) > 3) --- depois de 3min da ultima tentativa
     `
     try {
 
@@ -46,15 +47,8 @@ const valida_idCargaPK = async (cfg) => {                                       
                     // logEventos(cfg,`Falha na validação : "${itn.CHAVE}", (${itn.CdEmpresa},${itn.NrSeqControle})`,{ achou:'NÃO', success:true })
                     api.data.data.rowsAffected = -1
                     logEventos(cfg,`Falha na validação : "${itn.CHAVE}", (${itn.CdEmpresa},${itn.NrSeqControle})`,api.data.data)
-
                     
-                    console.log('>>> FLAG_ADDCARGA:',itn.FLAG_ADDCARGA)    //// teste
-
-
-                    //================================================ PARA TESTES (INCLUIR CARGA)
-                    itn.FLAG_ADDCARGA = 1
-                    //============================================================================
-
+                    console.log('>>> FLAG_ADDCARGA:',itn.FLAG_ADDCARGA)    //// = 1 liberado inclusão de carga
 
                     if(itn.FLAG_ADDCARGA) {
                         params = {

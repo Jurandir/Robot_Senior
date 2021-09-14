@@ -1,8 +1,8 @@
 {  
  "user": "sa",  
- "password": "!@t3rm4c0l0g",  
- "server": "192.168.0.155",  
- "database": "softran_modelo",
+ "password": "_6h$plzot!b7ispOsw6q",  
+ "server": "192.168.0.33",  
+ "database": "softran_termaco",
  "options": {
     "encrypt": false,
     "enableArithAbort": true 
