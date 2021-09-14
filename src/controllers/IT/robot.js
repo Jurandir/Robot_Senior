@@ -43,24 +43,23 @@ const robot = async (cli,cfg,uptime) =>{
 
                                          /// ENTREGA PROGRAMADA NÃO FEITA ROTINA ESPECIFICA (91)
 
-//   await captura_nfs()                   // XXX - INICIA PROCESSO DE MONITORAMENTO (BD CLIENTES ITRACK)
-//   await valida_idCargaPK(cfg)           // XXX - PESQUISA NA API ITRACK O "IDCARGAPK" OU REGISTRA NOVA CARGA
-//   await transporte_iniciado()           // 000 - PROCESSO DE TRANSPORTE INICIADO (BD)
-//   await api_registra_NFs()              // 000 - PROCESSO DE TRANSPORTE INICIADO (API)
-//   await ocorrencias_manuais()           // XXX - OCORRENCIAS MANUAIS - SÊNIOR (DB)
-//   await transferencia_entre_filiais()   // 101 - EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS (BD)
-//   await api_transferencia_NFs()         // 101 - EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS (API)
-//   await chegada_filial_destino()        // 098 - CHEGADA NA CIDADE OU FILIAL DE DESTINO (BD)
-//   await api_chegada_filial()            // 098 - CHEGADA NA CIDADE OU FILIAL DE DESTINO (API)
-//   await API_ocorrencias_manuais()       // XXX - OCORRENCIAS MANUAIS (API) 
-//   await em_rota_entrega()               // 100 - EM ROTA PARA ENTREGA (BD)
-//   await api_em_rota_entrega()           // 100 - EM ROTA PARA ENTREGA (API)
-//   await confirmacao_entrega()           // 001 - ENTREGA REALIZADA NORMALMENTE (BD)
-//   await api_confirmacao_entrega()       // 001 - ENTREGA REALIZADA NORMALMENTE (API)
-
-//   await comprovante_entrega_BD()        // 999 - COMPROVANTE DE ENTREGA (BD)
-//   await comprovante_entrega_FILE()      // 999 - COMPROVANTE DE ENTREGA (FILE - API LOCAL)
-//   await API_comprovante_entrega()       // 999 - COMPROVANTE DE ENTREGA (API)
+   await captura_nfs()                   // XXX - INICIA PROCESSO DE MONITORAMENTO (BD CLIENTES ITRACK)
+   await valida_idCargaPK(cfg)           // XXX - PESQUISA NA API ITRACK O "IDCARGAPK" OU REGISTRA NOVA CARGA
+   await transporte_iniciado()           // 000 - PROCESSO DE TRANSPORTE INICIADO (BD)
+   await api_registra_NFs()              // 000 - PROCESSO DE TRANSPORTE INICIADO (API)
+   await ocorrencias_manuais()           // XXX - OCORRENCIAS MANUAIS - SÊNIOR (DB)
+   await transferencia_entre_filiais()   // 101 - EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS (BD)
+   await api_transferencia_NFs()         // 101 - EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS (API)
+   await chegada_filial_destino()        // 098 - CHEGADA NA CIDADE OU FILIAL DE DESTINO (BD)
+   await api_chegada_filial()            // 098 - CHEGADA NA CIDADE OU FILIAL DE DESTINO (API)
+   await API_ocorrencias_manuais()       // XXX - OCORRENCIAS MANUAIS (API) 
+   await em_rota_entrega()               // 100 - EM ROTA PARA ENTREGA (BD)
+   await api_em_rota_entrega()           // 100 - EM ROTA PARA ENTREGA (API)
+   await confirmacao_entrega()           // 001 - ENTREGA REALIZADA NORMALMENTE (BD)
+   await api_confirmacao_entrega()       // 001 - ENTREGA REALIZADA NORMALMENTE (API)
+   await comprovante_entrega_BD()        // 999 - COMPROVANTE DE ENTREGA (BD)
+   await comprovante_entrega_FILE()      // 999 - COMPROVANTE DE ENTREGA (FILE - API LOCAL)
+   await API_comprovante_entrega()       // 999 - COMPROVANTE DE ENTREGA (API)
    await encerra_processo()              // XXX - ENCERRA PROCESSO DE MONITORAMENTO (BD)
 
 

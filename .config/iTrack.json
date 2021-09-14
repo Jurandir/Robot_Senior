@@ -5,7 +5,7 @@
     "validade": 5400000,
     "testeURL": "https://beta.itrackbrasil.com.br/ws",
     "producaoURL": "https://integracao.itrackbrasil.com.br/ws",
-    "comprovanteURL": "http://201.49.34.12:4999/downloads/images",
+    "comprovanteURL": "http://200.217.161.8:4999/downloads/images",
     "debug": "OFF",
     "user": "11552312000710",
     "pwd": "TERMACO789"
