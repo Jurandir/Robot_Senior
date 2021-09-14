@@ -12,7 +12,7 @@ const preparaComprovantes = async () => {
         dados: [],
     }
     async function upd_status(id,links) {
-        let flag = ( !links || links=='[]' ) ? 0  : 1
+        let flag = ( !links || links=='[]' || links=='[null]' ) ? 0  : 1
         let sJson = flag ? `'${links}'` : 'null'
         let sqlEx = `
             UPDATE SIC.dbo.ITRACK_DANFE 
