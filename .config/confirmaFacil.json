@@ -1,10 +1,10 @@
 {
-    "run": "Test",
+    "run": "Production",
     "versao": "1.0",
     "time": 30000,
     "validade": 5400000,
-    "loginURL": "http://utilities.confirmafacil.com.br/login/login",
-    "embarqueURL": "http://utilities.confirmafacil.com.br/business/v2/embarque",
+    "loginURL": "https://utilities.confirmafacil.com.br/login/login",
+    "embarqueURL": "https://utilities.confirmafacil.com.br/business/v2/embarque",
     "comprovanteURL": "http://201.49.34.12:5000/downloads/images",
     "debug": "OFF",
     "user": "ti@termaco.com.br",

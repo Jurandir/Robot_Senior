@@ -1,7 +1,7 @@
 {   "localtest": true,
     "comprovantes": {
-        "server": "http://201.49.34.12:5000",
-        "endpoint": "/api/downloadAgileProcess"
+        "server": "http://200.217.161.8:4999",
+        "endpoint": "/api/preparaDownload"
     },
     "test_comprovantes": {
         "server": "http://localhost:4999",

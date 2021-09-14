@@ -8,7 +8,7 @@ moment.locale('pt-br')
 
 const colors    = require('colors')
 const config    = require('./.config/confirmaFacil.json') 
-const clientes  = require('./.config/clientes.json')
+const clientes  = require('./.config/CF/clientes.json')
 const login     = require('./src/metodsAPI/CF/login')
 const robot     = require('./src/controllers/CF/robot')
 
