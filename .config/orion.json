@@ -1,0 +1,16 @@
+{
+    "run": "Test",
+    "versao": "1.0",
+    "time": 30000,
+    "validade": 5400000,
+    "comprovanteURL": "",
+    "debug": "OFF",
+    "SERVIDOR": "https://orionbr.cevalogistics.com/WCFBaixaOcorrencia/Servicos/RegistraBaixa.svc",
+    "LOGIN": "WEBTERMACO",
+    "SENHA": "plqQS/5gjKlJ49n1IRC2WU7jC06OaajvzghiPoI8nWGrlbvdwxC5JHZBt7ZkVKE+zVwfJmY/b1s0UOkb2T+tDWlnDDsvKptVBMxGO3RM3tTiQHOD0jWEx63VmK9bqJXGT7MG+2dt5RsWsbKZkcjeA546Fy1qo3LzX3TSyVmInQ8=",
+    "URL_OCORRENCIA": "/BaixaOcorrencia",
+    "URL_OCORRENCIA_SIMPLIFICADA": "/BaixaOcorrenciaSimplificada",
+    "URL_OCORRENCIA_CLIENTE": "/BaixaOcorrenciaCliente",
+    "URL_EVIDENCIAR_OCORRENCIA" : "/EvidenciaOcorrencia",
+    "CHAVE_PUBLICA": "<RSAKeyValue><Modulus>tAXzaypuIdGAdPMEVvypU1WlfkVxUvETN69LY9+H+8LxlJuAAHmA9yMTiXG8/w1Fai0KzuS0W1/KxhC6I/gqClW/qEjoJLuTLwh3wLc2nxYkMIkkyWxJTEcR6vI/qqX4WFIpakQnTke9tCfCFZy8miPXGWziSiaoWmPZTa7qfW0=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>"
+}

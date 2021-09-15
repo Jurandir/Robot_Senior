@@ -42,7 +42,7 @@ const robot = async (cli,cfg,uptime) =>{
     await api_registra_NFs()              // 000 - PROCESSO DE TRANSPORTE INICIADO (API)
     await ocorrencias_manuais()           // XXX - OCORRENCIAS MANUAIS (BD) 
     await transferencia_entre_filiais()   // 101 - EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS (BD,API)
-//    await chegada_filial_destino()        // 098 - CHEGADA NA CIDADE OU FILIAL DE DESTINO (BD,API)
+    await chegada_filial_destino()        // 098 - CHEGADA NA CIDADE OU FILIAL DE DESTINO (BD,API)
 //    await entrega_programada()            // 091 - ENTREGA PROGRAMADA (BD,API)
 //    await em_rota_entrega()               // 100 - EM ROTA PARA ENTREGA (BD,API)
 //    await confirmacao_entrega()           // 001 - ENTREGA REALIZADA NORMALMENTE (BD,API)
