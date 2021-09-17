@@ -34,10 +34,10 @@ const robot = async (cli,cfg,uptime) =>{
    // CONTROLE DE EXECUÇÃO
    if( cli.count <=0 ){
         clearInterval(cli.fnTime);
-        console.log(moment().format(),`- ( Renovando parâmetros ) - Time: ${timeOUT}s - iTrack`)
+        console.log(moment().format(),`- ( Renovando parâmetros ) (iTrack) - Time: ${timeOUT}s - iTrack`)
         return 
    } else {
-        console.log(moment().format(),'- Robô em Execução:',cli.count,' - ',timeOUT,'s')
+        console.log(moment().format(),'- Robô em Execução: (iTrack)',cli.count,' - ',timeOUT,'s')
    }
    cli.count--   
 
@@ -48,14 +48,14 @@ const robot = async (cli,cfg,uptime) =>{
    await transporte_iniciado()           // 000 - PROCESSO DE TRANSPORTE INICIADO (BD)
    await api_registra_NFs()              // 000 - PROCESSO DE TRANSPORTE INICIADO (API)
    await ocorrencias_manuais()           // XXX - OCORRENCIAS MANUAIS - SÊNIOR (DB)
-   await transferencia_entre_filiais()   // 101 - EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS (BD) --- 99
-   await api_transferencia_NFs()         // 101 - EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS (API) --- 99
+   await transferencia_entre_filiais()   // 101 - EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS (BD) --- 302
+   await api_transferencia_NFs()         // 101 - EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS (API) --- 302
    await chegada_filial_destino()        // 098 - CHEGADA NA CIDADE OU FILIAL DE DESTINO (BD)
    await api_chegada_filial()            // 098 - CHEGADA NA CIDADE OU FILIAL DE DESTINO (API)
    await API_ocorrencias_manuais()       // XXX - OCORRENCIAS MANUAIS (API) 
-//   await em_rota_entrega()               // 100 - EM ROTA PARA ENTREGA (BD)
-//   await api_em_rota_entrega()           // 100 - EM ROTA PARA ENTREGA (API)
-//   await confirmacao_entrega()           // 001 - ENTREGA REALIZADA NORMALMENTE (BD)
+   await em_rota_entrega()               // 100 - EM ROTA PARA ENTREGA (BD)                           --- 808
+   await api_em_rota_entrega()           // 100 - EM ROTA PARA ENTREGA (API)                          --- 808
+   await confirmacao_entrega()           // 001 - ENTREGA REALIZADA NORMALMENTE (BD)
 //   await api_confirmacao_entrega()       // 001 - ENTREGA REALIZADA NORMALMENTE (API)
 //   await comprovante_entrega_BD()        // 999 - COMPROVANTE DE ENTREGA (BD)
 //   await comprovante_entrega_FILE()      // 999 - COMPROVANTE DE ENTREGA (FILE - API LOCAL)

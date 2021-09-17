@@ -1,7 +1,11 @@
-// 15/09/2021 15:20 - Versão Sênior - ORION - By: Jurandir Ferreira
+// 16/09/2021 10:14 - Versão Sênior - ORION - By: Jurandir Ferreira
 
 const moment                = require('moment')
 const logEventos            = require('../../helpers/logEventos')
+
+const initCTe               = require('../../metodsDB/OR/initCTe')
+const initOcorrencias       = require('../../metodsDB/OR/initOcorrencias')
+const enviaOcorrencias      = require('../../metodsAPI/OR/enviaOcorrencias')
 
 const robot = async (cli,cfg,uptime) =>{
    let timeOUT = Math.ceil((process.uptime()-2) - uptime)
@@ -18,8 +22,9 @@ const robot = async (cli,cfg,uptime) =>{
    cli.count--   
    //=======================
 
-   captura_nfs() // CAPTURA DADOS PARA MONITORAMENTO
-
+   captura_CTe()           // CAPTURA DADOS PARA MONITORAMENTO
+   novas_correncias_DB()   // PESQUISA E REGISTRA NOVAS OCORRENCIAS PARA OS CTe´s MONITORADOS
+   novas_correncias_API()  // ENVIA AS OCORRENCIAS PARA API ORION
 
 
    //=======================
@@ -33,27 +38,41 @@ const robot = async (cli,cfg,uptime) =>{
 
    // json LOG
    function jsonLOG (itn) { 
-        return {
-          success: itn.success,
-          message: `API: ${itn.data.message ? itn.data.message : 'OK' }, UPD: ${itn.upd.message}`,
-          idCargaFk: itn.body.content.idCargaFk,
-          api: itn.data.success,
-          upd: itn.upd.success
-        }
-    }
+     return {
+       success: itn.success,
+       message: `${itn.body.observacao}`,
+       REFID: itn.body.REFID || 0,
+       api_success: itn.dados.BaixaOcorrenciaResult.Sucesso || false,
+       api_message: itn.dados.BaixaOcorrenciaResult.Mensagem || 'API Error',
+       upd_success: itn.grv.success || false,
+       upd_message: `${itn.grv.message || 'upd Error' }, Affected: ${itn.grv.rowsAffected || -1}`
+     }
+   }
 
-   // CAPTURA NFs 
-   async function captura_nfs() {
-     //   let ret = await initNFs(cli)
-        ret = {
-             success: true,
-             message: 'Test'
-        }
-        logEventos(cfg,'(BD - CAPTURA NFs) - Sênior -> ORION:',ret) 
+   // CAPTURA CTe´s 
+   async function captura_CTe() {
+        let ret = await initCTe()
+        logEventos(cfg,'(BD - CAPTURA CTe´s ) - Sênior -> ORION:',ret) 
         return ret
    }
 
+    // PESQUISA NOVAS OCORRENCIAS PARA OS CTe´s MONITORADOS
+    async function novas_correncias_DB() {
+        let ret = await initOcorrencias()
+        logEventos(cfg,'(BD - NOVAS OCORRÊNCIAS REGISTRADAS) - Sênior -> ORION:',ret) 
+        return ret
+    }
 
+    // ENVIA AS OCORRENCIAS PARA API ORION
+    async function novas_correncias_API() {
+          let ret = await enviaOcorrencias()
+          ret.forEach(itn => {
+               let log = jsonLOG(itn)
+               logEventos(cfg,'(API - ENVIA OCORRÊNCIAS) - Sênior -> ORION:',log) 
+          })
+     return ret
+ }
+  
 }
 
 module.exports = robot

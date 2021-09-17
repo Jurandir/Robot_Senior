@@ -15,7 +15,8 @@ SELECT TOP 10
 	 g.DsBairro                                            AS content_embarcador_endereco_bairro,
 	 g.DsNumero                                            AS content_embarcador_endereco_nro,
 	 g.NrCEP                                               AS content_embarcador_endereco_cep,
-	 g.CdInscricao                                         AS content_embarcador_responsavel_cnpj,
+     CASE WHEN SUBSTRING(g.CdInscricao,1,3)='000' THEN SUBSTRING(g.CdInscricao,4,11) ELSE g.CdInscricao END	 -- IDENTIFICA CPF	 
+	                                                       AS content_embarcador_responsavel_cnpj,
 	 g.DsEntidade                                          AS content_embarcador_responsavel_nome,
 
 	 k.DsUF                                                AS content_destinatario_endereco_uf,

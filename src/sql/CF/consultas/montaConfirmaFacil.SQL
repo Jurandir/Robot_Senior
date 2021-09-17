@@ -1,6 +1,7 @@
 -- 31/08/2021 14:28
 SELECT DISTINCT  
-	 SUBSTRING(isnull(NFR.CdRemetente,'')+CNH.CdRemetente,1,14)    as EMBARCADOR
+	 -- SUBSTRING(isnull(NFR.CdRemetente,'')+CNH.CdRemetente,1,14)    as EMBARCADOR 
+	 CNH.CdRemetente                                               as EMBARCADOR  -- MODIFICADO P/ EVITAR ERRO EM CF 
 	,RIGHT(REPLICATE('0',7) + CAST(NFR.NrNotaFiscal AS VARCHAR),7) as NUMERO
 	,NFR.NrSerie                                                   as SERIE
 	,NFR.NrChaveAcessoNFe                                          as CHAVE

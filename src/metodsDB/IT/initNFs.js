@@ -20,7 +20,7 @@ const initNFs = async (cli) => {
      VALOR, CTRC, DESTINATARIO, TRANSPORTADOR, DT_UPDATE, CdEmpresa, NrSeqControle, FASE_ID )
     ${sqlInitNF}
     WHERE 
-         CNH.InTipoEmissao = 0 
+         CNH.InTipoEmissao in ( 00, 11 , 12 ) 
      AND ( EXISTS (SELECT 1 FROM SIC.dbo.ITRACK_CLIENTE WHERE RAIZ_CNPJ=SUBSTRING(CNH.CdRemetente,1,8) ) OR 
          EXISTS (SELECT 1 FROM SIC.dbo.ITRACK_CLIENTE WHERE RAIZ_CNPJ=SUBSTRING(CNH.CdDestinatario,1,8) ) OR 
          EXISTS (SELECT 1 FROM SIC.dbo.ITRACK_CLIENTE WHERE RAIZ_CNPJ=SUBSTRING(CNH.CdInscricao,1,8) ) )

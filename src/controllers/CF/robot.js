@@ -30,10 +30,10 @@ const robot = async (cli,cfg,uptime) =>{
     // CONTROLE DE EXECUÇÃO
     if( cli.count <=0 ){
          clearInterval(cli.fnTime);
-         console.log(moment().format(),`- ( TOKEN VENCIDO  ) - ${cli.login.resposta.token} - Time: ${timeOUT}s - `,cli.nome)
+         console.log(moment().format(),`- ( TOKEN VENCIDO  ) (CF) - ${cli.login.resposta.token} - Time: ${timeOUT}s - `,cli.nome)
          return 
     } else {
-         console.log(moment().format(),'- Robô em Execução:',cli.count,' - ',timeOUT,'s')
+         console.log(moment().format(),'- Robô em Execução: (ConfirmaFacil)',cli.count,' - ',timeOUT,'s')
     }
     cli.count--
 
@@ -43,9 +43,9 @@ const robot = async (cli,cfg,uptime) =>{
     await ocorrencias_manuais()           // XXX - OCORRENCIAS MANUAIS (BD) 
     await transferencia_entre_filiais()   // 101 - EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS (BD,API)
     await chegada_filial_destino()        // 098 - CHEGADA NA CIDADE OU FILIAL DE DESTINO (BD,API)
-//    await entrega_programada()            // 091 - ENTREGA PROGRAMADA (BD,API)
-//    await em_rota_entrega()               // 100 - EM ROTA PARA ENTREGA (BD,API)
-//    await confirmacao_entrega()           // 001 - ENTREGA REALIZADA NORMALMENTE (BD,API)
+    await entrega_programada()            // 091 - ENTREGA PROGRAMADA (BD,API)
+    await em_rota_entrega()               // 100 - EM ROTA PARA ENTREGA (BD,API)
+    await confirmacao_entrega()           // 001 - ENTREGA REALIZADA NORMALMENTE (BD,API)
 //    await comprovante_entrega_BD()        // 999 - COMPROVANTE DE ENTREGA (BD)
 //    await comprovante_entrega_FILE()      // 999 - COMPROVANTE DE ENTREGA (FILE,API LOCAL)
 //    await API_comprovante_entrega()       // 999 - COMPROVANTE DE ENTREGA (API)

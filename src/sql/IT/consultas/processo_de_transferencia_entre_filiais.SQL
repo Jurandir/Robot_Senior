@@ -4,7 +4,7 @@ SELECT TOP 10
      DF.CHAVE                                              as content_danfe
 	,DF.IDCARGA                                            as content_idCargaFk
 	,FORMAT(CO.OCORRENCIA_DATA,'yyyy-MM-ddThh:mm:ss-03')   as content_dataOcorrencia
-	,99                                                    as content_idOcorrenciaPk
+	,302                                                   as content_idOcorrenciaPk
 	,ISNULL(CO.OCORRENCIA_OBS,CO.OCORRENCIA_NOME)          as content_descricao
 	,CO.ID                                                 as content_idTrackingCliente
 	,DF.NUMERO                                             as content_nroNotaFiscal

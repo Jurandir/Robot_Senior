@@ -3,13 +3,14 @@
 const sqlQuery        = require('../../connection/sqlSENIOR')
 const get_IdCargaPK   = require('../../metodsAPI/IT/get_IdCargaPK')
 const grava_IdCargaPK = require('../../metodsDB/IT/grava_IdCargaPK')
+const grava_Update    = require('../../metodsDB/IT/grava_Update')
 const insertNewCarga  = require('../../metodsAPI/IT/insertNewCarga')
 
 const logEventos      = require('../../helpers/logEventos')
 
 const valida_idCargaPK = async (cfg) => {                                                ////   TESTE (TOP 20)
     let sql = `
-    SELECT TOP 20 DF.* ,TK.TOKEN
+    SELECT TOP 100 DF.* ,TK.TOKEN
 	,(SELECT TOP 1 1 FROM SIC.dbo.ITRACK_CLIENTE CL 
 	  WHERE (CL.RAIZ_CNPJ=SUBSTRING(DF.EMBARCADOR,1,8) 
 	     OR CL.RAIZ_CNPJ=SUBSTRING(DF.DESTINATARIO,1,8)
@@ -17,7 +18,8 @@ const valida_idCargaPK = async (cfg) => {                                       
     FROM SIC.dbo.ITRACK_DANFE DF
     JOIN SIC.dbo.ITRACK_TOKEN TK ON TK.CNPJ = DF.TRANSPORTADOR
    WHERE DF.IDCARGA = 0
-     AND ( DF.DT_UPDATE IS NULL OR DATEDIFF(minute,DF.DT_UPDATE, CURRENT_TIMESTAMP) > 3) --- depois de 3min da ultima tentativa
+     AND ( DF.DT_UPDATE    IS NULL OR DATEDIFF(minute,DF.DT_UPDATE   , CURRENT_TIMESTAMP) > 3) ---UPDATE    depois de 3min da ultima tentativa
+     AND ( DF.DT_VALIDACAO IS NULL OR DATEDIFF(minute,DF.DT_VALIDACAO, CURRENT_TIMESTAMP) > 3) ---VALIDACAO depois de 3min da ultima tentativa
     `
     try {
 
@@ -46,17 +48,20 @@ const valida_idCargaPK = async (cfg) => {                                       
                 } else {
                     // logEventos(cfg,`Falha na validação : "${itn.CHAVE}", (${itn.CdEmpresa},${itn.NrSeqControle})`,{ achou:'NÃO', success:true })
                     api.data.data.rowsAffected = -1
-                    logEventos(cfg,`Falha na validação : "${itn.CHAVE}", (${itn.CdEmpresa},${itn.NrSeqControle})`,api.data.data)
-                    
-                    console.log('>>> FLAG_ADDCARGA:',itn.FLAG_ADDCARGA)    //// = 1 liberado inclusão de carga
+                    logEventos(cfg,`Falha Validação - ADD: ${itn.FLAG_ADDCARGA ? 'S' : 'N'}, "${itn.CHAVE}", (${itn.CdEmpresa},${itn.NrSeqControle})`,api.data.data)
 
+                    params = {
+                        idCargaPK     : 0,
+                        CdEmpresa     : itn.CdEmpresa, 
+                        NrSeqControle : itn.NrSeqControle,
+                        danfe         : itn.CHAVE
+                    }
+                    
+                    grava_Update(params) // Atualiza "DT_UPDATE"
+
+                    //--console.log('DEBUG:',params,grv)
+                    
                     if(itn.FLAG_ADDCARGA) {
-                        params = {
-                            idCargaPK     : 0,
-                            CdEmpresa     : itn.CdEmpresa, 
-                            NrSeqControle : itn.NrSeqControle,
-                            danfe         : itn.CHAVE
-                        }
                         let nova = await insertNewCarga(params)
 
                         //console.log('para API (insertNewCarga):',params)     ////// teste
