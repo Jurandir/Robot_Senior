@@ -23,10 +23,10 @@ const robot = async (cli,cfg,uptime) =>{
    cli.count--   
    //=======================
 
-   captura_CTe()               // CAPTURA DADOS PARA MONITORAMENTO
-   novas_correncias_DB()       // PESQUISA E REGISTRA NOVAS OCORRENCIAS PARA OS CTe´s MONITORADOS
+//   captura_CTe()               // CAPTURA DADOS PARA MONITORAMENTO
+//   novas_correncias_DB()       // PESQUISA E REGISTRA NOVAS OCORRENCIAS PARA OS CTe´s MONITORADOS
    novas_correncias_API()      // ENVIA AS OCORRENCIAS PARA API ORION
-   // prepara_comprovantes_DB()   // PREPARA ESTRUTURA PARA ENVIO DE COMPROVANTES
+//   prepara_comprovantes_DB()   // PREPARA ESTRUTURA PARA ENVIO DE COMPROVANTES
 
 
    //=======================

@@ -39,7 +39,7 @@ const enviaOcorrencias = async () => {
             message: 'API Ok.',
             dados: { 
                 BaixaOcorrenciaResult:{         
-                    Mensagem: 'Documento CTRC não encontrado.',
+                    Mensagem: 'teste. (teste/fake)',
                     Protocolo: 'B3B14EB1748226DFE053C24DEC0AA494',
                     Sucesso: false 
                 }            
@@ -50,6 +50,9 @@ const enviaOcorrencias = async () => {
             
             let api   = await loadAPI(method,endpoint,server,body)
             ret.dados = api.data 
+
+            console.log('POST:', body)
+            console.log('RESPONSE:', api.data)
             
             let id        = body.REFID
             let Mensagem  = ret.dados.BaixaOcorrenciaResult.Mensagem
@@ -74,17 +77,3 @@ const enviaOcorrencias = async () => {
 
 
 module.exports = enviaOcorrencias
-
-
-/*
-RET: {
-  dados: {
-    BaixaOcorrenciaResult: {
-      Mensagem: 'Documento CTRC não encontrado.',
-      Protocolo: 'B3B14EB1748226DFE053C24DEC0AA494',
-      Sucesso: false
-    }
-  },
-  isErr: false
-}
-*/
