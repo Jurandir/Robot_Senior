@@ -25,7 +25,7 @@ const preparaComprovantes = async () => {
     }
 
     let sqlComp = `
-        SELECT * 
+        SELECT TOP 20 * 
         FROM SIC.dbo.ITRACK_DANFE IT 
         WHERE IDCARGA > 0
         AND FASE_ID = 6 
@@ -35,6 +35,8 @@ const preparaComprovantes = async () => {
     try {
         let dadosComp =  await sqlQuery( sqlComp ) 
         let lenArray  = dadosComp.length
+
+        // console.log('preparaComprovantes (dadosComp)',dadosComp,lenArray)   //// teste
 
         if(!lenArray) {
             retorno.message = dadosComp.Erro ? dadosComp.Erro : 'Sem dados !!!'
@@ -47,6 +49,9 @@ const preparaComprovantes = async () => {
         for await (let itn of dadosComp) {
             let ctrc                     = itn.CTRC
             let download                 = await downloadComprovante(ctrc)
+
+            // console.log('preparaComprovantes (downloadComprovante)',download,ctrc)    /// teste
+
             let alinks                   = download.data.map(i=>i.url)
             let slinks                   = JSON.stringify(alinks)
             retorno.dados[idx].links     = slinks

@@ -1,10 +1,16 @@
-{  
- "user": "sa",  
- "password": "_6h$plzot!b7ispOsw6q",  
- "server": "192.168.0.33",  
- "database": "softran_termaco",
- "options": {
-    "encrypt": false,
-    "enableArithAbort": true 
- }        
+{
+   "user": "sa",
+   "password": "_6h$plzot!b7ispOsw6q",
+   "server": "192.168.0.33",
+   "database": "softran_termaco",
+   "options": {
+      "encrypt": false,
+      "requestTimeout": 900000,
+      "enableArithAbort": true
+   },
+   "pool": {
+      "max": 5,
+      "min": 0,
+      "idle": 20000
+   }
 }

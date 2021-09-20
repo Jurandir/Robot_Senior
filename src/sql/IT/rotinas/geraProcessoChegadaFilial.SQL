@@ -30,6 +30,7 @@ BEGIN TRY
     ;
 
     BEGIN
+       /* Anterior (Codigo Refatorado)
         UPDATE CO
            SET OCORRENCIA_OBS =  
                               (SELECT TOP 1 CONCAT('CHEGADA EM : ',n.DsLocal,' / ',n.DsUF)
@@ -41,6 +42,16 @@ BEGIN TRY
         FROM SIC.dbo.ITRACK_OCORRENCIA CO
        WHERE CO.OCORRENCIA_OBS IS NULL 
          AND CO.OCORRENCIA_ID = 098 -- Codigo no Sênior
+        */
+        UPDATE CO
+           SET OCORRENCIA_OBS = CONCAT('CHEGADA EM : ',n.DsLocal,' / ',n.DsUF) 
+        FROM SIC.dbo.ITRACK_OCORRENCIA     CO
+        JOIN softran_termaco.dbo.GTCConhe  a ON a.CdEmpresa = CO.CdEmpresa AND a.NrSeqControle = CO.NrSeqControle 
+        JOIN softran_termaco.dbo.SISEMPRE  m ON m.CdEmpresa = a.CdEmpresaDestino -- Filial Destino
+        JOIN softran_termaco.dbo.SISCep    n ON n.NrCep     = m.NrCep
+       WHERE CO.OCORRENCIA_ID = 098 -- Codigo no Sênior
+         AND CO.OCORRENCIA_OBS IS NULL         
+
     END
     ;
 

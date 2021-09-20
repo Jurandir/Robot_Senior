@@ -20,22 +20,22 @@ const grava_MsgApiResponse = async (resposta,id) => {
         BEGIN TRANSACTION
 
         UPDATE SIC.dbo.ITRACK_OCORRENCIA
-            SET DT_SEND            = CURRENT_TIMESTAMP
-                ,FLAG_SEND          = ${FLAG_SEND}
-                ,RESPOSTA_STATUS    = ${RESPOSTA_STATUS}
-                ,RESPOSTA_PROTOCOLO = ${RESPOSTA_PROTOCOLO}
-                ,RESPOSTA_MSG       = ${RESPOSTA_MSG}
-            WHERE
+           SET DT_SEND            = CURRENT_TIMESTAMP
+              ,FLAG_SEND          = ${FLAG_SEND}
+              ,RESPOSTA_STATUS    = ${RESPOSTA_STATUS}
+              ,RESPOSTA_PROTOCOLO = ${RESPOSTA_PROTOCOLO}
+              ,RESPOSTA_MSG       = ${RESPOSTA_MSG}
+         WHERE
             ID = ${ID}
             ;
 
-            UPDATE SIC.dbo.ITRACK_DANFE
-            SET DT_UPDATE          = CURRENT_TIMESTAMP
-            WHERE FASE_ID <= 1
-              AND ID = (SELECT ITRACK_DANFE_ID FROM SIC.dbo.ITRACK_OCORRENCIA WHERE ID=${ID})
-            ;
+        UPDATE SIC.dbo.ITRACK_DANFE
+           SET DT_UPDATE          = CURRENT_TIMESTAMP
+         WHERE FASE_ID <= 1
+           AND ID = (SELECT ITRACK_DANFE_ID FROM SIC.dbo.ITRACK_OCORRENCIA WHERE ID=${ID})
+           ;
 
-            COMMIT TRANSACTION
+        COMMIT TRANSACTION
     END TRY
     BEGIN CATCH
         IF @@TRANCOUNT > 0

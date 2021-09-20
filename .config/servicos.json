@@ -1,4 +1,4 @@
-{   "localtest": true,
+{   "localtest": false,
     "comprovantes": {
         "server": "http://200.217.161.8:4999",
         "endpoint": "/api/preparaDownload"

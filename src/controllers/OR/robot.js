@@ -6,6 +6,7 @@ const logEventos            = require('../../helpers/logEventos')
 const initCTe               = require('../../metodsDB/OR/initCTe')
 const initOcorrencias       = require('../../metodsDB/OR/initOcorrencias')
 const enviaOcorrencias      = require('../../metodsAPI/OR/enviaOcorrencias')
+const initComprovantes      = require('../../metodsDB/OR/initComprovantes')
 
 const robot = async (cli,cfg,uptime) =>{
    let timeOUT = Math.ceil((process.uptime()-2) - uptime)
@@ -14,7 +15,7 @@ const robot = async (cli,cfg,uptime) =>{
    // CONTROLE DE EXECUÇÃO
    if( cli.count <=0 ){
         clearInterval(cli.fnTime);
-        console.log(moment().format(),`- ( Renovando parâmetros ) - Time: ${timeOUT}s - iTrack`)
+        console.log(moment().format(),`- ( Renovando parâmetros ) - Time: ${timeOUT}s - Orion`)
         return 
    } else {
         console.log(moment().format(),'- Robô em Execução:',cli.count,' - ',timeOUT,'s')
@@ -22,9 +23,10 @@ const robot = async (cli,cfg,uptime) =>{
    cli.count--   
    //=======================
 
-   captura_CTe()           // CAPTURA DADOS PARA MONITORAMENTO
-   novas_correncias_DB()   // PESQUISA E REGISTRA NOVAS OCORRENCIAS PARA OS CTe´s MONITORADOS
-   novas_correncias_API()  // ENVIA AS OCORRENCIAS PARA API ORION
+   captura_CTe()               // CAPTURA DADOS PARA MONITORAMENTO
+   novas_correncias_DB()       // PESQUISA E REGISTRA NOVAS OCORRENCIAS PARA OS CTe´s MONITORADOS
+   novas_correncias_API()      // ENVIA AS OCORRENCIAS PARA API ORION
+   // prepara_comprovantes_DB()   // PREPARA ESTRUTURA PARA ENVIO DE COMPROVANTES
 
 
    //=======================
@@ -70,9 +72,16 @@ const robot = async (cli,cfg,uptime) =>{
                let log = jsonLOG(itn)
                logEventos(cfg,'(API - ENVIA OCORRÊNCIAS) - Sênior -> ORION:',log) 
           })
-     return ret
- }
-  
+          return ret
+     }
+
+     // PREPARA ESTRUTURA PARA ENVIO DE COMPROVANTES
+     async function prepara_comprovantes_DB() {
+          let ret = await initComprovantes()
+          logEventos(cfg,'(BD - PREPARA ESTRUTURA PARA ENVIO DE COMPROVANTES) - Sênior -> ORION:',ret) 
+          return ret
+      }
+    
 }
 
 module.exports = robot
