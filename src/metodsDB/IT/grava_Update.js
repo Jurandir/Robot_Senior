@@ -3,10 +3,11 @@
 const sqlExec       = require('../../connection/sqlExSENIOR')
 
 const grava_Update = async (params) => {
-   let { idCargaPK, CdEmpresa, NrSeqControle, danfe } = params
+   let { idCargaPK, CdEmpresa, NrSeqControle, danfe, addCarga } = params
    let sql = `
    UPDATE SIC.dbo.ITRACK_DANFE
       SET DT_UPDATE = CURRENT_TIMESTAMP
+        , CTRC_OLD  = '${addCarga}'
     WHERE CdEmpresa = ${CdEmpresa}
       AND NrSeqControle = ${NrSeqControle}
       AND CHAVE = '${danfe}'

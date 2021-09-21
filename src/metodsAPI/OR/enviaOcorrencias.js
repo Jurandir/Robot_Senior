@@ -29,7 +29,7 @@ const enviaOcorrencias = async () => {
         return retorno
     }
 
-    console.log('Envia Ocorrencias:')
+    console.log('Envia Ocorrências:')
     console.log('* server:', server)
     console.log('* endpoint:', endpoint)
     
@@ -51,8 +51,8 @@ const enviaOcorrencias = async () => {
             let api   = await loadAPI(method,endpoint,server,body)
             ret.dados = api.data 
 
-            console.log('POST:', body)
-            console.log('RESPONSE:', api.data)
+             console.log('POST:', body)                       //--- TESTES
+             console.log('RESPONSE:', api.data)
             
             let id        = body.REFID
             let Mensagem  = ret.dados.BaixaOcorrenciaResult.Mensagem
@@ -64,6 +64,9 @@ const enviaOcorrencias = async () => {
             retorno.push( ret ) 
 
         } catch (err) {
+
+            console.log('(enviaOcorrencias) err:', err.message )     //--- TESTES
+
             ret.success = false
             ret.message = err.message
             ret.dados   = {}

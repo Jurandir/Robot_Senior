@@ -14,7 +14,7 @@ let flag_livre      = true
 
 const initCTe = async () => {
    let sql = `
-    INSERT INTO SIC.dbo.ORION_CTE (DOCUMENTO,CHAVE,EMBARCADOR,DT_ATUAL,
+    INSERT INTO SIC.dbo.ORION_CTE (DOCUMENTO,CHAVE,CHAVEORIGINAL,EMBARCADOR,DT_ATUAL,
                                    DT_EMISSAO,DT_EMBARQUE,DT_CHEGADA,DT_ENTREGA,
                                    DT_PREVISAO,DT_PREV_ORIGINAL,DESTINATARIO,TRANSPORTADOR,
                                    CdEmpresa, NrSeqControle, NrDoctoFiscal, 
@@ -22,6 +22,7 @@ const initCTe = async () => {
     ${sqlInitCTe}
 
     WHERE CNH.InTipoEmissao IN ( 00, 11 , 12 )
+    AND ORI.NrChaveAcessoCTeOrigem  IS NOT NULL
     AND ( EXISTS (SELECT 1 FROM SIC.dbo.ORION_CLIENTES WHERE CNPJ_RAIZ=SUBSTRING(CNH.CdRemetente   ,1,8) ) OR 
           EXISTS (SELECT 1 FROM SIC.dbo.ORION_CLIENTES WHERE CNPJ_RAIZ=SUBSTRING(CNH.CdDestinatario,1,8) ) OR 
           EXISTS (SELECT 1 FROM SIC.dbo.ORION_CLIENTES WHERE CNPJ_RAIZ=SUBSTRING(CNH.CdInscricao   ,1,8) ) )

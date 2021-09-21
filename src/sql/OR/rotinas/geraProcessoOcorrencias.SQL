@@ -35,19 +35,20 @@ BEGIN TRY
                 (MOV.CdOcorrencia = 89  AND OCT.FASE_ID <> 3) OR
                 (MOV.CdOcorrencia = 100 AND OCT.FASE_ID <> 4) OR
                 (MOV.CdOcorrencia = 1   AND OCT.FASE_ID <> 5) )
-          AND ( OCT.DT_UPDATE IS NULL OR DATEDIFF(minute,OCT.DT_UPDATE, CURRENT_TIMESTAMP) > 3) --- depois de 3min do ultimo update
+          AND ( OCT.DT_UPDATE IS NULL OR DATEDIFF(minute,OCT.DT_UPDATE, CURRENT_TIMESTAMP) > 5) --- depois de 5min do ultimo update
           AND (OCT.FASE_ID < 5)
         ;
 
         INSERT INTO SIC.dbo.ORION_OCORRENCIAS ( 
-                      CNPJ, DOCUMENTO, CHAVE, DT_OCORRENCIA, OBSERVACAO,
+                      CNPJ, DOCUMENTO, CHAVE, CHAVEORIGINAL, DT_OCORRENCIA, OBSERVACAO,
                       OCORR301, OCORR302, OCORRCASUAL, OCORRTRANSPORTE,
                       OCORRSIMPLIFICADA, RECEBEDOR_DOC, RECEBEDOR_NOME,
                       CdEmpresa, NrSeqControle, CdSequencia, CdOcorrencia )
-        SELECT TOP 20
+        SELECT TOP 50
              OCT.EMBARCADOR          AS CNPJ
             ,OCT.DOCUMENTO           AS DOCUMENTO
             ,OCT.CHAVE               AS CHAVE
+            ,OCT.CHAVEORIGINAL       AS CHAVEORIGINAL
             ,CAST(CONCAT(FORMAT(OUN.DtMovimento,'yyyy-MM-dd'),' ', FORMAT(OUN.HRMovimento,'HH:mm:ss')) as datetime) 
                                      AS DT_OCORRENCIA
             ,OCO.DsHistoricoEntrega  AS OBSERVACAO

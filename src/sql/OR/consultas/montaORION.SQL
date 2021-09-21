@@ -3,6 +3,7 @@
 SELECT DISTINCT  
      CONCAT(EMP.DSAPELIDO,'E',CNH.NrDoctoFiscal)                as DOCUMENTO
 	,CTE.CdChaveAcesso                                          as CHAVE
+	,ORI.NrChaveAcessoCTeOrigem                                 as CHAVEORIGINAL
 	,CNH.CdRemetente                                            as EMBARCADOR
 	,CNH.dtdigitacao                                            as DT_ATUAL
 	,CNH.DtEmissao                                              as DT_EMISSAO
@@ -26,5 +27,6 @@ SELECT DISTINCT
 FROM softran_termaco.dbo.gtcconhe  CNH
 JOIN softran_termaco.dbo.sisempre  EMP  ON EMP.CdEmpresa   = CNH.CdEmpresa
 JOIN softran_termaco.dbo.gtcconce  CTE  ON CTE.CdEmpresa   = CNH.CdEmpresa	 AND CTE.NrSeqControle = CNH.NrSeqControle
+JOIN softran_termaco.dbo.GTCCONIA  ORI  ON ORI.CdEmpresa   = CNH.CdEmpresa	 AND ORI.NrSeqControle = CNH.NrSeqControle
 LEFT JOIN SIC.dbo.ORION_CTE        OCT  ON OCT.CHAVE       = CTE.CdChaveAcesso
 		   

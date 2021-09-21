@@ -49,19 +49,24 @@ const valida_idCargaPK = async (cfg) => {
                         idCargaPK     : 0,
                         CdEmpresa     : itn.CdEmpresa, 
                         NrSeqControle : itn.NrSeqControle,
-                        danfe         : itn.CHAVE
+                        danfe         : itn.CHAVE,
+                        addCarga      : itn.FLAG_ADDCARGA ? 'S' : 'N'
                     }
                     
-                    grava_Update(params) // Atualiza "DT_UPDATE"
+                    await grava_Update(params) // Atualiza "DT_UPDATE"
                   
                     if(itn.FLAG_ADDCARGA) {
-                        let nova = await insertNewCarga(params)
 
-                        params.idCargaPK = nova.success ? (nova.data.success ? nova.data.data : 0 ) : 0
-                        logEventos(cfg,`Retorno API (InsertCarga) : (${params.CdEmpresa},${params.NrSeqControle}): CODE:${nova.data.code || params.idCargaPK}, MSG:"${nova.data.message || '' }", OK:${nova.data.success}, CALL:`,{success:true})
+                        if(params.addCarga=='S') {
+                            let nova = await insertNewCarga(params)
+                        
+                            params.idCargaPK = nova.success ? (nova.data.success ? nova.data.data : 0 ) : 0
+                            logEventos(cfg,`Retorno API (InsertCarga) : (${params.CdEmpresa},${params.NrSeqControle}): CODE:${nova.data.code || params.idCargaPK}, MSG:"${nova.data.message || '' }", OK:${nova.data.success}, CALL:`,{success:true})
 
-                        grv = await grava_IdCargaPK(params)
-                        logEventos(cfg,`Nova CARGA : ${params.idCargaPK}, (${params.CdEmpresa},${params.NrSeqControle}) - OK: ${grv.success}`,grv)
+                            grv = await grava_IdCargaPK(params)
+                            logEventos(cfg,`Nova CARGA : ${params.idCargaPK}, (${params.CdEmpresa},${params.NrSeqControle}) - OK: ${grv.success}`,grv)
+                        }
+
                     }
                 }
             } else {
