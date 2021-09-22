@@ -1,0 +1,11 @@
+{
+    "run": "Test",
+    "versao": "1.0",
+    "time": 30000,
+    "validade": 5400000,
+    "testeURL": "http://localhost:4999/test",
+    "producaoURL": "http://localhost:4999/test",
+    "debug": "OFF",
+    "user": "*",
+    "pwd": "*"
+}

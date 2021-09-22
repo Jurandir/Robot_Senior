@@ -12,8 +12,7 @@ const clientes  = require('./.config/CF/clientes.json')
 const login     = require('./src/metodsAPI/CF/login')
 const robot     = require('./src/controllers/CF/robot')
 
-
-const titulo  = ` Robô - ConfirmaFacil - Sênior - ${config.versao} `.yellow.bgBlue.bold 
+const titulo  = ` Robô - `.yellow.bgBlue.bold+`" ConfirmaFacil "`.white.bgBlue.bold+` - Sênior - ${config.versao} `.yellow.bgBlue.bold 
 
 process.stdout.write('\x1B[2J\x1B[0f')
 console.log(titulo)

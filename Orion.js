@@ -9,7 +9,7 @@ const colors    = require('colors')
 const config    = require('./.config/orion.json') 
 const robot     = require('./src/controllers/OR/robot')
 
-const titulo  = ` Robô - ORION - Sênior - ${config.versao} `.yellow.bgBlue.bold 
+const titulo  = ` Robô - `.yellow.bgBlue.bold+`" Orion "`.white.bgBlue.bold+` - Sênior - ${config.versao} `.yellow.bgBlue.bold 
 
 process.stdout.write('\x1B[2J\x1B[0f')
 console.log(titulo)

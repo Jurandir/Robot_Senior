@@ -31,7 +31,7 @@ BEGIN TRY
       JOIN softran_termaco.dbo.GTCMovEn    MOV ON MOV.CdEmpresa = CO.CdEmpresa AND MOV.NrSeqControle = CO.NrSeqControle AND MOV.CdSequencia = CO.CdSequencia
      WHERE CF.FASE_ID = 5 
        AND CO.OCORRENCIA_ID = 1
-       AND CO.OCORRENCIA_OBS IS NULL
+       AND (CO.OCORRENCIA_OBS IS NULL OR LEN(CO.OCORRENCIA_OBS) < 3)
     ;
 
     COMMIT TRANSACTION

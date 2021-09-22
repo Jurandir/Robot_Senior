@@ -14,6 +14,8 @@ let flag_livre      = true
 const initNFs = async (cli) => {
    let raiz = `${cli.cnpj}`.substr(0,8)
    let sql = `
+    --- ( initNFs.js ) - BD - CAPTURA NFs
+    
     INSERT INTO SIC.dbo.CONFIRMAFACIL ( EMBARCADOR,	NUMERO, SERIE,
      CHAVE, DT_EMISSAO, DT_EMBARQUE, DT_CHEGADA, DT_ENTREGA, DT_PREVISAO, DT_PREV_ORIGINAL,
      VALOR, CTRC, DESTINATARIO, TRANSPORTADOR, DT_UPDATE, CdEmpresa, NrSeqControle, FASE_ID )
