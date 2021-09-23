@@ -49,8 +49,8 @@ const robot = async (cli,cfg,uptime) =>{
     await confirmacao_entrega()           // 001 - ENTREGA REALIZADA NORMALMENTE (BD,API)
     await comprovante_entrega_BD()        // 999 - COMPROVANTE DE ENTREGA (BD)
     await comprovante_entrega_FILE()      // 999 - COMPROVANTE DE ENTREGA (FILE,API LOCAL)
-//    await API_comprovante_entrega()       // 999 - COMPROVANTE DE ENTREGA (API)
-//    await encerra_processo()              // XXX - ENCERRA PROCESSO DE MONITORAMENTO (BD)
+    await API_comprovante_entrega()       // 999 - COMPROVANTE DE ENTREGA (API)
+    await encerra_processo()              // XXX - ENCERRA PROCESSO DE MONITORAMENTO (BD)
 
     let time_final = process.uptime()
     let time_total = Math.ceil(time_final-time_inicio)
@@ -161,9 +161,9 @@ const robot = async (cli,cfg,uptime) =>{
 
     // ENVIA LINKS DOS COMPROVANTES DE ENTREGA
     async function API_comprovante_entrega() {
-      let retComprovante = await comprovante(cfg,cli)
-      logEventos(cfg,'(API - COMPROVANTE) - retComprovante:',retComprovante.message)
-      return retComprovante
+      let ret = await comprovante(cfg,cli)
+      logEventos(cfg,'(API - COMPROVANTE) - retComprovante:',ret)
+      return ret
     }
 
     // ENCERRA PROCESSOS DE MONITORAMENTO

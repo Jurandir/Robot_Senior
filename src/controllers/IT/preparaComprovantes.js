@@ -24,13 +24,16 @@ const preparaComprovantes = async () => {
         return await sqlExec(sqlEx)
     }
 
+    let tempo = Math.floor( Math.random() * 07 + 3 ) // Soteia um numero de 3 a 10 minutos
+    let lista = Math.floor( Math.random() * 20 + 5 ) // Soteia um numero de 5 a 25 registros
+
     let sqlComp = `
-        SELECT TOP 20 * 
+        SELECT TOP ${lista} * 
         FROM SIC.dbo.ITRACK_DANFE IT 
         WHERE IDCARGA > 0
         AND FASE_ID = 6 
         AND FLAG_COMPROVANTE = 0
-        AND ( IT.DT_UPDATE IS NULL OR DATEDIFF(minute,IT.DT_UPDATE, CURRENT_TIMESTAMP) > 3) --- depois de 3min da ultima tentativa
+        AND ( IT.DT_UPDATE IS NULL OR DATEDIFF(minute,IT.DT_UPDATE, CURRENT_TIMESTAMP) > ${tempo}) --- depois de X min da ultima tentativa
     `
     try {
         let dadosComp =  await sqlQuery( sqlComp ) 

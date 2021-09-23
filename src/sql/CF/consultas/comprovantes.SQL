@@ -1,6 +1,6 @@
 -- 03/09/2021 17:37 - COMPROVANTE DE ENTREGA
 
-SELECT TOP 10
+SELECT TOP 1 -- 10
 	 CO.ID                                        AS FLAG_ID
 	,CF.NUMERO                                    AS embarque_numero
 	,CF.SERIE                                     AS embarque_serie

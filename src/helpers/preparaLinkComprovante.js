@@ -14,8 +14,6 @@ const preparaLinkComprovante = async (cfg) => {
     let sql       = sqlPendentes
     let resposta  = { success: true, message: 'Em Processamento.',  rowsAffected: 0 }
 
-    console.log('-------> Comprovantes inicio.')
-
     try {
         let ret  = await sqlQuery( sql )
 
@@ -43,10 +41,7 @@ const preparaLinkComprovante = async (cfg) => {
                     logEventos(cfg,`ERROR LINK :${resp.err}`,'preparaLinkComprovante.js') // ,resp)
             }   
 
-        }
-
-        console.log('-------> Comprovantes final.')
-        
+        }        
         return resposta
 
     } catch (err) {

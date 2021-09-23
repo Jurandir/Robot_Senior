@@ -4,13 +4,9 @@ const sqlExec = require('../../connection/sqlExSENIOR')
 const updFlagsErros = async (dados,response) => {
     let result = {success: false, message:'updFlagsErros' ,rowsAffected: 0 , embarque: response }
 
-    // console.log('(updFlagsErros) 0')
-
     if(!response.data) {
-        // console.log('(updFlagsErros) Passou 2')
         return result
     }
-    // console.log('(updFlagsErros) Passou 1')
 
     let base        = response.data.response  
     let list        = base.data.message
@@ -19,7 +15,11 @@ const updFlagsErros = async (dados,response) => {
     let protocolo   = base.data.protocolo
     result.embarque = base
 
-    console.log(moment().format(),'- (updFlagsErros.js) Lista:',list)
+    if(!list) {
+        list = []
+        console.log(moment().format(),'- ERRO - updFlagsErros.js ')
+        return result
+    }
     
     list.map( async (item) => {
         let sql = `UPDATE SIC.dbo.CONFIRMAFACILOCORRENCIA 

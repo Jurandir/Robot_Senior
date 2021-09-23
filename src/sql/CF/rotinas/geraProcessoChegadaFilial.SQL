@@ -29,6 +29,7 @@ BEGIN TRY
     ;
 
     BEGIN
+        /*
         UPDATE CO
            SET OCORRENCIA_OBS =  
                               (SELECT TOP 1 CONCAT('CHEGADA EM : ',n.DsLocal,' / ',n.DsUF)
@@ -41,6 +42,21 @@ BEGIN TRY
         JOIN SIC.dbo.CONFIRMAFACILDEPARA DP ON DP.ID_SENIOR = 098 -- Codigo no Sênior
        WHERE CO.OCORRENCIA_OBS IS NULL 
          AND CO.OCORRENCIA_ID = DP.ID_CONFIRMAFACIL
+        */
+
+        UPDATE CO
+           SET OCORRENCIA_OBS =  
+                              (SELECT TOP 1 CONCAT('CHEGADA EM : ',n.DsLocal,' / ',n.DsUF)
+                                 FROM softran_termaco.dbo.sisempre m 
+                            LEFT JOIN softran_termaco.dbo.siscep   n ON n.nrcep     = m.nrcep
+                                WHERE m.cdempresa = CNH.cdempresadestino -- Filial Destino
+								 )
+        FROM SIC.dbo.CONFIRMAFACILOCORRENCIA CO
+        JOIN SIC.dbo.CONFIRMAFACILDEPARA     DP ON DP.ID_SENIOR  = 098 -- Codigo no Sênior
+		JOIN softran_termaco.dbo.GTCConhe   CNH ON CNH.CdEmpresa = CO.CdEmpresa AND CNH.NrSeqControle = CO.NrSeqControle 
+       WHERE CO.OCORRENCIA_OBS IS NULL 
+         AND CO.OCORRENCIA_ID = DP.ID_CONFIRMAFACIL
+
     END
     ;
 

@@ -10,10 +10,10 @@ const embarque = async (cfg,cli,body) => {
     } 
     let params   = body
     let token    = cli.login.resposta.token
-    
+
     let ret  = await loadAPI(method,endpoint,server,params,token)
     let base = ret
-    
+
     if(!ret.success) {
         console.log('FALHA (embarque.js) RET:',ret)
     }    

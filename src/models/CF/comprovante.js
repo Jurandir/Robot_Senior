@@ -17,9 +17,12 @@ const base = () => {
 
 const comprovante = async (cfg,cli) => {
    let server = cfg.comprovanteURL
-   let sql    = eval('`'+sqlFile+'`');
-  
-    return await enviaDadosAPI(cfg,cli,base,sql)
+   let sql    = eval('`'+sqlFile+'`')
+   let debug  = false
+
+   let ret = await enviaDadosAPI(cfg,cli,base,sql,debug)
+
+    return ret
 }
 
 module.exports = comprovante
