@@ -13,3 +13,14 @@ SELECT a.CdEmpresa
 WHERE 
    -- CONCAT(d.DsApelido,'E',a.NrDoctoFiscal) IN ('SPOE3423994','SPOE3423995','SPOE3424003','SPOE3424429')
    c.DsArquivo IS NOT NULL
+
+;
+-- CONVERTE BINARY FOR BASE64 - TEM LIMITE DE 8000 CARACTERES
+select CdEmpresa, NrSeqControle, CdSequencia ,DsArquivo
+from openjson(
+    (
+       select CdEmpresa, NrSeqControle, CdSequencia ,DsArquivo from softran_termaco.dbo.GTCMVEDG 
+	   where CdEmpresa = 2 and NrSeqControle = 414 
+	   for json auto
+    )
+) with(CdEmpresa int, NrSeqControle bigint, CdSequencia int, DsArquivo nvarchar(max))

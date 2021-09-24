@@ -1,9 +1,9 @@
 {
     "run": "Production",
     "versao": "1.0",
-    "time": 30000,
+    "time": 50000,
     "validade": 5400000,
-    "comprovanteURL": "",
+    "comprovanteURL": "http://200.217.161.8:4999",
     "debug": "OFF",
     "TEST_SRV": "http://localhost:4999/test",
     "SERVIDOR": "https://orionbr.cevalogistics.com/WCFBaixaOcorrencia/Servicos/RegistraBaixa.svc",

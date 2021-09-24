@@ -26,13 +26,14 @@ BEGIN TRY
 
     --- INSERT REGISTRO PARA COMPROVANTE
     INSERT INTO SIC.dbo.ORION_OCORRENCIAS ( 
-                      CNPJ, DOCUMENTO, CHAVE, DT_ATUAL, DT_OCORRENCIA,
+                      CNPJ, DOCUMENTO, CHAVE, CHAVEORIGINAL, DT_ATUAL, DT_OCORRENCIA,
                       TIPOIMAGEM, OBSERVACAO, RECEBEDOR_DOC, RECEBEDOR_NOME,
                       CdEmpresa, NrSeqControle, CdOcorrencia )
     SELECT TOP 20
              OCT.EMBARCADOR            AS CNPJ
             ,OCT.DOCUMENTO             AS DOCUMENTO
             ,OCT.CHAVE                 AS CHAVE
+            ,OCT.CHAVEORIGINAL         AS CHAVEORIGINAL
             ,CURRENT_TIMESTAMP         AS DT_ATUAL
             ,CURRENT_TIMESTAMP         AS DT_OCORRENCIA
             ,1                         AS TIPOIMAGEM
@@ -50,7 +51,16 @@ BEGIN TRY
       AND CO.CdOcorrencia = 1
       AND CO.FLAG_SEND    = 1
       AND NOT EXISTS (SELECT 1 FROM SIC.dbo.ORION_OCORRENCIAS a WHERE a.CdEmpresa = OCT.CdEmpresa AND a.NrSeqControle = OCT.NrSeqControle AND a.CdOcorrencia = 999)
-    ;          
+    ; 
+
+    UPDATE OCT
+       SET FASE_ID   = 6
+         , DT_UPDATE = CURRENT_TIMESTAMP
+      FROM SIC.dbo.ORION_CTE        OCT
+      JOIN SIC.dbo.ORION_OCORRENCIAS CO ON CO.DOCUMENTO = OCT.DOCUMENTO
+     WHERE OCT.FASE_ID     = 5
+       AND CO.CdOcorrencia = 999
+    ;
 
     COMMIT TRANSACTION
     

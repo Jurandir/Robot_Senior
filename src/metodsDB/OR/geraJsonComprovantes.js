@@ -1,15 +1,14 @@
-// 16/09/2021 16:36 - GERA OCORRENCIAS - ("ORION/CEVA")
+// 23/09/2021 16:36 - GERA JSON OUTRAS OCORRENCIAS - ("ORION/CEVA")
 
 const sqlQuery        = require('../../connection/sqlSENIOR')
 const dataSetToJson   = require('../../helpers/dataSetToJson')
 
 const fs                        = require('fs')
 const path                      = require('path')
-const sqlFileName               =  path.join(__dirname, '../../sql/OR/consultas/enviaOcorrencias.SQL')
+const sqlFileName               =  path.join(__dirname, '../../sql/OR/consultas/enviaComprovantes.SQL')
 const sqlNovaOcorrenciaJSON     = fs.readFileSync(sqlFileName, "utf8")
 
-
-const geraJsonOcorrencia = async () => {
+const geraJsonComprovantes = async () => {
     let sql = eval('`'+sqlNovaOcorrenciaJSON+'`');
     
     try {
@@ -28,4 +27,4 @@ const geraJsonOcorrencia = async () => {
     }
 }
 
-module.exports = geraJsonOcorrencia
+module.exports = geraJsonComprovantes
