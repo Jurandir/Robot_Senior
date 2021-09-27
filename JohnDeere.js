@@ -1,6 +1,10 @@
 //-- Versão Inicial Sênior ( 22/09/2021 )
 //-- By : Jurandir Ferreira
 
+// 2 Horas = 432000000 ms
+// 1 Dia   = 5184000000 ms
+
+
 require('dotenv').config()
 const moment = require('moment')
 
@@ -29,4 +33,4 @@ function loopExecRobot (loopToken) {
 }
 
 // Executa Robot
-// loopExecRobot(0)
+loopExecRobot(0)

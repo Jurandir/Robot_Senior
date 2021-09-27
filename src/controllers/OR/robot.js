@@ -50,7 +50,7 @@ const robot = async (cli,cfg,uptime) =>{
        success: itn.success,
        message: `${itn.body.observacao}`,
        REFID: itn.body.REFID || 0,
-       api_success: itn.dados[element].Sucesso || false,
+       api_success: itn.dados[element].Sucesso || false,              // <- USAR TEMPLATE STRING PARA EVITAR ERRO
        api_message: itn.dados[element].Mensagem || 'API Error',
        upd_success: itn.grv.success || false,
        upd_message: `${itn.grv.message || 'upd Error' }, Affected: ${itn.grv.rowsAffected || -1}`
