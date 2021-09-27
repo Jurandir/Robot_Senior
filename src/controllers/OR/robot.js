@@ -9,6 +9,8 @@ const enviaOcorrenciasIniciais = require('../../metodsAPI/OR/enviaOcorrenciasIni
 const enviaOcorrenciasOutras   = require('../../metodsAPI/OR/enviaOcorrenciasOutras')
 const enviaComprovantes        = require('../../metodsAPI/OR/enviaComprovantes')
 const initComprovantes         = require('../../metodsDB/OR/initComprovantes')
+const encerraProcessos         = require('../../metodsDB/OR/encerraProcessos')
+
 
 const robot = async (cli,cfg,uptime) =>{
    let timeOUT = Math.ceil((process.uptime()-2) - uptime)
@@ -25,14 +27,13 @@ const robot = async (cli,cfg,uptime) =>{
    cli.count--   
    //=======================
 
-  captura_CTe()                      // CAPTURA DADOS PARA MONITORAMENTO
-  novas_correncias_DB()              // PESQUISA E REGISTRA NOVAS OCORRENCIAS PARA OS CTe´s MONITORADOS
-  envia_ocorrencias_iniciais_API()   // ENVIA AS OCORRENCIAS PARA API ORION - INICIAIS
-  envia_ocorrencias_outras_API()     // ENVIA AS OCORRENCIAS PARA API ORION - OUTRAS
-  prepara_comprovantes_DB()          // PREPARA ESTRUTURA PARA ENVIO DE COMPROVANTES
-
-  // envia_comprovantes_API()           // PESQUISA EXISTENCIA DE COMPROVANTES E ENVIA PARA API
-
+   await captura_CTe()                      // CAPTURA DADOS PARA MONITORAMENTO
+   await novas_correncias_DB()              // PESQUISA E REGISTRA NOVAS OCORRENCIAS PARA OS CTe´s MONITORADOS
+   await envia_ocorrencias_iniciais_API()   // ENVIA AS OCORRENCIAS PARA API ORION - INICIAIS
+   await envia_ocorrencias_outras_API()     // ENVIA AS OCORRENCIAS PARA API ORION - OUTRAS
+   await prepara_comprovantes_DB()          // PREPARA ESTRUTURA PARA ENVIO DE COMPROVANTES
+   await envia_comprovantes_API()           // PESQUISA EXISTENCIA DE COMPROVANTES E ENVIA PARA API
+   await encerra_processo()                 // XXX - ENCERRA PROCESSO DE MONITORAMENTO (BD)
 
    //=======================
 
@@ -44,13 +45,13 @@ const robot = async (cli,cfg,uptime) =>{
    // ======================== ROTINAS ===============================
 
    // json LOG
-   function jsonLOG (itn) { 
+   function jsonLOG (itn,element) { 
      return {
        success: itn.success,
        message: `${itn.body.observacao}`,
        REFID: itn.body.REFID || 0,
-       api_success: itn.dados.BaixaOcorrenciaResult.Sucesso || false,
-       api_message: itn.dados.BaixaOcorrenciaResult.Mensagem || 'API Error',
+       api_success: itn.dados[element].Sucesso || false,
+       api_message: itn.dados[element].Mensagem || 'API Error',
        upd_success: itn.grv.success || false,
        upd_message: `${itn.grv.message || 'upd Error' }, Affected: ${itn.grv.rowsAffected || -1}`
      }
@@ -74,7 +75,7 @@ const robot = async (cli,cfg,uptime) =>{
     async function envia_ocorrencias_iniciais_API() {
           let ret = await enviaOcorrenciasIniciais()
           ret.forEach(itn => {
-               let log = jsonLOG(itn)
+               let log = jsonLOG(itn,'BaixaOcorrenciaResult')
                logEventos(cfg,'(API - ENVIA OCORRÊNCIAS INICIAIS) - Sênior -> ORION:',log) 
           })
           return ret
@@ -84,7 +85,7 @@ const robot = async (cli,cfg,uptime) =>{
      async function envia_ocorrencias_outras_API() {
           let ret = await enviaOcorrenciasOutras()
           ret.forEach(itn => {
-               let log = jsonLOG(itn)
+               let log = jsonLOG(itn,'BaixaOcorrenciaResult')
                logEventos(cfg,'(API - ENVIA OCORRÊNCIAS MANUAIS) - Sênior -> ORION:',log) 
           })
           return ret
@@ -100,10 +101,20 @@ const robot = async (cli,cfg,uptime) =>{
      // PESQUISA EXISTENCIA DE COMPROVANTES E ENVIA PARA API
      async function envia_comprovantes_API() {
           let ret = await enviaComprovantes()
-          logEventos(cfg,'(API - PESQUISA EXISTENCIA DE COMPROVANTES - ENVIA P/ API) - Sênior -> ORION:',ret) 
+          ret.forEach(itn => {
+               let log = jsonLOG(itn,'EvidenciaOcorrenciaResult')
+               logEventos(cfg,'(API - PESQUISA EXISTENCIA DE COMPROVANTES - ENVIA P/ API) - Sênior -> ORION:',log) 
+          })
+
           return ret
      }
 
+     // ENCERRA PROCESSOS DE MONITORAMENTO
+     async function encerra_processo() {
+          let ret = await encerraProcessos()
+          logEventos(cfg,'(BD - ENCERRA PROCESSOS) - retEncerraProcessos:',ret)
+          return ret
+     }
 
 }
 

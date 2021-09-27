@@ -29,7 +29,7 @@ BEGIN TRY
                       CNPJ, DOCUMENTO, CHAVE, CHAVEORIGINAL, DT_ATUAL, DT_OCORRENCIA,
                       TIPOIMAGEM, OBSERVACAO, RECEBEDOR_DOC, RECEBEDOR_NOME,
                       CdEmpresa, NrSeqControle, CdOcorrencia )
-    SELECT TOP 20
+    SELECT TOP 60
              OCT.EMBARCADOR            AS CNPJ
             ,OCT.DOCUMENTO             AS DOCUMENTO
             ,OCT.CHAVE                 AS CHAVE

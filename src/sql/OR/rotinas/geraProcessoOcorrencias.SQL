@@ -44,7 +44,7 @@ BEGIN TRY
                       OCORR301, OCORR302, OCORRCASUAL, OCORRTRANSPORTE,
                       OCORRSIMPLIFICADA, RECEBEDOR_DOC, RECEBEDOR_NOME,
                       CdEmpresa, NrSeqControle, CdSequencia, CdOcorrencia )
-        SELECT TOP 50
+        SELECT TOP 60
              OCT.EMBARCADOR          AS CNPJ
             ,OCT.DOCUMENTO           AS DOCUMENTO
             ,OCT.CHAVE               AS CHAVE

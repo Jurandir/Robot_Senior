@@ -1,9 +1,10 @@
--- 24/09/2021 15:02 - COMPROVANTES NÃO ENVIADOS - ("ORION/CEVA")
+-- 27/09/2021 13:24 - COMPROVANTES NÃO ENVIADOS - ("ORION/CEVA")
 
-SELECT  TOP 1  --- teste
+SELECT  TOP 20
      AC.LOGIN                                       AS "login"
     ,AC.SENHA                                       AS "senha"
     ,CO.CHAVEORIGINAL                               AS "chave"
+    ,'1'                                            AS "tipoImagem"
 	  ,''                                             AS "imagem"
     ,CO.REPLICAR                                    AS "replicar"
     ,CO.ID                                          AS "REFID"

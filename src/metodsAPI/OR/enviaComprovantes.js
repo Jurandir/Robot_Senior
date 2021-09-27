@@ -4,6 +4,7 @@
 const loadAPI                   = require('../../helpers/loadAPI')
 const config                    = require('../../../.config/orion.json')
 const upd_response              = require('../../metodsDB/OR/upd_response')
+const upd_flag_comprovante      = require('../../metodsDB/OR/upd_flag_comprovante')
 const geraJsonComprovantes      = require('../../metodsDB/OR/geraJsonComprovantes')
 
 const debug    = false
@@ -11,8 +12,7 @@ const server_comprovante   = config.comprovanteURL
 const endpoint_comprovante = '/api/preparaDownload'
 const method   = 'POST'
 const endpoint = config.URL_EVIDENCIAR_OCORRENCIA
-// const server   =  (config.run=='Test') ? config.TEST_SRV : config.SERVIDOR
-const server   =  config.TEST_SRV  /// TESTES
+const server   =  (config.run=='Test') ? config.TEST_SRV : config.SERVIDOR
 
 const enviaComprovantes = async () => {
     let retorno  = []
@@ -21,53 +21,53 @@ const enviaComprovantes = async () => {
     if(!bodys || bodys.length==0) {
         return retorno
     }
-
-    for await (let body of bodys) {
-        console.log('enviaComprovantes',body)
-        let comp  = await loadAPI('GET',endpoint_comprovante,server_comprovante,{ ctrc: body.CTRC, retTipo:2 })
-        console.log('enviaComprovantes COMP:',comp)
-    }
-
     
-    return retorno
-
     for await (let body of bodys) {
-        let ret = { 
-            success: true,
-            message: 'API Ok.',
-        }
-        try {
+        let comp   = await loadAPI('GET',endpoint_comprovante,server_comprovante,{ ctrc: body.CTRC, retTipo:2 })
+        let imagem =  comp.data[0].base64  // Pega a Primeira imagem da lista
+        if(comp.success && imagem) {
+
+            upd_flag_comprovante(body.CTRC)
             
-            if(debug) { console.log('Request ID:',body.REFID) }
+            body.imagem     = imagem
+            body.observacao = 'ENVIO DO COMPROVANTE/EVIDÊNCIA'
+            let ret = { 
+                success: true,
+                message: 'API Ok.',
+            }
+            try {
+                
+                console.log('Request ID:',body.REFID,method,endpoint) 
 
-            let api   = await loadAPI(method,endpoint,server,body)
-            ret.dados = api.data 
-            
-            if(debug) { console.log('Response:',api) }
-            
-            let id        = body.REFID
-            let Mensagem  = ret.dados.BaixaOcorrenciaResult.Mensagem
-            let Protocolo = ret.dados.BaixaOcorrenciaResult.Protocolo
-            let Sucesso   = ret.dados.BaixaOcorrenciaResult.Sucesso
+                let api   = await loadAPI(method,endpoint,server,body)
+                ret.dados = api.data
+                ret.body  = body 
+                                
+                let id        = body.REFID
+                let Mensagem  = api.data.EvidenciaOcorrenciaResult.Mensagem
+                let Protocolo = api.data.EvidenciaOcorrenciaResult.Protocolo
+                let Sucesso   = api.data.EvidenciaOcorrenciaResult.Sucesso
 
-            if(!Mensagem) {
-                console.log('(enviaComprovantes) Mensagem:', ret )     //--- TESTES
-            }            
-            
-            ret.grv  = await upd_response( { id, Mensagem, Protocolo, Sucesso } )
+                if(!Mensagem) {
+                    console.log('Response:',api)
+                    console.log('(enviaComprovantes) Mensagem:', ret )     //--- TESTES
+                }            
+                
+                ret.grv  = await upd_response( { id, Mensagem, Protocolo, Sucesso } )
 
-            retorno.push( ret ) 
+                retorno.push( ret ) 
 
-        } catch (err) {
+            } catch (err) {
 
-            console.log('(enviaComprovantes) err:', err.message )     //--- TESTES
+                console.log('(enviaComprovantes) err:', err.message )     //--- TESTES
 
-            ret.success = false
-            ret.message = err.message
-            ret.dados   = {}
-            retorno.push( ret ) 
-        }
-        let grv = {}    
+                ret.success = false
+                ret.message = err.message
+                ret.dados   = {}
+                retorno.push( ret ) 
+            }
+
+        } 
     }  
 
     return retorno
