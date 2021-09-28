@@ -1,8 +1,8 @@
 //-- Versão Inicial Sênior ( 22/09/2021 )
 //-- By : Jurandir Ferreira
 
-// 2 Horas = 432000000 ms
-// 1 Dia   = 5184000000 ms
+// 2 Horas = 7200000 ms
+// 1 Dia   = 86400000 ms
 
 
 require('dotenv').config()
@@ -12,34 +12,32 @@ moment.locale('pt-br')
 const colors    = require('colors')
 const config    = require('./.config/johnDeere.json') 
 const robot     = require('./src/controllers/JD/robot')
+const lt        = require('long-timeout')
+const label     = `"John Deere"`.green.bold
 
-const titulo  = ` Robô - `.yellow.bgBlue.bold+`" John Deere "`.white.bgBlue.bold+` - Sênior - ${config.versao} `.yellow.bgBlue.bold 
+const titulo  = ` Robô - `.white.bgGreen.bold+`" John Deere "`.white.bgGreen.bold+` - Sênior - ${config.versao} `.white.bgGreen.bold 
 
 process.stdout.write('\x1B[2J\x1B[0f')
 console.log(titulo)
 
-function loopExecRobot (loopToken) {
+async function loopExecRobot (loopToken) {
     loopToken++
     let uptime = Math.ceil(process.uptime())
     let item   = { count: 3, fnTime:null }
 
-    // setTimeout(loopExecRobot, config.validade + config.time, loopToken ) 
-
-    item.count = parseInt( config.validade / config.time ) -1 // Quantidade de vezes que o robô vai executar usando o token atual
-    item.fnTime = setInterval(robot, config.time, item, config, uptime) 
-
-    console.log(moment().format(),`- ( ROBOT "John Deere" iniciado ) - UP Time: ${uptime}s - loop:`,loopToken)
-
+    console.log(moment().format(),`- ( ROBOT ${label} iniciado ) - UP Time: ${uptime}s - loop:`,loopToken)
+    await robot(item, config, uptime) 
     
-    console.log('loopToken',loopToken)
-    console.log('uptime',uptime)
-    console.log('item',item)
-    console.log('config.validade + config.time',config.validade + config.time)
-    console.log('config',config)
+    let proxima   = new Date()
+    let intervalo = proxima.getMilliseconds() + config.time
+    proxima.setMilliseconds(intervalo)
+
+    console.log(moment().format(),`- ${label} - proxima execução: "${ moment(proxima).format('DD/MM/YYYY HH:mm:ss') }"`)
+    lt.setTimeout(loopExecRobot, config.time, loopToken ) 
 
     // process.exit(0)
 
 }
 
 // Executa Robot
-// loopExecRobot(0)
+loopExecRobot(0)

@@ -5,7 +5,7 @@
   "main": "iTrack.js",
   "scripts": {
     "run": "node iTrack.js",
-    "start": "npx nodemon --inspect=9231 iTrack.js"    
+    "start": "npx nodemon --inspect=9231 iTrack.js"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,7 @@
     "crypto": "^1.0.1",
     "dotenv": "^10.0.0",
     "fs": "^0.0.1-security",
+    "long-timeout": "^0.1.1",
     "moment": "^2.29.1",
     "mssql": "^6.3.2",
     "path": "^0.12.7"

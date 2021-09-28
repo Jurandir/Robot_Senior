@@ -1,8 +1,8 @@
 {
     "run": "Test",
     "versao": "1.0",
-    "time": 432000000,
-    "validade": 5184000000,
+    "time": 7200000,
+    "validade": 86400000,
     "testeURL": "http://localhost:4999/test",
     "producaoURL": "http://localhost:4999/test",
     "debug": "OFF",

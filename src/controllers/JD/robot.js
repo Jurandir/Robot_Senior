@@ -7,18 +7,11 @@ const initManifesto            = require('../../metodsDB/JD/initManifestos')
 
 
 const robot = async (cli,cfg,uptime) =>{
-   let timeOUT = Math.ceil((process.uptime()-2) - uptime)
+   let timeOUT = Math.ceil((process.uptime()) - uptime)
    let time_inicio = process.uptime()
 
-   // CONTROLE DE EXECUÇÃO
-   if( cli.count <=0 ){
-        clearInterval(cli.fnTime);
-        console.log(moment().format(),`- ( Renovando parâmetros ) - Time: ${timeOUT}s - Orion`)
-        return 
-   } else {
-        console.log(moment().format(),'- Robô em Execução:',cli.count,' - ',timeOUT,'s')
-   }
-   cli.count--   
+   console.log(moment().format(),`- Robot - Time: ${timeOUT}s`)
+
    //=======================
 
    await captura_MANIFESTO()                // CAPTURA DADOS PARA MONITORAMENTO
@@ -44,7 +37,6 @@ const robot = async (cli,cfg,uptime) =>{
         logEventos(cfg,'(BD - CAPTURA MANIFESTOS ) - Sênior -> "JONH DEERE":',ret) 
         return ret
    }
-
 
 }
 

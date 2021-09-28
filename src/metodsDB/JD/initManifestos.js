@@ -17,7 +17,10 @@ const initManifestos = async () => {
    
     try {
 
-        let result = await sqlExec(sql)         
+        let result = await sqlExec(sql)
+        
+        console.log(result)
+
         flag_livre = true
         return result
   
