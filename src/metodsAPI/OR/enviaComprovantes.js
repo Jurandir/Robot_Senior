@@ -23,8 +23,9 @@ const enviaComprovantes = async () => {
     }
     
     for await (let body of bodys) {
-        let comp   = await loadAPI('GET',endpoint_comprovante,server_comprovante,{ ctrc: body.CTRC, retTipo:2 })
-        let imagem =  comp.data[0].base64  // Pega a Primeira imagem da lista
+        let comp    = await loadAPI('GET',endpoint_comprovante,server_comprovante,{ ctrc: body.CTRC, retTipo:2 })
+        let idx_img = comp.data.length > 1 ? 1 : 0
+        let imagem  =  comp.data[idx_img].base64  // Pega a imagem da lista no index "idx_img"
         if(comp.success && imagem) {
 
             upd_flag_comprovante(body.CTRC)

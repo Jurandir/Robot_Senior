@@ -11,7 +11,7 @@ const moment = require('moment')
 moment.locale('pt-br')      
 const colors    = require('colors')
 const config    = require('./.config/johnDeere.json') 
-// const robot     = require('./src/controllers/JD/robot')
+const robot     = require('./src/controllers/JD/robot')
 
 const titulo  = ` Robô - `.yellow.bgBlue.bold+`" John Deere "`.white.bgBlue.bold+` - Sênior - ${config.versao} `.yellow.bgBlue.bold 
 
@@ -23,14 +23,23 @@ function loopExecRobot (loopToken) {
     let uptime = Math.ceil(process.uptime())
     let item   = { count: 3, fnTime:null }
 
-    setTimeout(loopExecRobot, config.validade + config.time, loopToken ) 
+    // setTimeout(loopExecRobot, config.validade + config.time, loopToken ) 
 
     item.count = parseInt( config.validade / config.time ) -1 // Quantidade de vezes que o robô vai executar usando o token atual
     item.fnTime = setInterval(robot, config.time, item, config, uptime) 
 
     console.log(moment().format(),`- ( ROBOT "John Deere" iniciado ) - UP Time: ${uptime}s - loop:`,loopToken)
 
+    
+    console.log('loopToken',loopToken)
+    console.log('uptime',uptime)
+    console.log('item',item)
+    console.log('config.validade + config.time',config.validade + config.time)
+    console.log('config',config)
+
+    // process.exit(0)
+
 }
 
 // Executa Robot
-loopExecRobot(0)
+// loopExecRobot(0)
