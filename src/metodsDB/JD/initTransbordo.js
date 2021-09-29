@@ -1,14 +1,14 @@
-// 27/09/2021 17:12 - MANIFESTOS EMITIDOS - SÊNIOR - ("JOHN DEERE")
+// 29/09/2021 15:46 - REGISTRO NA FILIAL DE TRANSBORDO - SÊNIOR - ("JOHN DEERE")
 
 const sqlExec              = require('../../connection/sqlExSENIOR')
 const fs                   = require('fs')
 const path                 = require('path')
-const sqlFileName          = path.join(__dirname, '../../sql/JD/rotinas/EMISSAO_MANIFESTO_SHIP.SQL')
+const sqlFileName          = path.join(__dirname, '../../sql/JD/rotinas/CHEGANTE_CD_DELIVERY.SQL')
 const sqlInit              = fs.readFileSync(sqlFileName, "utf8")
 
 let flag_livre = true
 
-const initManifestos = async () => {
+const initTransbordo = async () => {
     let sql = sqlInit
 
     if(!flag_livre) { return { success: false, message: 'Processo ocupado !!!' }} 
@@ -18,7 +18,7 @@ const initManifestos = async () => {
 
         let result = await sqlExec(sql)
         
-        console.log('EMISSAO_MANIFESTO_SHIP:',result)
+        console.log('CHEGANTE_CD_DELIVERY:',result)
 
         flag_livre = true
         return result
@@ -28,7 +28,7 @@ const initManifestos = async () => {
             success: false,
             message: err.message,
             rowsAffected: -1,
-            rotine: 'initManifestos',
+            rotine: 'initTransbordo',
             sql: sql,
             err: err
         }
@@ -38,4 +38,4 @@ const initManifestos = async () => {
 
 }
 
-module.exports = initManifestos
+module.exports = initTransbordo

@@ -25,7 +25,7 @@ SELECT
     ,FORMAT(CNH.dtemissao,'yyyyMMddHHmmss')                                                   AS SHIPDATE
     ,MAN.NrPlaca                                                                              AS LICENSEPLATENUMBER
     ,ISNULL(FAT.CdFatura,'')                                                                  AS BOLNUMBER
-    ,MAN.NrManifesto                                                                          AS MANIFESTNUMBER
+    ,SUBSTRING(MAN.NrManifesto, CHARINDEX ('-',MAN.NrManifesto)+1, 8 )                        AS MANIFESTNUMBER
     ,CNH.cdEmpresadestino                                                                     AS DESTINATIONLOC
     ,CONCAT(FORMAT(MAN.DtPrevisaoChegada,'yyyyMMdd'),FORMAT(MAN.HrPrevisaoChegada,'HHmmss'))  AS DESTINATIONETA
     ,softran_termaco.dbo.SP_CalculaDtPrevisaoEntregaPercurso(CNH.DtEmissao, CNH.CdEmpresaDestino, CNH.CdPercurso, CNH.CdTransporte, CNH.CdRemetente, CNH.CdDestinatario, CNH.cdempresa, CNH.nrseqcontrole) 
@@ -51,7 +51,6 @@ WHERE
       CNH.InTipoEmissao = 00                      --- CTRC Normal
   AND CNH.InImpressao   = 1                       --- Impresso
   AND SUBSTRING( CNH.CdInscricao,1,8) ='89674782' --- JOHN DEERE BRASIL LTDA (89674782001391)
-  AND FAT.CdSequencia   = 1
   AND NOT EXISTS ( SELECT 1 FROM SIC..JOHNDEERE_INFO INF
                     WHERE INF.EVENTTYPE      = 'SHIP' 
                       AND INF.NrManifesto    = MAN.NrManifesto

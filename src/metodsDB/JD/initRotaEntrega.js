@@ -1,14 +1,14 @@
-// 27/09/2021 17:12 - MANIFESTOS EMITIDOS - SÊNIOR - ("JOHN DEERE")
+// 29/09/2021 16:46 - EM ROTA DE ENTREGA - SÊNIOR - ("JOHN DEERE")
 
 const sqlExec              = require('../../connection/sqlExSENIOR')
 const fs                   = require('fs')
 const path                 = require('path')
-const sqlFileName          = path.join(__dirname, '../../sql/JD/rotinas/EMISSAO_MANIFESTO_SHIP.SQL')
+const sqlFileName          = path.join(__dirname, '../../sql/JD/rotinas/MAPA_ENTREGA_SHIP.SQL')
 const sqlInit              = fs.readFileSync(sqlFileName, "utf8")
 
 let flag_livre = true
 
-const initManifestos = async () => {
+const initRotaEntrega = async () => {
     let sql = sqlInit
 
     if(!flag_livre) { return { success: false, message: 'Processo ocupado !!!' }} 
@@ -18,7 +18,7 @@ const initManifestos = async () => {
 
         let result = await sqlExec(sql)
         
-        console.log('EMISSAO_MANIFESTO_SHIP:',result)
+        console.log('MAPA_ENTREGA_SHIP:',result)
 
         flag_livre = true
         return result
@@ -28,7 +28,7 @@ const initManifestos = async () => {
             success: false,
             message: err.message,
             rowsAffected: -1,
-            rotine: 'initManifestos',
+            rotine: 'initRotaEntrega',
             sql: sql,
             err: err
         }
@@ -38,4 +38,4 @@ const initManifestos = async () => {
 
 }
 
-module.exports = initManifestos
+module.exports = initRotaEntrega

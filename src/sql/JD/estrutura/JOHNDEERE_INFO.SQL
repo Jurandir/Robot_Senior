@@ -19,11 +19,11 @@ CREATE TABLE JOHNDEERE_INFO (
 	RAILHEAD                        varchar(80)  DEFAULT '89674782001391',
 	SHIPDATE                        varchar(20)  ,  --- DATA DE EMISSÃO CTRC - yyyyMMddHHmmss
 	CARRIERTYPE                     varchar(10)  DEFAULT 'TRUCK',
-	CARRIERCODE                     varchar(10)  DEFAULT 'TERM',
+	CARRIERCODE                     varchar(10)  DEFAULT 'TERM', -- TERMACO
 	LICENSEPLATENUMBER              varchar(10)  ,  --- PLACAS DO VEICULO
 	TRUCKNUMBER                     varchar(20)  DEFAULT '',
 	BOLNUMBER                       varchar(12)  ,  --- NUMERO (BOLETO/FATURA)
-	MANIFESTNUMBER                  varchar(12)  ,  --- NUMERO DO MANIFESTO
+	MANIFESTNUMBER                  varchar(12)  ,  --- NUMERO DO MANIFESTO (SPO/AJU-0000001)
 	DESTINATIONLOC                  varchar(80)  ,  --- DESTINATARIO
 	DESTINATIONETA                  varchar(20)  ,  --- PREVISÃO DE CHEGADA - yyyyMMddHHmmss
 	FINALDESTETA                    varchar(20)  ,  --- PREVISÃO DE ENTREGA - yyyyMMddHHmmss
@@ -53,7 +53,8 @@ CREATE TABLE JOHNDEERE_INFO (
     NrSeqControle                   BIGINT,
     CdRemetente                     VARCHAR(20),
     NrNotaFiscal	                BIGINT,
-    NrSerie                         VARCHAR(10)
+    NrSerie                         VARCHAR(10),
+	CdSequencia  	                INT DEFAULT 0
 ) 
 ;
 

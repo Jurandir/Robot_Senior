@@ -1,0 +1,64 @@
+ -- 29/09/2021 13:40 -  RECEIVE - CHEGADA NO CD DESTINO / DESCARREGADO - "JONH DEERE"
+ 
+INSERT INTO SIC..JOHNDEERE_INFO (MESSAGETYPE,MESSAGESENDER,MESSAGERECIPIENT,WITSFILENAME,TIMESTAMP,CONTROLNUMBER,INVOICENUMBER,COMMERCIALINVOICENUMBER,CUSTOMER,EVENTTYPE,RAILHEAD,RECEIVELOC,RECEIVEDATE,FINALDESTETA,SENDXML
+    ,NrManifesto
+    ,CdEmpresa
+    ,NrSeqControle
+    ,CdRemetente
+    ,NrNotaFiscal
+    ,NrSerie
+	,CdSequencia
+)
+SELECT 
+'INVOICE'      AS MESSAGETYPE,
+'CARRIER_TERM' AS MESSAGESENDER,
+'VISIBILITY'   AS MESSAGERECIPIENT,
+FORMAT(CURRENT_TIMESTAMP,'yyyyMMddHHmmss')  AS WITSFILENAME,
+FORMAT(CURRENT_TIMESTAMP,'yyyyMMddHHmmss')  AS TIMESTAMP,
+'000000000'                                 AS CONTROLNUMBER,
+NFR.nrnotafiscal            AS INVOICENUMBER,
+''                    AS COMMERCIALINVOICENUMBER,
+'JDP'                 AS CUSTOMER,
+'RECEIVE'             AS EVENTTYPE,
+'89674782001391'      AS RAILHEAD,
+CNH.CdEmpresaDestino  AS DELIVERYLOC, 
+CONCAT(FORMAT(MOV.DtMovimento,'yyyyMMdd'),FORMAT(MOV.HrMovimento,'HHmmss')) AS DEALERDELIVERYDATE,
+CONCAT(FORMAT(MOV.DtMovimento,'yyyyMMdd'),FORMAT(MOV.HrMovimento,'HHmmss')) AS FINALDESTETA,
+'0' AS SENDXML
+
+    ,MAN.NrManifesto
+    ,CNH.CdEmpresa
+    ,CNH.NrSeqControle
+    ,NFR.CdRemetente
+    ,NFR.NrNotaFiscal
+    ,NFR.NrSerie
+	,MOV.CdSequencia
+
+FROM softran_termaco.dbo.gtcconhe      CNH                                        
+JOIN softran_termaco.dbo.gtcnfcon      LNK ON LNK.cdempresa       = CNH.cdempresa AND LNK.nrseqcontrole = CNH.nrseqcontrole  
+JOIN softran_termaco.dbo.gtcnf         NFR ON NFR.cdremetente     = LNK.cdinscricao AND NFR.nrserie     = LNK.nrserie AND NFR.nrnotafiscal = LNK.nrnotafiscal
+JOIN softran_termaco.dbo.gtcmoven      MOV ON MOV.cdempresa       = CNH.cdempresa   AND MOV.nrseqcontrole = CNH.nrseqcontrole  -- Movimento de Ocorrencias 
+LEFT JOIN softran_termaco.dbo.GTCFatIt FAT ON FAT.CdEmpresaConhec = CNH.CdEmpresa AND FAT.NrSeqControle = CNH.NrSeqControle AND FAT.CdSequencia   = 1
+JOIN softran_termaco.dbo.GTCManCn      LMA ON LMA.CdEmpresa       = CNH.CdEmpresa AND LMA.NrSeqControle = CNH.NrSeqControle
+JOIN softran_termaco.dbo.GTCMan        MAN ON MAN.NrManifesto     = LMA.NrManifesto
+
+WHERE  
+      CNH.InTipoEmissao = 00                      --- CTRC Normal
+  AND CNH.InImpressao   = 1                       --- Impresso
+  AND MOV.CdOcorrencia  = 098	                  --- "CHEGADA NA CIDADE OU FILIAL DESTINO"
+  AND SUBSTRING( CNH.CdInscricao,1,8) ='89674782' --- JOHN DEERE BRASIL LTDA (89674782001391)
+  AND NOT EXISTS ( SELECT 1 FROM SIC..JOHNDEERE_INFO INF
+                    WHERE INF.EVENTTYPE      = 'RECEIVE' 
+                      AND INF.NrManifesto    = MAN.NrManifesto
+                      AND INF.CdEmpresa      = CNH.CdEmpresa
+                      AND INF.NrSeqControle  = CNH.NrSeqControle
+                      AND INF.CdRemetente    = NFR.CdRemetente
+                      AND INF.NrNotaFiscal   = NFR.NrNotaFiscal
+                      AND INF.NrSerie        = NFR.NrSerie
+					  AND INF.CdSequencia    = MOV.CdSequencia )
+;
+
+UPDATE SIC..JOHNDEERE_INFO
+   SET CONTROLNUMBER = FORMAT( CODEINSERT ,'000000000') 
+ WHERE CONTROLNUMBER = '000000000'
+;
