@@ -55,7 +55,7 @@ SELECT
     , SUBSTRING(MAN.NrManifesto, CHARINDEX ('-',MAN.NrManifesto)+1, 8 )           AS MANIFESTNUMBER
     , CONCAT(ENT.DsLocal,',',ENT.DsUF,'-BR')                                      AS DESTINATIONLOC -- LOCAL DE ENTREGA
     , CONCAT(FORMAT(MOV.DtMovimento,'yyyyMMdd'),FORMAT(MOV.HrMovimento,'HHmmss')) AS DESTINATIONETA -- DATA DE ENTREGA
-    , softran_termaco.dbo.SP_CalculaDtPrevisaoEntregaPercurso(CNH.DtEmissao, CNH.CdEmpresaDestino, CNH.CdPercurso, CNH.CdTransporte, CNH.CdRemetente, CNH.CdDestinatario, CNH.cdempresa, CNH.nrseqcontrole) 
+    , FORMAT(softran_termaco.dbo.SP_CalculaDtPrevisaoEntregaPercurso(CNH.DtEmissao, CNH.CdEmpresaDestino, CNH.CdPercurso, CNH.CdTransporte, CNH.CdRemetente, CNH.CdDestinatario, CNH.cdempresa, CNH.nrseqcontrole) ,'yyyyMMddHHmmss')
                                                                                   AS FINALDESTETA -- PREVISÃO DE ENTREGA
     , NFR.QtVolume                                                                AS VOLUME
     , NFR.VlNotaFiscal                                                            AS GROSSWT
@@ -68,7 +68,7 @@ SELECT
     ,NFR.CdRemetente
     ,NFR.NrNotaFiscal
     ,NFR.NrSerie
-	,MOV.CdSequencia
+	  ,MOV.CdSequencia
 
 FROM softran_termaco.dbo.gtcconhe      CNH                                        
 JOIN softran_termaco.dbo.gtcnfcon      LNK ON LNK.cdempresa       = CNH.cdempresa   AND LNK.nrseqcontrole = CNH.nrseqcontrole  

@@ -8,6 +8,7 @@ const initTransbordo           = require('../../metodsDB/JD/initTransbordo')
 const initFilialDestino        = require('../../metodsDB/JD/initFilialDestino')
 const initRotaEntrega          = require('../../metodsDB/JD/initRotaEntrega')
 const confirmaEntrega          = require('../../metodsDB/JD/confirmaEntrega')
+const enviaDados               = require('../../metodsAPI/JD/enviaDados')
 
 const robot = async (cli,cfg,uptime) =>{
    let timeOUT = Math.ceil((process.uptime()) - uptime)
@@ -17,13 +18,13 @@ const robot = async (cli,cfg,uptime) =>{
 
    //=======================
 
-   await captura_MANIFESTO()        // SHIP     - CAPTURA DADOS PARA MONITORAMENTO / INICIA MANIFESTO/TRANSPORTE
-   await chegou_CD_Transbordo()     // DELIVERY - FILIAL DE TRANSBORDO
-   await chegou_CD_Destino()        // RECEIVE  - CHECOU NO DESTINO / FILIAL DE ENTREGA / DESCARREGAMENTO
-   await rota_ENTREGA()             // SAIU EM ROTA DE ENTREGA
-   //await confirmacao_ENTREGA()      // REGISTRO DE ENTREGA CONFIRMADA
+   await captura_MANIFESTO()        // SHIP        - CAPTURA DADOS PARA MONITORAMENTO / INICIA MANIFESTO/TRANSPORTE
+   await chegou_CD_Transbordo()     // DELIVERY    - FILIAL DE TRANSBORDO
+   await chegou_CD_Destino()        // RECEIVE     - CHECOU NO DESTINO / FILIAL DE ENTREGA / DESCARREGAMENTO
+   await rota_ENTREGA()             // SHIP-BR     - SAIU EM ROTA DE ENTREGA
+   await confirmacao_ENTREGA()      // DELIVERY-BR - REGISTRO DE ENTREGA CONFIRMADA
 
-   //await envia_DADOS()              // ENVIA DADOS PARA API "JONH DEERE"
+   await envia_DADOS()               // ENVIA DADOS PARA API "JONH DEERE"
 
    //=======================
 
@@ -69,7 +70,13 @@ const robot = async (cli,cfg,uptime) =>{
       return ret
    }
 
-
+   // ENVIA DADOS PARA API "JONH DEERE"
+   async function envia_DADOS() {
+      let ret = await enviaDados()
+      logEventos(cfg,'(BD - ENVIA DADOS PARA API ) - Sênior -> "JONH DEERE":',ret) 
+      return ret
+   }
+   
 }
 
 module.exports = robot

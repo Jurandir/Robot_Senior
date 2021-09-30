@@ -26,9 +26,9 @@ SELECT
     ,MAN.NrPlaca                                                                              AS LICENSEPLATENUMBER
     ,ISNULL(FAT.CdFatura,'')                                                                  AS BOLNUMBER
     ,SUBSTRING(MAN.NrManifesto, CHARINDEX ('-',MAN.NrManifesto)+1, 8 )                        AS MANIFESTNUMBER
-    ,CNH.cdEmpresadestino                                                                     AS DESTINATIONLOC
+    ,FDT.NrCGCCPF                                                                             AS DESTINATIONLOC
     ,CONCAT(FORMAT(MAN.DtPrevisaoChegada,'yyyyMMdd'),FORMAT(MAN.HrPrevisaoChegada,'HHmmss'))  AS DESTINATIONETA
-    ,softran_termaco.dbo.SP_CalculaDtPrevisaoEntregaPercurso(CNH.DtEmissao, CNH.CdEmpresaDestino, CNH.CdPercurso, CNH.CdTransporte, CNH.CdRemetente, CNH.CdDestinatario, CNH.cdempresa, CNH.nrseqcontrole) 
+    ,FORMAT(softran_termaco.dbo.SP_CalculaDtPrevisaoEntregaPercurso(CNH.DtEmissao, CNH.CdEmpresaDestino, CNH.CdPercurso, CNH.CdTransporte, CNH.CdRemetente, CNH.CdDestinatario, CNH.cdempresa, CNH.nrseqcontrole),'yyyyMMddHHmmss') 
                                                                                               AS FINALDESTETA
     ,NFR.QtVolume                                                                             AS VOLUME
     ,NFR.VlNotaFiscal                                                                         AS GROSSWT
@@ -46,6 +46,7 @@ JOIN softran_termaco.dbo.gtcnf         NFR ON NFR.cdremetente     = LNK.cdinscri
 LEFT JOIN softran_termaco.dbo.GTCFatIt FAT ON FAT.CdEmpresaConhec = CNH.CdEmpresa AND FAT.NrSeqControle = CNH.NrSeqControle AND FAT.CdSequencia   = 1
 JOIN softran_termaco.dbo.GTCManCn      LMA ON LMA.CdEmpresa       = CNH.CdEmpresa AND LMA.NrSeqControle = CNH.NrSeqControle
 JOIN softran_termaco.dbo.GTCMan        MAN ON MAN.NrManifesto     = LMA.NrManifesto
+LEFT JOIN softran_termaco.dbo.sisempre FDT ON FDT.cdempresa       = CNH.cdempresadestino -- Filial Destino
 
 WHERE  
       CNH.InTipoEmissao = 00                      --- CTRC Normal
