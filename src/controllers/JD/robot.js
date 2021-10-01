@@ -8,7 +8,7 @@ const initTransbordo           = require('../../metodsDB/JD/initTransbordo')
 const initFilialDestino        = require('../../metodsDB/JD/initFilialDestino')
 const initRotaEntrega          = require('../../metodsDB/JD/initRotaEntrega')
 const confirmaEntrega          = require('../../metodsDB/JD/confirmaEntrega')
-// const enviaDados               = require('../../metodsAPI/JD/enviaDados')
+const enviaDados               = require('./enviaDados')
 
 const robot = async (cli,cfg,uptime) =>{
    let timeOUT = Math.ceil((process.uptime()) - uptime)
@@ -73,7 +73,6 @@ const robot = async (cli,cfg,uptime) =>{
    // ENVIA DADOS PARA API "JONH DEERE"
    async function envia_DADOS() {
       let ret = await enviaDados()
-      logEventos(cfg,'(BD - ENVIA DADOS PARA API ) - Sênior -> "JONH DEERE":',ret) 
       return ret
    }
    
