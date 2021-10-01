@@ -26,7 +26,7 @@ const initNFs = async (cli) => {
           SUBSTRING(CNH.CdDestinatario,1,8) = '${raiz}' OR
           SUBSTRING(CNH.CdInscricao,1,8)    = '${raiz}' )
      AND CNH.DtEmissao  BETWEEN (CURRENT_TIMESTAMP${faixa_down}) AND (CURRENT_TIMESTAMP${faixa_up})
-     AND CNH.InImpressao = 1
+     -- AND CNH.InImpressao = 1
      AND NFR.NrChaveAcessoNFe IS NOT NULL  
      AND CTE.insituacaosefaz = 100
      AND NFE.ID IS NULL

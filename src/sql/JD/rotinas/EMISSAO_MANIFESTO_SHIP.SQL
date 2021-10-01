@@ -50,7 +50,7 @@ LEFT JOIN softran_termaco.dbo.sisempre FDT ON FDT.cdempresa       = CNH.cdempres
 
 WHERE  
       CNH.InTipoEmissao = 00                      --- CTRC Normal
-  AND CNH.InImpressao   = 1                       --- Impresso
+  -- AND CNH.InImpressao   = 1                       --- Impresso
   AND SUBSTRING( CNH.CdInscricao,1,8) ='89674782' --- JOHN DEERE BRASIL LTDA (89674782001391)
   AND NOT EXISTS ( SELECT 1 FROM SIC..JOHNDEERE_INFO INF
                     WHERE INF.EVENTTYPE      = 'SHIP' 
@@ -66,3 +66,5 @@ UPDATE SIC..JOHNDEERE_INFO
    SET CONTROLNUMBER = FORMAT( CODEINSERT ,'000000000') 
  WHERE CONTROLNUMBER = '000000000'
 ;
+
+-- AND CTE.insituacaosefaz = 100

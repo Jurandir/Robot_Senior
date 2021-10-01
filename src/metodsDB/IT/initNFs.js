@@ -25,7 +25,7 @@ const initNFs = async (cli) => {
          EXISTS (SELECT 1 FROM SIC.dbo.ITRACK_CLIENTE WHERE RAIZ_CNPJ=SUBSTRING(CNH.CdDestinatario,1,8) ) OR 
          EXISTS (SELECT 1 FROM SIC.dbo.ITRACK_CLIENTE WHERE RAIZ_CNPJ=SUBSTRING(CNH.CdInscricao,1,8) ) )
      AND CNH.DtEmissao BETWEEN (CURRENT_TIMESTAMP${faixa_down}) AND (CURRENT_TIMESTAMP${faixa_up})
-     AND CNH.InImpressao = 1
+     -- AND CNH.InImpressao = 1
      AND NFR.NrChaveAcessoNFe IS NOT NULL  
      AND CTE.insituacaosefaz = 100
      AND NFE.ID IS NULL
