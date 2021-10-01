@@ -8,7 +8,7 @@ const initTransbordo           = require('../../metodsDB/JD/initTransbordo')
 const initFilialDestino        = require('../../metodsDB/JD/initFilialDestino')
 const initRotaEntrega          = require('../../metodsDB/JD/initRotaEntrega')
 const confirmaEntrega          = require('../../metodsDB/JD/confirmaEntrega')
-const enviaDados               = require('../../metodsAPI/JD/enviaDados')
+// const enviaDados               = require('../../metodsAPI/JD/enviaDados')
 
 const robot = async (cli,cfg,uptime) =>{
    let timeOUT = Math.ceil((process.uptime()) - uptime)
@@ -24,7 +24,7 @@ const robot = async (cli,cfg,uptime) =>{
    await rota_ENTREGA()             // SHIP-BR     - SAIU EM ROTA DE ENTREGA
    await confirmacao_ENTREGA()      // DELIVERY-BR - REGISTRO DE ENTREGA CONFIRMADA
 
-   await envia_DADOS()               // ENVIA DADOS PARA API "JONH DEERE"
+   // await envia_DADOS()               // ENVIA DADOS PARA API "JONH DEERE"
 
    //=======================
 

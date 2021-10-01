@@ -1,7 +1,16 @@
 // 30/09/2021 14:10 - MONTA XML - SÊNIOR - ("JOHN DEERE")
 
+const fs            = require('fs')
+const path          = require('path')
 
 const montaXML = async (itn) => {
+        let resutado = {
+          success:false,
+          id: itn.CODEINSERT,
+          filename: itn.FILENAME,
+          fullName: '',
+          xml:''
+        }
         let WITSFileName            = itn.FILENAME
         let TimeStamp               = itn.TIMESTAMP
         let ControlNumber           = itn.CONTROLNUMBER
@@ -19,18 +28,19 @@ const montaXML = async (itn) => {
         let CarrierCode             = itn.CARRIERCODE
         let LicensePlateNumber      = itn.LICENSEPLATENUMBER
         let TruckNumber             = itn.TRUCKNUMBER
-        let BOLNumber               = itn.BOLNUMBER      ? itn.BOLNUMBER      : ''
-        let ManifestNumber          = itn.MANIFESTNUMBER ? itn.MANIFESTNUMBER : ''
+        let BOLNumber               = itn.BOLNUMBER == '0' ? ''                 : itn.BOLNUMBER
+        let ManifestNumber          = itn.MANIFESTNUMBER   ? itn.MANIFESTNUMBER : ''
         let DestinationLoc          = itn.DESTINATIONLOC
         let DestinationETA          = itn.DESTINATIONETA
         let FinalDestETA            = itn.FINALDESTETA
         let Volume                  = itn.VOLUME
         let GrossWt                 = itn.GROSSWT
         let NetWt                   = itn.NETWT
-        let Comments                = itn.COMMENTS      || ''
-        let ReceiveLoc              = itn.RECEIVELOC    || ''
-        let ReceiveDate             = itn.RECEIVEDATE   || ''
-        let DeliveryLoc             = itn.DELIVERYLOC   || ''
+        let Comments                = itn.COMMENTS           || ''
+        let ReceiveLoc              = itn.RECEIVELOC         || ''
+        let ReceiveDate             = itn.RECEIVEDATE        || ''
+        let DeliveryLoc             = itn.DELIVERYLOC        || ''
+        let DealerDeliveryDate      = itn.DEALERDELIVERYDATE || ''
 
         const cabXML = () => 
         `<?xml version="1.0" encoding="UTF-8"?>
@@ -113,82 +123,29 @@ const montaXML = async (itn) => {
         </Transaction>
         </Message>
         `
-
-         let ret
+        let xml
         if (EventType == 'SHIP'){ 
-                ret = cabXML() + eventShip() + Rodape()
+                xml = cabXML() + eventShip() + Rodape()
               } else 
         if(EventType == 'RECEIVE'){
-                ret = cabXML() + eventReceive() + Rodape()
+                xml = cabXML() + eventReceive() + Rodape()
               } else 
         if(EventType == 'DELIVERY') {
-                ret = cabXML() + eventDelivery() + Rodape()
-              } else {
-                ret = cabXML() + eventDealer() + Rodape()
+                xml = cabXML() + eventDelivery() + Rodape()
+        } else {
+                xml = cabXML() + eventDealer() + Rodape()
         }
 
-        return ret
+        let fullName = path.join(__dirname,`../../../logs/JD/${WITSFileName}`) // fullName = `./logs/JD/${WITSFileName}`
 
+        fs.writeFileSync(fullName,xml)
+        fs.close
+
+        resutado.success  = true
+        resutado.fullName = fullName
+        resutado.xml      = xml
+
+        return resutado
 }
 
 module.exports = montaXML
-
-/*
-  {
-    FILENAME: 'PARTS_TRUCK_SHIP_601_20210929_104002_3.XML',
-    CODEINSERT: 3,
-    DATESENDXML: 2021-09-29T10:40:02.497Z,
-    MESSAGETYPE: 'INVOICE',
-    MESSAGESENDER: 'CARRIER_TERM',
-    MESSAGERECIPIENT: 'VISIBILITY',
-    WITSFILENAME: '20210929104002',
-    TIMESTAMP: '20210929104002',
-    CONTROLNUMBER: '000000003',
-    INVOICENUMBER: '1585903',
-    COMMERCIALINVOICENUMBER: '',
-    INVOICENUMBERDETAILS: '',
-    CUSTOMER: 'JDP',
-    EVENTTYPE: 'SHIP',
-    RAILHEAD: '89674782001391',
-    SHIPDATE: '20210913000000',
-    CARRIERTYPE: 'TRUCK',
-    CARRIERCODE: 'TERM',
-    LICENSEPLATENUMBER: 'PJI0633',
-    TRUCKNUMBER: '',
-    BOLNUMBER: '0',
-    MANIFESTNUMBER: '0000001',
-    DESTINATIONLOC: '3',
-    DESTINATIONETA: '20210918073000',
-    FINALDESTETA: 'Sep 17 2021 12:00AM',
-    VOLUME: '2.0000',
-    GROSSWT: '15717.8800',
-    NETWT: '',
-    COMMENTS: '',
-    RECEIVELOC: null,
-    RECEIVEDATE: null,
-    DEALERASSIGNDATE: null,
-    DEALERSAPCODE: null,
-    ADDRESS1: null,
-    DELIVERYCITY: null,
-    DELIVERYSTATE: null,
-    ZIPCODE: null,
-    NAME: null,
-    NEIGHBOURHOODNAME: null,
-    CITYCODE: null,
-    COUNTRYCODE: null,
-    COUNTRYNAME: null,
-    DELIVERYLOC: null,
-    DEALERDELIVERYDATE: null,
-    FILEXML: null,
-    SENDXML: '0',
-    NrManifesto: 'SPO/AJU-0000001',
-    CdEmpresa: 2,
-    NrSeqControle: '1174',
-    CdRemetente: '89674782001391',
-    NrNotaFiscal: '1585903',
-    NrSerie: '1',
-    CdSequencia: 0
-  }
-]
-
-*/
