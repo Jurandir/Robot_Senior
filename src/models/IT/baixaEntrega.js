@@ -1,15 +1,15 @@
-// 11/09/2021 10:09 - (001) - ENTREGA REALIZADA NORMALMENTE (COM COMPROVANTE) - ITRACK
+// 04/10/2021 04:46 - BAIXA ENTREGA SEM COMPROVANTES - ("ITRACK")
 
 const fs                   = require('fs')
 const path                 = require('path')
-const sqlFileName          = path.join(__dirname, '../../sql/IT/consultas/entrega_comprovantes.SQL')
+const sqlFileName          = path.join(__dirname, '../../sql/IT/consultas/baixa_entrega_sem_comprovantes.SQL')
 const sql                  = fs.readFileSync(sqlFileName, "utf8")
 const enviaComprovantes     = require('../../metodsAPI/IT/enviaComprovantes')
 const sqlQuery             = require('../../connection/sqlSENIOR')
 const dataSetToJson        = require('../../helpers/dataSetToJson')
 const grava_MsgApiResponse = require('../../metodsDB/IT/grava_MsgApiResponse')
 
-const comprovantes = async () => { 
+const baixaEntrega = async () => { 
     let ret = []
     try {
         let oco   = await sqlQuery(sql)
@@ -18,8 +18,21 @@ const comprovantes = async () => {
         for await (let body of bodys ){
           let env = await enviaComprovantes(body)
           let grv = []
+
+          // console.log('env',env)
           
           if(env.success){
+
+            if(env.data && env.data.message){
+
+              if (env.data.message == 'Erro inesperado, tente novamente mais tarde' ) {
+                  env.data.success = true
+              }
+
+            } else {
+                env.data.message = `ENTREGA - Baixa sem Comprovante.`
+            }
+
             grv  = await grava_MsgApiResponse( env.data, body.content.idTrackingCliente )
             env.body = body
             env.upd  = grv
@@ -37,9 +50,9 @@ const comprovantes = async () => {
         return ret
   
     } catch (err) {
-      console.log('(comprovantes) ERRO:',err)
+      console.log('(comrovantes) ERRO:',err)
       return ret
     }
   }
 
-module.exports = comprovantes
+module.exports = baixaEntrega

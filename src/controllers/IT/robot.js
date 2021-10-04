@@ -20,6 +20,7 @@ const entregaNF              = require('../../models/IT/entregaNF')
 const initComprovante        = require('../../metodsDB/IT/initComprovante')
 const preparaComprovante     = require('../../controllers/IT/preparaComprovantes')
 const comprovantes           = require('../../models/IT/comprovantes')
+const baixaEntrega           = require('../../models/IT/baixaEntrega')
 const ocorrencias            = require('../../models/IT/ocorrencias')
 const encerraProcessos       = require('../../metodsDB/IT/encerraProcessos')
 
@@ -60,6 +61,7 @@ const robot = async (cli,cfg,uptime) =>{
     await comprovante_entrega_BD()        // 999 - COMPROVANTE DE ENTREGA (BD)
     await comprovante_entrega_FILE()      // 999 - COMPROVANTE DE ENTREGA (FILE - API LOCAL)
     await API_comprovante_entrega()       // 999 - COMPROVANTE DE ENTREGA (API)
+    await API_baixa_entrega()             // 999 - BAIXA ENTREGAS SEM COMPROVANTES (API)
     await encerra_processo()              // XXX - ENCERRA PROCESSO DE MONITORAMENTO (BD)
 
 
@@ -212,6 +214,18 @@ const robot = async (cli,cfg,uptime) =>{
           return 1
      }
 
+     API_baixa_entrega
+     // BAIXA ENTREGAS SEM COMPROVANTES
+     async function API_baixa_entrega() {
+          let ret = await baixaEntrega()
+          ret.forEach(itn => {
+           let log = jsonLOG(itn)
+           let msg = { success: true, response: log }
+           logEventos(cfg,`(API - BAIXA ENTREGA - SEM COMPROVANTES) - iTrack:`,msg)
+          })
+           return 1
+      }
+ 
      // API - (XXX) - OCORRENCIAS MANUAIS 
      async function API_ocorrencias_manuais() {
           let ret = await ocorrencias()

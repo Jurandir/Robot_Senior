@@ -1,8 +1,9 @@
--- 20/09/2021 14:03 - ENTREGA COMPROVANTE (ITRACK)
-SELECT TOP 20
-    'ENTREGA REALIZADA'                                    as content_observacao
+-- 04/10/2021 16:34 - BAIXA ENTREGAS SEM COMPROVANTES ("ITRACK")
+
+SELECT TOP 50 
+    'BAIXA REALIZADA'                                      as content_observacao
 	,FORMAT(CO.OCORRENCIA_DATA,'yyyy-MM-ddThh:mm:ss-03')   as content_dataInicioEntrega
-    ,DF.JSON_COMPROVANTE                                   as content_fotosComprovantes
+    ,'[]'                                                  as content_fotosComprovantes
 	,ISNULL(CO.RECEBEDOR_NOME,'COLABORADOR RESPONSAVEL')   as content_nomeRecebedor
     ,DF.CHAVE                                              as content_danfe
 	,SUBSTRING(DF.CTRC,5,10)                               as content_nroCte   
@@ -23,10 +24,7 @@ LEFT JOIN softran_termaco.dbo.CCERomIt ITR ON  ITR.CdEmpresaColetaEntrega = DF.C
 LEFT JOIN softran_termaco.dbo.CCERoman ROM ON ROM.CdEmpresa = ITR.CdEmpresa AND ROM.CdRomaneio = ITR.CdRomaneio AND ROM.CdRota = ITR.CdRota
 LEFT JOIN softran_termaco.dbo.GTCFunDp MOT ON MOT.NrCPF = ROM.NrCPFMotorista
 WHERE DF.IDCARGA          > 0
-  AND CO.OCORRENCIA_ID    = 999  
-  AND CO.FLAG_SEND        = 0
-  AND DF.FASE_ID          = 6
-  AND DF.FLAG_COMPROVANTE = 1
-  AND ISNULL(CO.RESPOSTA_STATUS,0)  <> -1
-  AND ( CO.DT_SEND IS NULL OR DATEDIFF(minute,CO.DT_SEND, CURRENT_TIMESTAMP) > 5) --- depois de 3min da ultima tentativa
+  AND CO.OCORRENCIA_ID    = 999 
+  AND CO.FLAG_SEND        = 0 
+  AND DATEDIFF(hour,CO.DT_CREATE, CURRENT_TIMESTAMP) > 26
 ORDER BY CO.OCORRENCIA_DATA
