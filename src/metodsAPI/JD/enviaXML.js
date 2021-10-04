@@ -1,16 +1,14 @@
 // 01/10/2021 15:48 - ENVIA XML PARA API "JOHN DEERE"
 
-const axios         = require('axios')
-const atualizaEnvio = require('../../metodsDB/JD/atualizaEnvio')
-
-const test        = 'https://tpallbeta.2wglobal.com:6443/WWLRestService?Message_Identifier=JD&Message_Type=PARTSTATUS'
-const production  = 'https://tpall2.2wglobal.com:6443/WWLRestService?Message_Identifier=JD&Message_Type=PARTSTATUS'
-
+const axios             = require('axios')
+const atualizaEnvio     = require('../../metodsDB/JD/atualizaEnvio')
+const atualizarResponse = require('../../metodsDB/JD/atualizarResponse')
+const config            = require('../../../.config/johnDeere.json')
 
 async function enviaXML(itn) {
     let filexml = itn.xml
     let retorno = {success: false, data:'', status:0, statusText:'' }
-    let url     = test
+    let url     =  config.run=='Test' ? config.testeURL : config.producaoURL
     let host    = 'tp'+url.replace(/.*tp(.*):6443.*/, '$1')+':6443'
 
     let res = await axios.post(url, filexml, 
@@ -23,7 +21,6 @@ async function enviaXML(itn) {
                 'Host': host,
                 'Connection': 'Keep-Alive',
                 'User-Agent': 'Apache-HttpClient/4.1.1 (java 1.5)'
-  
             }
   
         });
@@ -38,7 +35,10 @@ async function enviaXML(itn) {
       
     if (retorno.success) {
         await atualizaEnvio(itn)  
-    }
+    } 
+
+    itn.retorno = retorno
+    atualizarResponse(itn)
 
     return retorno
 

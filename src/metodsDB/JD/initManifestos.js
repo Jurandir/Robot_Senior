@@ -17,8 +17,10 @@ const initManifestos = async () => {
     try {
 
         let result = await sqlExec(sql)
-        
-        console.log('EMISSAO_MANIFESTO_SHIP:',result)
+
+        if(!result.success) {
+           console.log('EMISSAO_MANIFESTO_SHIP:',result)
+        }   
 
         flag_livre = true
         return result

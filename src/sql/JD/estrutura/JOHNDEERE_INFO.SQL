@@ -30,7 +30,7 @@ CREATE TABLE JOHNDEERE_INFO (
 	VOLUME                          varchar(15)  ,  --- VOLUME / PESO CALCULADO
 	GROSSWT                         varchar(15)  ,  --- VALOR NOTA FISCAL
 	NETWT                           varchar(15)  DEFAULT '',
-	COMMENTS                        varchar(4)   DEFAULT '',
+	COMMENTS                        varchar(80)  DEFAULT '',
 	RECEIVELOC                      varchar(80)  ,
 	RECEIVEDATE                     varchar(14)  ,   --- REMETENTE
 	DEALERASSIGNDATE                varchar(14)  ,
@@ -46,8 +46,9 @@ CREATE TABLE JOHNDEERE_INFO (
 	COUNTRYNAME                     varchar(18)  ,
 	DELIVERYLOC                     varchar(80)  ,
 	DEALERDELIVERYDATE              varchar(14)  ,
-	FILEXML                         image        ,
+	FILEXML                         NVARCHAR(MAX),        
 	SENDXML                         varchar(1)   DEFAULT '0',
+	RESPONSE                        NVARCHAR(MAX),
     NrManifesto                     VARCHAR(20),
     CdEmpresa                       INT,
     NrSeqControle                   BIGINT,

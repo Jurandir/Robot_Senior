@@ -1,10 +1,10 @@
 {
-    "run": "Test",
+    "run": "Production",
     "versao": "1.0",
     "time": 7200000,
     "validade": 86400000,
-    "testeURL": "http://localhost:4999/test",
-    "producaoURL": "http://localhost:4999/test",
+    "testeURL": "https://tpallbeta.2wglobal.com:6443/WWLRestService?Message_Identifier=JD&Message_Type=PARTSTATUS",
+    "producaoURL": "https://tpall2.2wglobal.com:6443/WWLRestService?Message_Identifier=JD&Message_Type=PARTSTATUS",
     "debug": "OFF",
     "user": "*",
     "pwd": "*"

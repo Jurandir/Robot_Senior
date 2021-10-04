@@ -9,3 +9,4 @@
 - 27/08/2021
 npm install npm@latest -g
 
+- 04/10/2021 - JD Produção.

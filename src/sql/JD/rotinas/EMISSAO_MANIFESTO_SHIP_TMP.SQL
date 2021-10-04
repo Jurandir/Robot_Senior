@@ -1,26 +1,6 @@
--- 22/09/2021 14:53 - INSERT DADOS NA TABELA DE CONTROLE "JOHN DEERE"
+-- teste
 
-INSERT INTO SIC.dbo.JOHNDEERE_INFO (
-    CONTROLNUMBER
-    ,INVOICENUMBER
-    ,SHIPDATE
-    ,LICENSEPLATENUMBER
-    ,BOLNUMBER
-    ,MANIFESTNUMBER
-    ,DESTINATIONLOC
-    ,DESTINATIONETA
-    ,FINALDESTETA
-    ,VOLUME
-    ,GROSSWT
-    ,COMMENTS
-    ,NrManifesto
-    ,CdEmpresa
-    ,NrSeqControle
-    ,CdRemetente
-    ,NrNotaFiscal
-    ,NrSerie
-)
-SELECT DISTINCT
+SELECT 
      '000000000'                                                                              AS CONTROLNUMBER
     ,NFR.nrnotafiscal                                                                         AS INVOICENUMBER
     ,FORMAT(CNH.dtemissao,'yyyyMMddHHmmss')                                                   AS SHIPDATE
@@ -33,7 +13,7 @@ SELECT DISTINCT
                                                                                               AS FINALDESTETA
     ,NFR.QtVolume                                                                             AS VOLUME
     ,NFR.VlNotaFiscal                                                                         AS GROSSWT
-    ,'INICIO'
+
     ,MAN.NrManifesto
     ,CNH.CdEmpresa
     ,CNH.NrSeqControle
@@ -43,10 +23,10 @@ SELECT DISTINCT
 
 FROM softran_termaco.dbo.gtcconhe      CNH   
 JOIN softran_termaco.dbo.gtcconce      CTE ON CTE.CdEmpresa       = CNH.CdEmpresa	  AND CTE.NrSeqControle = CNH.NrSeqControle                               
-JOIN softran_termaco.dbo.gtcnfcon      LNK ON LNK.cdempresa       = CNH.cdempresa   AND LNK.nrseqcontrole = CNH.nrseqcontrole  
-JOIN softran_termaco.dbo.gtcnf         NFR ON NFR.cdremetente     = LNK.cdinscricao AND NFR.nrserie       = LNK.nrserie       AND NFR.nrnotafiscal = LNK.nrnotafiscal
-LEFT JOIN softran_termaco.dbo.GTCFatIt FAT ON FAT.CdEmpresaConhec = CNH.CdEmpresa   AND FAT.NrSeqControle = CNH.NrSeqControle AND FAT.CdSequencia  = 1 AND FAT.Insituacao = 1
-JOIN softran_termaco.dbo.GTCManCn      LMA ON LMA.CdEmpresa       = CNH.CdEmpresa   AND LMA.NrSeqControle = CNH.NrSeqControle
+JOIN softran_termaco.dbo.gtcnfcon      LNK ON LNK.cdempresa       = CNH.cdempresa AND LNK.nrseqcontrole = CNH.nrseqcontrole  
+JOIN softran_termaco.dbo.gtcnf         NFR ON NFR.cdremetente     = LNK.cdinscricao AND NFR.nrserie     = LNK.nrserie AND NFR.nrnotafiscal = LNK.nrnotafiscal
+LEFT JOIN softran_termaco.dbo.GTCFatIt FAT ON FAT.CdEmpresaConhec = CNH.CdEmpresa AND FAT.NrSeqControle = CNH.NrSeqControle AND FAT.CdSequencia   = 1
+JOIN softran_termaco.dbo.GTCManCn      LMA ON LMA.CdEmpresa       = CNH.CdEmpresa AND LMA.NrSeqControle = CNH.NrSeqControle
 JOIN softran_termaco.dbo.GTCMan        MAN ON MAN.NrManifesto     = LMA.NrManifesto
 LEFT JOIN softran_termaco.dbo.sisempre FDT ON FDT.cdempresa       = CNH.cdempresadestino -- Filial Destino
 
@@ -62,10 +42,3 @@ WHERE
                       AND INF.CdRemetente    = NFR.CdRemetente
                       AND INF.NrNotaFiscal   = NFR.NrNotaFiscal
                       AND INF.NrSerie        = NFR.NrSerie )
-;
-
-UPDATE SIC..JOHNDEERE_INFO
-   SET CONTROLNUMBER = FORMAT( CODEINSERT ,'000000000') 
- WHERE CONTROLNUMBER = '000000000'
-;
- 

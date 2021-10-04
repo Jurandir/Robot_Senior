@@ -1,6 +1,7 @@
- -- 29/09/2021 10:56 -  DELIVERY - CHEGADA NO CD TRANSBORDO - "JONH DEERE"
+ -- 29/09/2021 10:56 -  DELIVERY - CHEGADA NO CD TRANSBORDO - "JOHN DEERE"
 
 INSERT INTO SIC..JOHNDEERE_INFO (MESSAGETYPE,MESSAGESENDER,MESSAGERECIPIENT,WITSFILENAME,TIMESTAMP,CONTROLNUMBER,INVOICENUMBER,COMMERCIALINVOICENUMBER,CUSTOMER,EVENTTYPE,RAILHEAD,DELIVERYLOC,DEALERDELIVERYDATE,SENDXML
+    ,COMMENTS
     ,NrManifesto
     ,CdEmpresa
     ,NrSeqControle
@@ -10,7 +11,7 @@ INSERT INTO SIC..JOHNDEERE_INFO (MESSAGETYPE,MESSAGESENDER,MESSAGERECIPIENT,WITS
     ,CdSequencia
 
 )
-SELECT 
+SELECT DISTINCT
 'INVOICE'      AS MESSAGETYPE,
 'CARRIER_TERM' AS MESSAGESENDER,
 'VISIBILITY'   AS MESSAGERECIPIENT,
@@ -22,10 +23,10 @@ NFR.nrnotafiscal            AS INVOICENUMBER,
 'JDP'                 AS CUSTOMER,
 'DELIVERY'            AS EVENTTYPE,
 '89674782001391'      AS RAILHEAD,
-CNH.CdEmpresaDestino  AS DELIVERYLOC, 
+FDT.NrCGCCPF          AS DELIVERYLOC, 
 CONCAT(FORMAT(MOV.DtMovimento,'yyyyMMdd'),FORMAT(MOV.HrMovimento,'HHmmss')) AS DEALERDELIVERYDATE,
 '0' AS SENDXML
-
+    ,'CD DELIVERY - CHEGADA NA FILIAL DE TRANSBORDO'
     ,MAN.NrManifesto
     ,CNH.CdEmpresa
     ,CNH.NrSeqControle
@@ -38,7 +39,8 @@ FROM softran_termaco.dbo.gtcconhe      CNH
 JOIN softran_termaco.dbo.gtcnfcon      LNK ON LNK.cdempresa       = CNH.cdempresa AND LNK.nrseqcontrole = CNH.nrseqcontrole  
 JOIN softran_termaco.dbo.gtcnf         NFR ON NFR.cdremetente     = LNK.cdinscricao AND NFR.nrserie     = LNK.nrserie AND NFR.nrnotafiscal = LNK.nrnotafiscal
 JOIN softran_termaco.dbo.gtcmoven      MOV ON MOV.cdempresa       = CNH.cdempresa   AND MOV.nrseqcontrole = CNH.nrseqcontrole  -- Movimento de Ocorrencias 
-LEFT JOIN softran_termaco.dbo.GTCFatIt FAT ON FAT.CdEmpresaConhec = CNH.CdEmpresa AND FAT.NrSeqControle = CNH.NrSeqControle AND FAT.CdSequencia   = 1
+LEFT JOIN softran_termaco.dbo.GTCFatIt FAT ON FAT.CdEmpresaConhec = CNH.CdEmpresa AND FAT.NrSeqControle = CNH.NrSeqControle AND FAT.CdSequencia   = 1 AND FAT.Insituacao = 1
+LEFT JOIN softran_termaco.dbo.sisempre FDT ON FDT.cdempresa       = CNH.cdempresadestino -- Filial Destino
 JOIN softran_termaco.dbo.GTCManCn      LMA ON LMA.CdEmpresa       = CNH.CdEmpresa AND LMA.NrSeqControle = CNH.NrSeqControle
 JOIN softran_termaco.dbo.GTCMan        MAN ON MAN.NrManifesto     = LMA.NrManifesto
 WHERE  

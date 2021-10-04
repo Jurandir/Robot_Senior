@@ -23,8 +23,7 @@ const robot = async (cli,cfg,uptime) =>{
    await chegou_CD_Destino()        // RECEIVE     - CHECOU NO DESTINO / FILIAL DE ENTREGA / DESCARREGAMENTO
    await rota_ENTREGA()             // SHIP-BR     - SAIU EM ROTA DE ENTREGA
    await confirmacao_ENTREGA()      // DELIVERY-BR - REGISTRO DE ENTREGA CONFIRMADA
-
-   // await envia_DADOS()               // ENVIA DADOS PARA API "JONH DEERE"
+   await envia_DADOS()              // SEND        - ENVIA DADOS PARA API "JOHN DEERE"
 
    //=======================
 
@@ -38,39 +37,39 @@ const robot = async (cli,cfg,uptime) =>{
    // CAPTURA DADOS - MANIFESTO EMITIDO
    async function captura_MANIFESTO() {
         let ret = await initManifesto()
-        logEventos(cfg,'(BD - CAPTURA MANIFESTOS ) - Sênior -> "JONH DEERE":',ret) 
+        logEventos(cfg,'(BD - CAPTURA MANIFESTOS ) - Sênior -> "JOHN DEERE":',ret) 
         return ret
    }
 
    // REGISTRO NA FILIAL DE TRANSBORDO
    async function chegou_CD_Transbordo() {
          let ret = await initTransbordo()
-         logEventos(cfg,'(BD - REGISTRO NA FILIAL DE TRANSBORDO ) - Sênior -> "JONH DEERE":',ret) 
+         logEventos(cfg,'(BD - REGISTRO NA FILIAL DE TRANSBORDO ) - Sênior -> "JOHN DEERE":',ret) 
          return ret
    }
 
    // CHECOU NO DESTINO / FILIAL DE ENTREGA / DESCARREGAMENTO
    async function chegou_CD_Destino() {
       let ret = await initFilialDestino()
-      logEventos(cfg,'(BD - CHECOU NO DESTINO / FILIAL DE ENTREGA / DESCARREGAMENTO ) - Sênior -> "JONH DEERE":',ret) 
+      logEventos(cfg,'(BD - CHECOU NO DESTINO / FILIAL DE ENTREGA / DESCARREGAMENTO ) - Sênior -> "JOHN DEERE":',ret) 
       return ret
    }
 
    // SAIU EM ROTA DE ENTREGA
    async function rota_ENTREGA() {
       let ret = await initRotaEntrega()
-      logEventos(cfg,'(BD - EM ROTA DE ENTREGA ) - Sênior -> "JONH DEERE":',ret) 
+      logEventos(cfg,'(BD - EM ROTA DE ENTREGA ) - Sênior -> "JOHN DEERE":',ret) 
       return ret
    }
 
    // REGISTRO DE ENTREGA CONFIRMADA
    async function confirmacao_ENTREGA() {
       let ret = await confirmaEntrega()
-      logEventos(cfg,'(BD - EM ROTA DE ENTREGA ) - Sênior -> "JONH DEERE":',ret) 
+      logEventos(cfg,'(BD - EM ROTA DE ENTREGA ) - Sênior -> "JOHN DEERE":',ret) 
       return ret
    }
 
-   // ENVIA DADOS PARA API "JONH DEERE"
+   // ENVIA DADOS PARA API "JOHN DEERE"
    async function envia_DADOS() {
       let ret = await enviaDados()
       return ret

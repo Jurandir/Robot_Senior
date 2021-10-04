@@ -1,6 +1,7 @@
- -- 29/09/2021 13:40 -  RECEIVE - CHEGADA NO CD DESTINO / DESCARREGADO - "JONH DEERE"
+ -- 29/09/2021 13:40 -  RECEIVE - CHEGADA NO CD DESTINO / DESCARREGADO - "JOHN DEERE"
  
 INSERT INTO SIC..JOHNDEERE_INFO (MESSAGETYPE,MESSAGESENDER,MESSAGERECIPIENT,WITSFILENAME,TIMESTAMP,CONTROLNUMBER,INVOICENUMBER,COMMERCIALINVOICENUMBER,CUSTOMER,EVENTTYPE,RAILHEAD,RECEIVELOC,RECEIVEDATE,FINALDESTETA,SENDXML
+    ,COMMENTS
     ,NrManifesto
     ,CdEmpresa
     ,NrSeqControle
@@ -9,23 +10,24 @@ INSERT INTO SIC..JOHNDEERE_INFO (MESSAGETYPE,MESSAGESENDER,MESSAGERECIPIENT,WITS
     ,NrSerie
 	,CdSequencia
 )
-SELECT 
+SELECT DISTINCT
 'INVOICE'      AS MESSAGETYPE,
 'CARRIER_TERM' AS MESSAGESENDER,
 'VISIBILITY'   AS MESSAGERECIPIENT,
 FORMAT(CURRENT_TIMESTAMP,'yyyyMMddHHmmss')  AS WITSFILENAME,
 FORMAT(CURRENT_TIMESTAMP,'yyyyMMddHHmmss')  AS TIMESTAMP,
 '000000000'                                 AS CONTROLNUMBER,
-NFR.nrnotafiscal            AS INVOICENUMBER,
+NFR.nrnotafiscal      AS INVOICENUMBER,
 ''                    AS COMMERCIALINVOICENUMBER,
 'JDP'                 AS CUSTOMER,
 'RECEIVE'             AS EVENTTYPE,
 '89674782001391'      AS RAILHEAD,
-CNH.CdEmpresaDestino  AS DELIVERYLOC, 
+FDT.NrCGCCPF          AS RECEIVELOC, 
 CONCAT(FORMAT(MOV.DtMovimento,'yyyyMMdd'),FORMAT(MOV.HrMovimento,'HHmmss')) AS DEALERDELIVERYDATE,
 CONCAT(FORMAT(MOV.DtMovimento,'yyyyMMdd'),FORMAT(MOV.HrMovimento,'HHmmss')) AS FINALDESTETA,
 '0' AS SENDXML
 
+    ,'CD RECEIVE - CHEGADA NA CIDADE OU FILIAL DESTINO'
     ,MAN.NrManifesto
     ,CNH.CdEmpresa
     ,CNH.NrSeqControle
@@ -38,7 +40,8 @@ FROM softran_termaco.dbo.gtcconhe      CNH
 JOIN softran_termaco.dbo.gtcnfcon      LNK ON LNK.cdempresa       = CNH.cdempresa AND LNK.nrseqcontrole = CNH.nrseqcontrole  
 JOIN softran_termaco.dbo.gtcnf         NFR ON NFR.cdremetente     = LNK.cdinscricao AND NFR.nrserie     = LNK.nrserie AND NFR.nrnotafiscal = LNK.nrnotafiscal
 JOIN softran_termaco.dbo.gtcmoven      MOV ON MOV.cdempresa       = CNH.cdempresa   AND MOV.nrseqcontrole = CNH.nrseqcontrole  -- Movimento de Ocorrencias 
-LEFT JOIN softran_termaco.dbo.GTCFatIt FAT ON FAT.CdEmpresaConhec = CNH.CdEmpresa AND FAT.NrSeqControle = CNH.NrSeqControle AND FAT.CdSequencia   = 1
+LEFT JOIN softran_termaco.dbo.GTCFatIt FAT ON FAT.CdEmpresaConhec = CNH.CdEmpresa AND FAT.NrSeqControle = CNH.NrSeqControle AND FAT.CdSequencia   = 1 AND FAT.Insituacao = 1
+LEFT JOIN softran_termaco.dbo.sisempre FDT ON FDT.cdempresa       = CNH.cdempresadestino -- Filial Destino
 JOIN softran_termaco.dbo.GTCManCn      LMA ON LMA.CdEmpresa       = CNH.CdEmpresa AND LMA.NrSeqControle = CNH.NrSeqControle
 JOIN softran_termaco.dbo.GTCMan        MAN ON MAN.NrManifesto     = LMA.NrManifesto
 

@@ -1,4 +1,4 @@
- -- 30/09/2021 09:32 -  "DELIVERY-BR" - REGISTRO DE ENTREGA - "JONH DEERE"
+ -- 30/09/2021 09:32 -  "DELIVERY-BR" - REGISTRO DE ENTREGA - "JOHN DEERE"
 
 INSERT INTO SIC..JOHNDEERE_INFO (
      MESSAGETYPE
@@ -15,6 +15,7 @@ INSERT INTO SIC..JOHNDEERE_INFO (
     ,DELIVERYLOC
     ,DEALERDELIVERYDATE
     ,SENDXML
+    ,COMMENTS
     ,NrManifesto
     ,CdEmpresa
     ,NrSeqControle
@@ -23,7 +24,7 @@ INSERT INTO SIC..JOHNDEERE_INFO (
     ,NrSerie
     ,CdSequencia )
 
-SELECT 
+SELECT DISTINCT
       'INVOICE'                                                                   AS MESSAGETYPE
     , 'CARRIER_TERM'                                                              AS MESSAGESENDER
     , 'VISIBILITY'                                                                AS MESSAGERECIPIENT
@@ -38,6 +39,7 @@ SELECT
     , CONCAT(ENT.DsLocal,',',ENT.DsUF,'-BR')                                      AS DELIVERYLOC  -- EMPRESA/LILIAL ENTREGA
     , CONCAT(FORMAT(MOV.DtMovimento,'yyyyMMdd'),FORMAT(MOV.HrMovimento,'HHmmss')) AS DEALERDELIVERYDATE -- DATA BAIXA ENTREGA
     , '0'                                                                         AS SENDXML
+    , 'ENTREGA REALIZADA NORMALMENTE'                                             AS COMMENTS
     ,MAN.NrManifesto
     ,CNH.CdEmpresa
     ,CNH.NrSeqControle

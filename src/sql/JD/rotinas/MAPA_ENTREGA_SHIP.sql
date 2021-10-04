@@ -1,4 +1,4 @@
- -- 29/09/2021 17:29 -  SHIP - EM ROTA DE ENTREGA - "JONH DEERE"
+ -- 29/09/2021 17:29 -  SHIP - EM ROTA DE ENTREGA - "JON DEERE"
 
 INSERT INTO SIC..JOHNDEERE_INFO (
      MESSAGETYPE
@@ -34,7 +34,7 @@ INSERT INTO SIC..JOHNDEERE_INFO (
     ,NrNotaFiscal
     ,NrSerie
     ,CdSequencia )
-SELECT 
+SELECT DISTINCT
       'INVOICE'                                                                   AS MESSAGETYPE
     , 'CARRIER_TERM'                                                              AS MESSAGESENDER
     , 'VISIBILITY'                                                                AS MESSAGERECIPIENT
@@ -45,7 +45,7 @@ SELECT
     , ''                                                                          AS COMMERCIALINVOICENUMBER
     , 'JDP'                                                                       AS CUSTOMER
     , 'SHIP'                                                                      AS EVENTTYPE
-    , CNH.CdEmpresaDestino                                                        AS RAILHEAD -- EMPRESA DESTINO
+    , FDT.NrCGCCPF                                                                AS RAILHEAD -- EMPRESA DESTINO
     , CONCAT(FORMAT(MOV.DtMovimento,'yyyyMMdd'),FORMAT(MOV.HrMovimento,'HHmmss')) AS SHIPDATE -- DATA DE ENTREGA
     , 'TRUCK'                                                                     AS CARRIERTYPE
     , 'TERM'                                                                      AS CARRIERCODE
@@ -60,7 +60,7 @@ SELECT
     , NFR.QtVolume                                                                AS VOLUME
     , NFR.VlNotaFiscal                                                            AS GROSSWT
     , ''                                                                          AS NETWT
-    , ''                                                                          AS COMMENTS
+    , 'EM ROTA PARA ENTREGA'                                                      AS COMMENTS                                   
     , '0'                                                                         AS SENDXML
     ,MAN.NrManifesto
     ,CNH.CdEmpresa
@@ -74,9 +74,10 @@ FROM softran_termaco.dbo.gtcconhe      CNH
 JOIN softran_termaco.dbo.gtcnfcon      LNK ON LNK.cdempresa       = CNH.cdempresa   AND LNK.nrseqcontrole = CNH.nrseqcontrole  
 JOIN softran_termaco.dbo.gtcnf         NFR ON NFR.cdremetente     = LNK.cdinscricao AND NFR.nrserie       = LNK.nrserie AND NFR.nrnotafiscal = LNK.nrnotafiscal
 JOIN softran_termaco.dbo.gtcmoven      MOV ON MOV.cdempresa       = CNH.cdempresa   AND MOV.nrseqcontrole = CNH.nrseqcontrole  -- Movimento de Ocorrencias 
-LEFT JOIN softran_termaco.dbo.GTCFatIt FAT ON FAT.CdEmpresaConhec = CNH.CdEmpresa   AND FAT.NrSeqControle = CNH.NrSeqControle AND FAT.CdSequencia   = 1
+LEFT JOIN softran_termaco.dbo.GTCFatIt FAT ON FAT.CdEmpresaConhec = CNH.CdEmpresa   AND FAT.NrSeqControle = CNH.NrSeqControle AND FAT.CdSequencia   = 1 AND FAT.Insituacao = 1
 JOIN softran_termaco.dbo.GTCManCn      LMA ON LMA.CdEmpresa       = CNH.CdEmpresa   AND LMA.NrSeqControle = CNH.NrSeqControle
 LEFT JOIN softran_termaco.dbo.siscep   ENT ON ENT.nrcep           = CNH.NrCepEntrega   -- CEP Local Entrega
+LEFT JOIN softran_termaco.dbo.sisempre FDT ON FDT.cdempresa       = CNH.cdempresadestino -- Filial Destino
 JOIN softran_termaco.dbo.GTCMan        MAN ON MAN.NrManifesto     = LMA.NrManifesto
 
 WHERE  

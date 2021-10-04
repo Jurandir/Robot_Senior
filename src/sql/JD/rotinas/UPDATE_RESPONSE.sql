@@ -1,3 +1,4 @@
 UPDATE SIC..JOHNDEERE_INFO
-SET SENDXML = 1
+SET RESPONSE= '${retorno}',
+    FILEXML = '${filexml}'
 WHERE CODEINSERT = ${codigo}
