@@ -16,6 +16,12 @@ const embarque = async (cfg,cli,body) => {
 
     if(!ret.success) {
         console.log('FALHA (embarque.js) RET:',ret)
+        base = {
+            success: false,
+            status: 500,
+            message: ret.err,
+            data: ret.data
+        }
     }    
 
     try {

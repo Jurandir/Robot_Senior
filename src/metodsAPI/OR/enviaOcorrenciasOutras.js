@@ -14,6 +14,7 @@ const server   =  (config.run=='Test') ? config.TEST_SRV : config.SERVIDOR
 const enviaOcorrenciasOutras = async () => {
     let retorno  = []
     let bodys    = await geraJsonOcorrenciaOutras()
+    let api
 
     // if(debug) { console.log('Params bodys:',bodys) }
 
@@ -38,8 +39,19 @@ const enviaOcorrenciasOutras = async () => {
             
             if(debug) { console.log('Request ID:',body.REFID) }
 
-            let api   = await loadAPI(method,endpoint,server,body)
-            ret.dados = api.data 
+            api = await loadAPI(method,endpoint,server,body)
+            
+            if(!api.success) {
+                ret.dados = {
+                    BaixaOcorrenciaResult: {
+                        Mensagem: api.err,
+                        Protocolo: 'ERRO API',
+                        Sucesso: false
+                    }
+                }
+            } else {
+                ret.dados = api.data 
+            }   
             
             if(debug) { console.log('Response:',api) }
             
@@ -49,7 +61,7 @@ const enviaOcorrenciasOutras = async () => {
             let Sucesso   = ret.dados.BaixaOcorrenciaResult.Sucesso
 
             if(!Mensagem) {
-                console.log('(enviaOcorrenciasIniciais) Mensagem:', ret )     //--- TESTES
+                console.log('(enviaOcorrenciasOutras) Mensagem:', ret )     //--- TESTES
             }            
             
             ret.grv  = await upd_response( { id, Mensagem, Protocolo, Sucesso } )

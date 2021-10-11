@@ -46,6 +46,17 @@ const robot = async (cli,cfg,uptime) =>{
 
    // json LOG
    function jsonLOG (itn,element) { 
+        
+        if(!itn.dados) {
+          itn.dados = {}
+        }
+
+        if(!itn.dados[element]) {
+          itn.dados[element] = {}
+          itn.dados[element].Sucesso = false
+          itn.dados[element].Mensagem = `API Error (${element})`
+        }
+        
      return {
        success: itn.success,
        message: `${itn.body.observacao}`,

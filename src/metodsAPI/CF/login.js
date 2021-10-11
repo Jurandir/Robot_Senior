@@ -9,7 +9,8 @@ const login = async (cfg) => {
      }  
     let params   = { 
         email: cfg.user,
-        senha: cfg.pwd
+        senha: cfg.pwd,
+        idcliente: cfg.id
     }
    
     let ret = await loadAPI(method,endpoint,server,params)
