@@ -1,4 +1,7 @@
--- 01/09/2021 10:48 - OCORRENCIAS DIVERSAS - MANUAIS
+-- 01/09/2021 10:48 - OCORRENCIAS DIVERSAS - MANUAIS - ("Confirma Facil V2")
+
+-- TEST
+
 SET XACT_ABORT ON
 
 DECLARE @CONFIRMAFACIL_ID           as INT
@@ -15,7 +18,7 @@ DECLARE @CdSequencia                as INT
 
 
 DECLARE Ocorrencia_Cursor CURSOR FOR 
-SELECT TOP 10
+SELECT TOP 50
     CF.ID                   AS CONFIRMAFACIL_ID
 	,CAST(CONCAT(FORMAT(OUN.DtMovimento,'yyyy-MM-dd'),' ', FORMAT(OUN.HRMovimento,'HH:mm:ss')) as datetime) 
 	                         AS OCORRENCIA_DATA
@@ -31,11 +34,11 @@ SELECT TOP 10
 
 FROM softran_termaco.dbo.gtcmoven         OUN                                                  -- Movimento das Ocorrencias
      JOIN softran_termaco.dbo.gtchisen    OCO ON OCO.cdhistoricoentrega = OUN.cdocorrencia     -- Ocorrencias
-     JOIN SIC.dbo.CONFIRMAFACIL           CF  ON CF.CdEmpresa = OUN.CdEmpresa AND CF.NrSeqControle = OUN.NrSeqControle 
-LEFT JOIN SIC.dbo.CONFIRMAFACILDEPARA     DP  ON DP.ID_SENIOR = OUN.CdOcorrencia               -- DE PARA ( SENIOR -> CONFIRMAFACIL )
-LEFT JOIN SIC.dbo.CONFIRMAFACILOCORRENCIA CO  ON CO.CdEmpresa = OUN.CdEmpresa AND CO.NrSeqControle = OUN.NrSeqControle AND CO.CdSequencia  = OUN.CdSequencia 
+     JOIN TEST..CONFIRMAFACIL           CF  ON CF.CdEmpresa = OUN.CdEmpresa AND CF.NrSeqControle = OUN.NrSeqControle 
+LEFT JOIN TEST..CONFIRMAFACILDEPARA     DP  ON DP.ID_SENIOR = OUN.CdOcorrencia               -- DE PARA ( SENIOR -> CONFIRMAFACIL )
+LEFT JOIN TEST..CONFIRMAFACILOCORRENCIA CO  ON CO.CdEmpresa = OUN.CdEmpresa AND CO.NrSeqControle = OUN.NrSeqControle AND CO.CdSequencia  = OUN.CdSequencia 
 WHERE (isnull(OCO.InExibehist, 0) = 0 OR OUN.CdOcorrencia=219)               -- 219 = AGUARDANDO AGENDAMENTO/SOLICITADO AGENDA
-  AND NOT EXISTS ( SELECT 1 FROM SIC.dbo.CONFIRMAFACILOCORRENCIA CO WHERE CO.CdEmpresa = OUN.CdEmpresa AND CO.NrSeqControle = OUN.NrSeqControle  AND CO.CdSequencia = OUN.CdSequencia )
+  AND NOT EXISTS ( SELECT 1 FROM TEST..CONFIRMAFACILOCORRENCIA CO WHERE CO.CdEmpresa = OUN.CdEmpresa AND CO.NrSeqControle = OUN.NrSeqControle  AND CO.CdSequencia = OUN.CdSequencia )
   AND OUN.CdOcorrencia not in (0,899)
   AND CF.FASE_ID < 5
 ORDER BY 
@@ -62,7 +65,7 @@ WHILE @@FETCH_STATUS = 0
 BEGIN      
       BEGIN TRANSACTION;
 
-         INSERT INTO SIC.dbo.CONFIRMAFACILOCORRENCIA ( 
+         INSERT INTO TEST..CONFIRMAFACILOCORRENCIA ( 
              CONFIRMAFACIL_ID, 
              OCORRENCIA_ID, 
              OCORRENCIA_NOME, 
@@ -72,7 +75,8 @@ BEGIN
              RECEBEDOR_NOME,
              CdEmpresa,
              NrSeqControle,
-             CdSequencia 
+             CdSequencia,
+             VER_ID 
         ) VALUES ( 
             @CONFIRMAFACIL_ID, 
             @OCORRENCIA_ID, 
@@ -83,7 +87,8 @@ BEGIN
             @RECEBEDOR_NOME,
             @CdEmpresa,
             @NrSeqControle,
-            @CdSequencia 
+            @CdSequencia,
+            2 
         )
 
       -- Print @@ROWCOUNT

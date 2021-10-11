@@ -2,7 +2,8 @@ const montaJSON = async (lista,base) => {
     let dados   = {}
     let retorno = []
     const setVar = async (campo,valor) => {
-        if(campo=='FLAG_ID') {return}
+        if(campo=='FLAG_ID')  {return}
+        if(campo=='TOKEN_ID') {return}  // Ajuste para a Versão 02 CF
         if(valor==null) {return}
         let chave  = `${campo}`.split('_')
         let chaves = chave.length
