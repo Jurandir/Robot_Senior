@@ -2,33 +2,40 @@
 
 // TEST
 
-const moment                = require('moment')
-const logEventos            = require('../../helpers/logEventos')
-const cfg                   = require('../../../.config/confirmaFacil.json')    
+const moment                 = require('moment')
+const logEventos             = require('../../helpers/logEventos')
+const cfg                    = require('../../../.config/confirmaFacil.json')    
 
-const initNFs               = require('../../metodsDB/CF2/initNFs')                 
-const initTransporte        = require('../../metodsDB/CF2/initTransporte')
-const initOcorrencias       = require('../../metodsDB/CF2/initOcorrencias')
-const registraNF            = require('../../models/CF2/registraNF')
-const initTransferencia     = require('../../metodsDB/CF2/initTransferencia')
-const transfereNF           = require('../../models/CF2/transfereNF')
+const initNFs                = require('../../metodsDB/CF2/initNFs')                 
+const initTransporte         = require('../../metodsDB/CF2/initTransporte')
+const initOcorrencias        = require('../../metodsDB/CF2/initOcorrencias')
+const registraNF             = require('../../models/CF2/registraNF')
 
-const initChegada           = require('../../metodsDB/CF2/initChegada')
-const chegadaNF             = require('../../models/CF2/chegadaNF')
+const initTransferencia      = require('../../metodsDB/CF2/initTransferencia')
+const transfereNF            = require('../../models/CF2/transfereNF')
 
+const initChegada            = require('../../metodsDB/CF2/initChegada')
+const chegadaNF              = require('../../models/CF2/chegadaNF')
 
-//const initEntregaProgramada = require('../../metodsDB/CF2/initEntregaProgramada')
-//const initEmRota            = require('../../metodsDB/CF2/initEmRota')
-//const initEntrega           = require('../../metodsDB/CF2/initEntrega')
-//const initComprovante       = require('../../metodsDB/CF2/initComprovante')
+const initEntregaProgramada  = require('../../metodsDB/CF2/initEntregaProgramada')
+const entregaProgramada      = require('../../models/CF2/entregaProgramada')
+
+const initEmRota             = require('../../metodsDB/CF2/initEmRota')
+const rotaEntrega            = require('../../models/CF2/rotaEntrega')
+
+const ocorrencias            = require('../../models/CF2/ocorrencias')
+
+const initEntrega            = require('../../metodsDB/CF2/initEntrega')
+const entregaNF              = require('../../models/CF2/entregaNF')
+
+const initComprovante        = require('../../metodsDB/CF2/initComprovante')
+
+const preparaLinkComprovante = require('../../helpers/preparaLinkComprovante_CF2')
+
+const comprovante            = require('../../models/CF2/comprovante')
+
 //const encerraProcessos      = require('../../metodsDB/CF2/encerraProcessos')
-//const entregaProgramada     = require('../../models/CF2/entregaProgramada')
-//const rotaEntrega           = require('../../models/CF2/rotaEntrega')
-//const entregaNF             = require('../../models/CF2/entregaNF')
-//const ocorrencias           = require('../../models/CF2/ocorrencias')
-//const comprovante           = require('../../models/CF2/comprovante')
 
-//const preparaLinkComprovante = require('../../helpers/preparaLinkComprovante')
 
 const robot_V2 = async (loopRobot) =>{
     let time_inicio = process.uptime()
@@ -44,17 +51,25 @@ const robot_V2 = async (loopRobot) =>{
 //-    await api_transferencia_entre_filiais() // 101 - EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS (API)
 
 //    await chegada_filial_destino()        // 098 - CHEGADA NA CIDADE OU FILIAL DE DESTINO (BD)
-    await api_chegada_filial_destino()    // 098 - CHEGADA NA CIDADE OU FILIAL DE DESTINO (API)
+//    await api_chegada_filial_destino()    // 098 - CHEGADA NA CIDADE OU FILIAL DE DESTINO (API)
 
+//    await entrega_programada()            // 091 - ENTREGA PROGRAMADA (BD)
+//    await api_entrega_programada()        // 091 - ENTREGA PROGRAMADA (API)
 
+//    await em_rota_entrega()               // 100 - EM ROTA PARA ENTREGA (BD)
+//    await api_em_rota_entrega()           // 100 - EM ROTA PARA ENTREGA (API)
 
-    //await entrega_programada()            // 091 - ENTREGA PROGRAMADA (BD,API)
-    //await em_rota_entrega()               // 100 - EM ROTA PARA ENTREGA (BD,API)
-    //await API_ocorrencias_manuais()       // XXX - OCORRENCIAS MANUAIS (API)
-    //await confirmacao_entrega()           // 001 - ENTREGA REALIZADA NORMALMENTE (BD,API)
-    //await comprovante_entrega_BD()        // 999 - COMPROVANTE DE ENTREGA (BD)
-    //await comprovante_entrega_FILE()      // 999 - COMPROVANTE DE ENTREGA (FILE,API LOCAL)
-    //await API_comprovante_entrega()       // 999 - COMPROVANTE DE ENTREGA (API)
+//    await api_ocorrencias_manuais()       // XXX - OCORRENCIAS MANUAIS (API)
+
+//    await confirmacao_entrega()           // 001 - ENTREGA REALIZADA NORMALMENTE (BD)
+//    await api_confirmacao_entrega()           // 001 - ENTREGA REALIZADA NORMALMENTE (API)
+
+//    await comprovante_entrega_BD()        // 999 - COMPROVANTE DE ENTREGA (BD)
+
+//    await comprovante_entrega_FILE()      // 999 - COMPROVANTE DE ENTREGA (FILE,API LOCAL)
+
+    await api_comprovante_entrega()       // 999 - COMPROVANTE DE ENTREGA (API)
+
     //await encerra_processo()              // XXX - ENCERRA PROCESSO DE MONITORAMENTO (BD)
 
     let time_final = process.uptime()
@@ -138,74 +153,118 @@ const robot_V2 = async (loopRobot) =>{
     }
 
 
-   /*
-
-    // OCORRENCIAS MANUAIS API
-    async function API_ocorrencias_manuais() {
-       let retOcorrencias = await ocorrencias(cfg,cli)
-       logEventos(cfg,'(API - OCORRÊNCIAS MANUAIS) - retOcorrencias:',retOcorrencias)
-       return { retOcorrencias }
-    }   
-
-    // ENTREGA PROGRAMADA
+    // BD - ENTREGA PROGRAMADA
     async function entrega_programada() {
-      let retInitEntregaProgamada = await initEntregaProgramada()
-      logEventos(cfg,'(BD - ENTREGA PROGRAMADA) - retInitEntregaProgamada:',retInitEntregaProgamada)
-
-      let retEntregaProgramada = await entregaProgramada(cfg,cli)
-      logEventos(cfg,'(API - ENTREGA PROGRAMADA) - retEntregaProgramada:',retEntregaProgramada)
-      return { retInitEntregaProgamada, retEntregaProgramada }
+      let ret = await initEntregaProgramada()
+      logEventos(cfg,'(BD - ENTREGA PROGRAMADA) - (CF - V2):',ret)
+      return 0
     }
 
-    // EM ROTA PARA ENTREGA
+    // API- ENTREGA PROGRAMADA
+    async function api_entrega_programada() {
+      let ret = await entregaProgramada()
+      for await (itn of ret) {
+        let log = {
+          success : itn.success,
+          message : itn.message
+        }
+         logEventos(cfg,`${itn.raiz} - (API - ENTREGA PROGRAMADA ) - (CF - V2):`,log)
+      }   
+      return 0
+    }
+
+    // BD - EM ROTA PARA ENTREGA
     async function em_rota_entrega() {
-      let retInitEmRota = await initEmRota()
-      logEventos(cfg,'(BD - EM ROTA PARA ENTREGA) - retInitEmRota:',retInitEmRota)
-
-      let retRotaEntrega = await rotaEntrega(cfg,cli)
-      logEventos(cfg,'(API - EM ROTA DE ENTREGA) - retRotaEntrega:',retRotaEntrega)
-      return { retInitEmRota, retRotaEntrega }
+      let ret = await initEmRota()
+      logEventos(cfg,'(BD - EM ROTA PARA ENTREGA) - (CF - V2):',ret)
+      return 0
     }
-        
-    // ENTREGA REALIZADA NORMALMENTE
+
+    // API - EM ROTA PARA ENTREGA
+    async function api_em_rota_entrega() {
+      let ret = await rotaEntrega()
+      for await (itn of ret) {
+        let log = {
+          success : itn.success,
+          message : itn.message
+        }
+         logEventos(cfg,`${itn.raiz} - (API - EM ROTA DE ENTREGA ) - (CF - V2):`,log)
+      }   
+      return 0
+    }
+
+    // API - OCORRENCIAS MANUAIS
+    async function api_ocorrencias_manuais() {
+      let ret = await ocorrencias()
+      for await (itn of ret) {
+        let log = {
+          success : itn.success,
+          message : itn.message
+        }
+         logEventos(cfg,`${itn.raiz} - (API - OCORRÊNCIAS MANUAIS ) - (CF - V2):`,log)
+      }   
+      return 0
+   }   
+
+    // BD - ENTREGA REALIZADA NORMALMENTE
     async function confirmacao_entrega() {
-      let retInitEntrega = await initEntrega()
-      logEventos(cfg,'(BD - ENTREGA REALIZADA NORMALMENTE) - retInitEntrega:',retInitEntrega)
-
-      let retEntregaNF = await entregaNF(cfg,cli)
-      logEventos(cfg,'(API - REGISTRO DE ENTREGA) - retEntregaNF:',retEntregaNF.message)
-      return { retInitEntrega, retEntregaNF }
+      let ret = await initEntrega()
+      logEventos(cfg,'(BD - ENTREGA REALIZADA NORMALMENTE) - (CF - V2):',ret)
+      return 0
     }
 
-    // COMPROVANTE DE ENTREGA
+    // API - ENTREGA REALIZADA NORMALMENTE
+    async function api_confirmacao_entrega() {
+      let ret = await entregaNF()
+      for await (itn of ret) {
+        let log = {
+          success : itn.success,
+          message : itn.message
+        }
+         logEventos(cfg,`${itn.raiz} - (API - BAIXA, REGISTRO DE ENTREGA ) - (CF - V2):`,log)
+      }   
+      return 0
+    }
+
+    // BD - COMPROVANTE DE ENTREGA
     async function comprovante_entrega_BD() {
-      let retInitComprovante = await initComprovante(cfg,cli)
-      logEventos(cfg,'(BD - COMPROVANTE) - retInitComprovante:',retInitComprovante)
-      return retInitComprovante
+      let ret = await initComprovante()
+      logEventos(cfg,'(BD - COMPROVANTE) - (CF - V2):',ret)
+      return 0
     }
-  
+
     // AVISA A API PARA DOWNLOAD DO COMPROVANTE - PREPARA API LOCAL
     async function comprovante_entrega_FILE() {
-      let retInitPreparaDownload = await preparaLinkComprovante(cfg)
-      logEventos(cfg,'(FILE - COMPROVANTE - PREPARA API LOCAL) - retInitPreparaDownload:',retInitPreparaDownload)
-      return retInitPreparaDownload
+      let ret = await preparaLinkComprovante()
+      for await (itn of ret) {
+        let log = {
+          success : itn.success,
+          message : itn.message
+        }
+         logEventos(cfg,`(FILE - COMPROVANTE - PREPARA API LOCAL) - (CF - V2):`,log)
+      }   
+      return 0
     }
 
     // ENVIA LINKS DOS COMPROVANTES DE ENTREGA
-    async function API_comprovante_entrega() {
-      let ret = await comprovante(cfg,cli)
-      logEventos(cfg,'(API - COMPROVANTE) - retComprovante:',ret)
-      return ret
+    async function api_comprovante_entrega() {
+      let ret = await comprovante()
+      for await (itn of ret) {
+        let log = {
+          success : itn.success,
+          message : itn.message
+        }
+         logEventos(cfg,`(API - COMPROVANTE - ENVIA LINKS) - (CF - V2):`,log)
+      }   
+      return 0
     }
 
     // ENCERRA PROCESSOS DE MONITORAMENTO
     async function encerra_processo() {
-      let retEncerraProcessos = await encerraProcessos()
-      logEventos(cfg,'(BD - ENCERRA PROCESSOS) - retEncerraProcessos:',retEncerraProcessos)
-      return retEncerraProcessos
+      let ret = await encerraProcessos()
+      logEventos(cfg,'(BD - ENCERRA PROCESSOS) - (CF - V2):',ret)
+      return 0
     }
-    */
-
    
    return 
 }

@@ -1,6 +1,8 @@
--- 03/09/2021 10:47 -  ENTREGA REALIZADA NORMALMENTE
+-- 13/10/2021 15:23 -  ENTREGA REALIZADA NORMALMENTE - ("CONFIRMA FACIL V2")
 
-SELECT TOP 10
+-- TEST
+
+SELECT TOP 10 -- Limite de 10 linhas por lote de envio na API CF
      CO.ID                                        AS FLAG_ID
 	,CF.NUMERO                                    AS embarque_numero
 	,CF.SERIE                                     AS embarque_serie
@@ -14,10 +16,19 @@ SELECT TOP 10
 	,CO.RECEBEDOR_DOC                             AS ocorrencia_documentoRecebedor
 	,CO.RECEBEDOR_NOME                            AS ocorrencia_nomeRecebedor
 	,ISNULL(CO.OCORRENCIA_OBS,CO.OCORRENCIA_NOME) AS ocorrencia_comentario
+    ,CFF.TOKEN                                    AS TOKEN_ID 
 
-FROM SIC.dbo.CONFIRMAFACILOCORRENCIA CO
-JOIN SIC.dbo.CONFIRMAFACIL CF ON CF.ID = CO.CONFIRMAFACIL_ID
+FROM TEST..CONFIRMAFACILOCORRENCIA CO
+JOIN TEST..CONFIRMAFACIL           CF ON CF.ID          = CO.CONFIRMAFACIL_ID
+JOIN TEST..CONFIRMAFACILCLIENTES  CFF ON CFF.FLAG_ATIVO = 1 AND
+                                          (( CFF.RAIZ = SUBSTRING(CF.EMBARCADOR,1,8)  ) OR 
+                                          (  CFF.RAIZ = SUBSTRING(CF.DESTINATARIO,1,8) ) )
 
 WHERE CO.FLAG_SEND      = 0
   AND CO.OCORRENCIA_ID  = 1  -- Codigo ConfirmaFacil
   AND CF.FASE_ID < 9
+  
+  AND CFF.DT_VALIDADE  > CURRENT_TIMESTAMP   -- TOKEN valido
+  AND CFF.RAIZ = '${raiz}'
+
+ORDER BY CFF.RAIZ,CO.OCORRENCIA_DATA

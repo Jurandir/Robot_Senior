@@ -25,7 +25,7 @@ SELECT
 	 END                    AS DsTipoEmissao	            -- DESCRIÇÃO DO TIPO DE EMISSÃO/CTRC
 	,f.dsapelido            AS DsTipoFiscal                 -- TIPO FISCAL DO DOCUMENTO
 	,a.dtemissao            AS DtEmissaoCTRC                -- DATA DE EMISSÃO DO CTRC
-	,dbo.SP_CalculaDtPrevisaoEntregaPercurso(a.DtEmissao, a.CdEmpresaDestino, a.CdPercurso, a.CdTransporte, a.CdRemetente, a.CdDestinatario, a.cdempresa, a.nrseqcontrole) 
+	,softran_termaco.dbo.SP_CalculaDtPrevisaoEntregaPercurso(a.DtEmissao, a.CdEmpresaDestino, a.CdPercurso, a.CdTransporte, a.CdRemetente, a.CdDestinatario, a.cdempresa, a.nrseqcontrole) 
 	                           AS DtPrevisaoEntrega            -- PREVISÃO DE ENTREGA
 	,o.DtCadastro              AS DtColeta                     -- DATA DA COLETA
 	,a.dtentrega               AS DtEntrega                    -- DATA DE ENTREGA
@@ -81,25 +81,25 @@ SELECT
 	,c.QtPeso                  AS QtPesoNF                     -- PESO INFORMADO NA FOTAFISCAL
 	,a.QTVolume                AS QtVolumeCTe                  -- VOLUME TOTAL NO CONHECIMENTO
 	,c.QtVolume                AS QTVolumeNF                   -- VOLUME NA NOTAFISCAL
-FROM dbo.gtcconhe      a                                          -- Conhecimento
-LEFT JOIN dbo.sisempre aa ON aa.cdempresa         = a.cdempresa   -- Filial Origem
-LEFT JOIN dbo.gtcconce bb ON bb.cdempresa         = a.cdempresa	  AND bb.nrseqcontrole = a.nrseqcontrole -- CTe Fiscal
-LEFT JOIN dbo.GTCCONIA zz ON zz.cdempresa         = a.cdempresa	  AND zz.nrseqcontrole = a.nrseqcontrole -- CTe original - Fiscal ("ABA REFERENCIA")
-LEFT JOIN dbo.gtcnfcon b  ON b.cdempresa          = a.cdempresa	  AND b.nrseqcontrole = a.nrseqcontrole  -- Link CTRC x NF
-LEFT JOIN dbo.gtcnf    c  ON c.cdremetente        = b.cdinscricao AND c.nrserie = b.nrserie AND c.nrnotafiscal = b.nrnotafiscal  -- NotaFiscal
-LEFT JOIN dbo.gtcmoven d  ON d.cdempresa          = a.cdempresa   AND d.nrseqcontrole = a.nrseqcontrole  -- Movimento de Ocorrencias
-LEFT JOIN dbo.gtchisen e  ON e.cdhistoricoentrega = d.cdocorrencia     -- Ocorrencias
-LEFT JOIN dbo.sistdf   f  ON f.cdtpdoctofiscal    = a.cdtpdoctofiscal  -- Tipo Fiscal
-LEFT JOIN dbo.siscli   g  ON g.cdinscricao        = a.cdremetente      -- Clientes Remetente
-LEFT JOIN dbo.siscli   h  ON h.cdinscricao        = a.cddestinatario   -- Clientes Destinatários
-LEFT JOIN dbo.siscli   i  ON i.cdinscricao        = a.cdinscricao      -- Clientes Pagador
-LEFT JOIN dbo.siscep   j  ON j.nrcep              = a.nrcepcoleta      -- CEP Filial Origem
-LEFT JOIN dbo.siscep   k  ON k.nrcep              = a.nrcepentrega     -- CEP Local Entrega
-LEFT JOIN dbo.sisempre l  ON l.cdempresa          = a.cdempresa        -- Filial Origem
-LEFT JOIN dbo.sisempre m  ON m.cdempresa          = a.cdempresadestino -- Filial Destino
-LEFT JOIN dbo.siscep   n  ON n.nrcep              = m.nrcep            -- CEP Filial Destino
-LEFT JOIN dbo.CCEColet o  ON o.CdEmpresa          = a.CdEmpresa  AND o.NrColeta = a.NrColeta  -- Dados Coleta
-LEFT JOIN dbo.GTCSITCG p  ON p.CdSituacaoCarga    = a.CdSituacaoCarga  -- Situação Atual da Carga
+FROM softran_termaco.dbo.gtcconhe      a                                          -- Conhecimento
+LEFT JOIN softran_termaco.dbo.sisempre aa ON aa.cdempresa         = a.cdempresa   -- Filial Origem
+LEFT JOIN softran_termaco.dbo.gtcconce bb ON bb.cdempresa         = a.cdempresa	  AND bb.nrseqcontrole = a.nrseqcontrole -- CTe Fiscal
+LEFT JOIN softran_termaco.dbo.GTCCONIA zz ON zz.cdempresa         = a.cdempresa	  AND zz.nrseqcontrole = a.nrseqcontrole -- CTe original - Fiscal ("ABA REFERENCIA")
+LEFT JOIN softran_termaco.dbo.gtcnfcon b  ON b.cdempresa          = a.cdempresa	  AND b.nrseqcontrole = a.nrseqcontrole  -- Link CTRC x NF
+LEFT JOIN softran_termaco.dbo.gtcnf    c  ON c.cdremetente        = b.cdinscricao AND c.nrserie = b.nrserie AND c.nrnotafiscal = b.nrnotafiscal  -- NotaFiscal
+LEFT JOIN softran_termaco.dbo.gtcmoven d  ON d.cdempresa          = a.cdempresa   AND d.nrseqcontrole = a.nrseqcontrole  -- Movimento de Ocorrencias
+LEFT JOIN softran_termaco.dbo.gtchisen e  ON e.cdhistoricoentrega = d.cdocorrencia     -- Ocorrencias
+LEFT JOIN softran_termaco.dbo.sistdf   f  ON f.cdtpdoctofiscal    = a.cdtpdoctofiscal  -- Tipo Fiscal
+LEFT JOIN softran_termaco.dbo.siscli   g  ON g.cdinscricao        = a.cdremetente      -- Clientes Remetente
+LEFT JOIN softran_termaco.dbo.siscli   h  ON h.cdinscricao        = a.cddestinatario   -- Clientes Destinatários
+LEFT JOIN softran_termaco.dbo.siscli   i  ON i.cdinscricao        = a.cdinscricao      -- Clientes Pagador
+LEFT JOIN softran_termaco.dbo.siscep   j  ON j.nrcep              = a.nrcepcoleta      -- CEP Filial Origem
+LEFT JOIN softran_termaco.dbo.siscep   k  ON k.nrcep              = a.nrcepentrega     -- CEP Local Entrega
+LEFT JOIN softran_termaco.dbo.sisempre l  ON l.cdempresa          = a.cdempresa        -- Filial Origem
+LEFT JOIN softran_termaco.dbo.sisempre m  ON m.cdempresa          = a.cdempresadestino -- Filial Destino
+LEFT JOIN softran_termaco.dbo.siscep   n  ON n.nrcep              = m.nrcep            -- CEP Filial Destino
+LEFT JOIN softran_termaco.dbo.CCEColet o  ON o.CdEmpresa          = a.CdEmpresa  AND o.NrColeta = a.NrColeta  -- Dados Coleta
+LEFT JOIN softran_termaco.dbo.GTCSITCG p  ON p.CdSituacaoCarga    = a.CdSituacaoCarga  -- Situação Atual da Carga
 WHERE isnull(e.InExibehist, 0) = 0
 	-- AND b.nrnotafiscal=1517772 -- NUMERO NF
 	AND a.nrdoctofiscal = 4183    -- CTRC / Conhecimento

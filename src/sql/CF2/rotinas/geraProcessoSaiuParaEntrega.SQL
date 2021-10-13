@@ -1,18 +1,20 @@
--- 01/09/2021 13:56 - EM ROTA PARA ENTREGA
+-- 13/10/2021 13:29 - EM ROTA PARA ENTREGA - ("CONFIRMA FACIL V2")
+
+-- TEST
 
 BEGIN TRY
     BEGIN TRANSACTION
 
     BEGIN
         UPDATE CF
-          SET CF.FASE_ID = 4,
-              CF.DT_UPDATE = CURRENT_TIMESTAMP
-        FROM SIC.dbo.CONFIRMAFACIL CF
-        JOIN SIC.dbo.CONFIRMAFACILDEPARA DP ON DP.ID_SENIOR = 100 -- Codigo no Sênior      
-        WHERE CF.FASE_ID = 3 AND CF.DT_CHEGADA IS NOT NULL 
-          AND EXISTS (SELECT 1 FROM SIC.dbo.CONFIRMAFACILOCORRENCIA CO 
-               WHERE CO.CONFIRMAFACIL_ID = CF.ID 
-                 AND CO.OCORRENCIA_ID = DP.ID_CONFIRMAFACIL )
+           SET CF.FASE_ID = 4,
+               CF.DT_UPDATE = CURRENT_TIMESTAMP
+          FROM TEST..CONFIRMAFACIL CF
+          JOIN TEST..CONFIRMAFACILDEPARA DP ON DP.ID_SENIOR = 100 -- Codigo no Sênior      
+         WHERE CF.FASE_ID = 3 AND CF.DT_CHEGADA IS NOT NULL 
+           AND EXISTS (SELECT 1 FROM TEST..CONFIRMAFACILOCORRENCIA CO 
+                        WHERE CO.CONFIRMAFACIL_ID = CF.ID 
+                          AND CO.OCORRENCIA_ID = DP.ID_CONFIRMAFACIL )
         -- CASO A (FASE < OU = 3) E EXISTIR OCORRENCIA = (DP.ID_CONFIRMAFACIL) GERADA, MUDA PARA FASE = 4        
         ;
     END
@@ -20,16 +22,14 @@ BEGIN TRY
 
     BEGIN
         UPDATE CO
-           SET OCORRENCIA_OBS =  
-                              (SELECT TOP 1 CONCAT('A CAMINHO DO DESTINATÁRIO EM : ',n.DsLocal,' / ',n.DsUF)
-                                 FROM softran_termaco.dbo.GTCConhe a
-                            LEFT JOIN softran_termaco.dbo.siscep   n ON n.nrcep = a.nrcepentrega  -- CEP Local Entrega
-                                WHERE a.CdEmpresa = CO.CdEmpresa 
-                                  AND a.NrSeqControle = CO.NrSeqControle )
-        FROM SIC.dbo.CONFIRMAFACILOCORRENCIA CO
-        JOIN SIC.dbo.CONFIRMAFACILDEPARA DP ON DP.ID_SENIOR = 100 -- Codigo no Sênior
-       WHERE CO.OCORRENCIA_OBS IS NULL 
-         AND CO.OCORRENCIA_ID = DP.ID_CONFIRMAFACIL
+           SET OCORRENCIA_OBS =  CONCAT('A CAMINHO DO DESTINATÁRIO EM : ',CEP.DsLocal,' / ',CEP.DsUF)
+          FROM TEST..CONFIRMAFACILOCORRENCIA    CO
+          JOIN TEST..CONFIRMAFACILDEPARA        DP ON DP.ID_SENIOR  = 100 -- Codigo no Sênior
+          JOIN softran_termaco.dbo.GTCConhe    CNH ON CNH.CdEmpresa = CO.CdEmpresa AND CNH.NrSeqControle = CO.NrSeqControle
+     LEFT JOIN softran_termaco.dbo.siscep      CEP ON CEP.NrCep     = CNH.NrCepEntrega  -- CEP Local Entrega
+         WHERE CO.OCORRENCIA_ID = DP.ID_CONFIRMAFACIL
+           AND CO.FLAG_SEND = 0 
+           AND CO.OCORRENCIA_OBS IS NULL 
     END
     ;
 
