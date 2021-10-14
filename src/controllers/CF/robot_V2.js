@@ -34,43 +34,47 @@ const preparaLinkComprovante = require('../../helpers/preparaLinkComprovante_CF2
 
 const comprovante            = require('../../models/CF2/comprovante')
 
-//const encerraProcessos      = require('../../metodsDB/CF2/encerraProcessos')
+const encerraProcessos      = require('../../metodsDB/CF2/encerraProcessos')
+
+const ajusteCTRC            = require('../../metodsDB/CF2/ajusteCTRC')
 
 
 const robot_V2 = async (loopRobot) =>{
     let time_inicio = process.uptime()
    
-//-    await captura_nfs()                   // XXX - INICIA PROCESSO DE MONITORAMENTO (BD)
-//-    await transporte_iniciado()           // 000 - PROCESSO DE TRANSPORTE INICIADO (BD)
+    await captura_nfs()                     // XXX - INICIA PROCESSO DE MONITORAMENTO (BD)
+    await transporte_iniciado()             // 000 - PROCESSO DE TRANSPORTE INICIADO (BD)
 
-//-    await api_registra_NFs()              // 000 - PROCESSO DE TRANSPORTE INICIADO (API)
+    await api_registra_NFs()                // 000 - PROCESSO DE TRANSPORTE INICIADO (API)
 
-//-    await ocorrencias_manuais()           // XXX - OCORRENCIAS MANUAIS (BD) 
+    await ocorrencias_manuais()             // XXX - OCORRENCIAS MANUAIS (BD) 
 
-//-    await transferencia_entre_filiais()     // 101 - EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS (BD)
-//-    await api_transferencia_entre_filiais() // 101 - EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS (API)
+    await transferencia_entre_filiais()     // 101 - EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS (BD)
+    await api_transferencia_entre_filiais() // 101 - EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS (API)
 
-//    await chegada_filial_destino()        // 098 - CHEGADA NA CIDADE OU FILIAL DE DESTINO (BD)
-//    await api_chegada_filial_destino()    // 098 - CHEGADA NA CIDADE OU FILIAL DE DESTINO (API)
+    await chegada_filial_destino()          // 098 - CHEGADA NA CIDADE OU FILIAL DE DESTINO (BD)
+    await api_chegada_filial_destino()      // 098 - CHEGADA NA CIDADE OU FILIAL DE DESTINO (API)
 
-//    await entrega_programada()            // 091 - ENTREGA PROGRAMADA (BD)
-//    await api_entrega_programada()        // 091 - ENTREGA PROGRAMADA (API)
+    await entrega_programada()              // 091 - ENTREGA PROGRAMADA (BD)
+    await api_entrega_programada()          // 091 - ENTREGA PROGRAMADA (API)
 
-//    await em_rota_entrega()               // 100 - EM ROTA PARA ENTREGA (BD)
-//    await api_em_rota_entrega()           // 100 - EM ROTA PARA ENTREGA (API)
+    await em_rota_entrega()                 // 100 - EM ROTA PARA ENTREGA (BD)
+    await api_em_rota_entrega()             // 100 - EM ROTA PARA ENTREGA (API)
 
-//    await api_ocorrencias_manuais()       // XXX - OCORRENCIAS MANUAIS (API)
+    await api_ocorrencias_manuais()         // XXX - OCORRENCIAS MANUAIS (API)
 
-//    await confirmacao_entrega()           // 001 - ENTREGA REALIZADA NORMALMENTE (BD)
-//    await api_confirmacao_entrega()           // 001 - ENTREGA REALIZADA NORMALMENTE (API)
+    await confirmacao_entrega()             // 001 - ENTREGA REALIZADA NORMALMENTE (BD)
+    await api_confirmacao_entrega()         // 001 - ENTREGA REALIZADA NORMALMENTE (API)
 
-//    await comprovante_entrega_BD()        // 999 - COMPROVANTE DE ENTREGA (BD)
+    await comprovante_entrega_BD()          // 999 - COMPROVANTE DE ENTREGA (BD)
 
-//    await comprovante_entrega_FILE()      // 999 - COMPROVANTE DE ENTREGA (FILE,API LOCAL)
+    await comprovante_entrega_FILE()        // 999 - COMPROVANTE DE ENTREGA (FILE,API LOCAL)
 
-    await api_comprovante_entrega()       // 999 - COMPROVANTE DE ENTREGA (API)
+    await api_comprovante_entrega()         // 999 - COMPROVANTE DE ENTREGA (API)
 
-    //await encerra_processo()              // XXX - ENCERRA PROCESSO DE MONITORAMENTO (BD)
+    await encerra_processo()                // XXX - ENCERRA PROCESSO DE MONITORAMENTO (BD)
+
+    await ajustaCTRC_canceladas()            // XXX - AJUSTA MONITORAMENTO CTRC SUBSTITUDOS (BD)
 
     let time_final = process.uptime()
     let time_total = Math.ceil(time_final-time_inicio)
@@ -263,6 +267,13 @@ const robot_V2 = async (loopRobot) =>{
     async function encerra_processo() {
       let ret = await encerraProcessos()
       logEventos(cfg,'(BD - ENCERRA PROCESSOS) - (CF - V2):',ret)
+      return 0
+    }
+
+    // MONITORAMENTO AJUSTE - CTRC CANCELADA POR NOVA CTRC
+    async function ajustaCTRC_canceladas() {
+      let ret = await ajusteCTRC()
+      logEventos(cfg,'(BD - AJUSTE DE CANCELAMENTO DA CTRC) - (CF - V2):',ret)
       return 0
     }
    

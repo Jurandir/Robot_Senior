@@ -1,14 +1,25 @@
-UPDATE CF
-SET CF.CTRC_OLD = CF.CTRC,
-    CF.CTRC     = CONCAT(CNH2.EMP_CODIGO,CNH2.SERIE,CNH2.CTRC)
-FROM CONFIRMAFACIL CF
-JOIN CARGASSQL.dbo.NFR ON NFR.CHAVENFE = CF.CHAVE
-JOIN CARGASSQL.dbo.CNH CNH1 ON CNH1.EMP_CODIGO=SUBSTRING(CF.CTRC,1,3) and CNH1.SERIE=SUBSTRING(CF.CTRC,4,1) and CNH1.CTRC =SUBSTRING(CF.CTRC,5,10)
-JOIN CARGASSQL.dbo.CNH CNH2 ON CNH2.EMP_CODIGO=NFR.EMP_CODIGO and CNH2.SERIE=NFR.CNH_SERIE and CNH2.CTRC = NFR.CNH_CTRC
-WHERE 
-    CNH2.VALORNF>0
-AND CNH2.TIPOCTRC IN (0,1)
-AND CNH2.STATUS = 'I'
-AND CNH1.STATUS <> 'I'
-AND CNH1.CTRC <> CNH2.CTRC
-;
+-- 14/10/2921 13:13 - AJUSTA NOTAS FISCAIS COM CONHECIMENTO CANCELADOS - ("CONFIRMA FACIL V2") 
+
+-- TEST
+
+UPDATE NFE
+SET CdEmpresa      = CNH.CdEmpresa
+  , NrSeqControle  = CNH.NrSeqControle
+  , CTRC_OLD       = NFE.CTRC
+  , CTRC           = CONCAT(EMP.DSAPELIDO,'E',CNH.NrDoctoFiscal)
+  ,DT_UPDATE       = CURRENT_TIMESTAMP
+FROM softran_termaco.dbo.gtcconhe  CNH
+JOIN softran_termaco.dbo.sisempre  EMP  ON EMP.CdEmpresa   = CNH.CdEmpresa
+JOIN softran_termaco.dbo.gtcnfcon  LNK  ON LNK.CdEmpresa   = CNH.CdEmpresa   AND LNK.NrSeqControle = CNH.NrSeqControle
+JOIN softran_termaco.dbo.gtcnf     NFR  ON NFR.CdRemetente = LNK.CdInscricao AND NFR.NrSerie       = LNK.NrSerie AND NFR.NrNotaFiscal = LNK.NrNotaFiscal 
+JOIN softran_termaco.dbo.gtcconce  CTE  ON CTE.CdEmpresa   = CNH.CdEmpresa	 AND CTE.NrSeqControle = CNH.NrSeqControle
+JOIN TEST..CONFIRMAFACIL           NFE  ON NFE.CHAVE       = NFR.NrChaveAcessoNFe
+WHERE CTE.insituacaosefaz = 100 -- PESQUISA NOVO CTRC VALIDADO PELA SEFAZ
+ AND NFE.CHAVE IN (
+SELECT NFE.CHAVE
+FROM softran_termaco.dbo.gtcconhe  CNH
+JOIN softran_termaco.dbo.gtcnfcon  LNK  ON LNK.CdEmpresa   = CNH.CdEmpresa   AND LNK.NrSeqControle = CNH.NrSeqControle
+JOIN softran_termaco.dbo.gtcnf     NFR  ON NFR.CdRemetente = LNK.CdInscricao AND NFR.NrSerie       = LNK.NrSerie AND NFR.NrNotaFiscal = LNK.NrNotaFiscal 
+JOIN softran_termaco.dbo.gtcconce  CTE  ON CTE.CdEmpresa   = CNH.CdEmpresa	 AND CTE.NrSeqControle = CNH.NrSeqControle
+JOIN TEST..CONFIRMAFACIL           NFE  ON NFE.CdEmpresa   = CNH.CdEmpresa   AND NFE.NrSeqControle  = CNH.NrSeqControle
+WHERE CTE.insituacaosefaz = 135 ) -- PESQUISA CTRC CANCELADAS APOS INCLUSÃO NO MONITORAMENTO
