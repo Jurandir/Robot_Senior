@@ -62,7 +62,7 @@ async function runRobot () {
 
 async function runInit () {
     // Gera tokens de acesso
-    // await renovaToken(0)
+    await renovaToken(0)
 
     // Run Loop Robot
     await runRobot()

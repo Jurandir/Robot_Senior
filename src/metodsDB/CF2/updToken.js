@@ -1,10 +1,14 @@
 
+// 14/10/2021 14:12 - UPDATE TOKEN CLIENTES NA BASE DE DADOS - ("CONFIRMA FACIL V2")
+
+// TEST
+
 const sqlExec = require('../../connection/sqlExSENIOR')
 const validadeHoras = 2
 
 const updToken = async ({ID,TOKEN}) => {
     let sql = `
-    UPDATE SIC..CONFIRMAFACILCLIENTES 
+    UPDATE TEST..CONFIRMAFACILCLIENTES 
        SET TOKEN       = '${TOKEN}'
          , DT_VALIDADE = DATEADD(HOUR,${validadeHoras},CURRENT_TIMESTAMP)
          , DT_UPDATE   = CURRENT_TIMESTAMP
