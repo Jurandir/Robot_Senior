@@ -27,6 +27,7 @@ const ocorrencias            = require('../../models/CF2/ocorrencias')
 
 const initEntrega            = require('../../metodsDB/CF2/initEntrega')
 const entregaNF              = require('../../models/CF2/entregaNF')
+const conhecimentoRetido     = require('../../models/CF2/conhecimentoRetido')
 
 const initComprovante        = require('../../metodsDB/CF2/initComprovante')
 
@@ -75,6 +76,8 @@ const robot_V2 = async (loopRobot) =>{
     await encerra_processo()                // XXX - ENCERRA PROCESSO DE MONITORAMENTO (BD)
 
     await ajustaCTRC_canceladas()            // XXX - AJUSTA MONITORAMENTO CTRC SUBSTITUDOS (BD)
+
+    await api_conhecimento_Retido()          // 119 - CONHECIMENTO DE TRANSPORTE RETIDO (API)
 
     let time_final = process.uptime()
     let time_total = Math.ceil(time_final-time_inicio)
@@ -259,6 +262,19 @@ const robot_V2 = async (loopRobot) =>{
           message : itn.message
         }
          logEventos(cfg,`(API - COMPROVANTE - ENVIA LINKS) - (CF - V2):`,log)
+      }   
+      return 0
+    }
+
+    // API - CONHECIMENTO DE TRANSPORTE RETIDO 
+    async function api_conhecimento_Retido() {
+      let ret = await conhecimentoRetido()
+      for await (itn of ret) {
+        let log = {
+          success : itn.success,
+          message : itn.message
+        }
+         logEventos(cfg,`${itn.raiz} - (API - BAIXA, CONHECIMENTO RETIDO ) - (CF - V2):`,log)
       }   
       return 0
     }
