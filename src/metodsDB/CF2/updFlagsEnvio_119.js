@@ -1,6 +1,6 @@
 // 15/10/2021 09:22 - UPDATE STATUS ENVIADO (119) - ("CONFIRMA FACIL V2")
 
-// TEST
+// PROD-15/10/2021
 
 const moment  = require('moment')
 const sqlExec = require('../../connection/sqlExSENIOR')
@@ -25,7 +25,7 @@ const updFlagsEnvio = async (dados,response) => {
         message += `(${item.posicao}-${dados[item.posicao].FLAG_ID}-OK),`
     })
 
-    let sql = `UPDATE TEST..CONFIRMAFACILOCORRENCIA 
+    let sql = `UPDATE SIC..CONFIRMAFACILOCORRENCIA 
                 SET FLAG_SEND          = ${flag},
                     DT_SEND            = CURRENT_TIMESTAMP,
                     RESPOSTA_MSG       = '${message}',
@@ -63,7 +63,6 @@ const updFlagsEnvio = async (dados,response) => {
         console.log(moment().format(),'- ERRO UPD FLAG - V2 (119) - ENVIO p/ API, IDs:',IDs,'-',err.message )
         return Erro
     }
-
 }
 
 module.exports = updFlagsEnvio

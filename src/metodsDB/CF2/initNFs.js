@@ -1,5 +1,7 @@
 // 08/10/2021 16:12 - INICIA PROCESSO - "CONFIRMA FACIL V2"
 
+// PROD-15/10/2021
+
 const sqlExec       = require('../../connection/sqlExSENIOR')
 
 const fs            = require('fs')
@@ -16,7 +18,7 @@ const initNFs = async () => {
    let sql = `
     --- ( CF2 - initNFs.js ) - BD - CAPTURA NFs - CF V2
     
-    INSERT INTO TEST.dbo.CONFIRMAFACIL ( EMBARCADOR,	NUMERO, SERIE,
+    INSERT INTO SIC..CONFIRMAFACIL ( EMBARCADOR,	NUMERO, SERIE,
      CHAVE, DT_EMISSAO, DT_EMBARQUE, DT_CHEGADA, DT_ENTREGA, DT_PREVISAO, DT_PREV_ORIGINAL,
      VALOR, CTRC, DESTINATARIO, TRANSPORTADOR, DT_UPDATE, CdEmpresa, NrSeqControle, FASE_ID, VER_ID )
     ${sqlInitNF}

@@ -1,6 +1,6 @@
 // 13/10/2021 14:23 - OCORRENCIAS MANUAIS - ("CONFIRMA FACIL V2")
 
-// TEST
+// PROD-15/10/2021
 
 const fs             = require('fs')
 const path           = require('path')

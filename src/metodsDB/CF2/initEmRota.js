@@ -1,6 +1,6 @@
 // 13/10/2021 13:25 - EM ROTA PARA ENTREGA - ("CONFIRMA FACIL V2")
 
-// TEST
+// PROD-15/10/2021
 
 const sqlExec       = require('../../connection/sqlExSENIOR')
 

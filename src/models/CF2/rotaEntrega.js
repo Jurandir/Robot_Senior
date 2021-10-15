@@ -1,6 +1,6 @@
 // 13/10/2021 13:47 - EM ROTA PARA ENTREGA - ("CONFIRMA FACIL V2")
 
-// TEST
+// PROD-15/10/2021
 
 const fs             = require('fs')
 const path           = require('path')
@@ -40,7 +40,6 @@ const rotaEntrega = async () => {
         }    
     }
     return retorno
-
 }
 
 module.exports = rotaEntrega

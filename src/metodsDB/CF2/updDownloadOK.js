@@ -1,6 +1,6 @@
 // 13/10/2021 16:06 - UPDATE DOWNLOAD OK - ("CONFIRMA FACIL V2")
 
-// TEST
+// PROD-15/10/2021
 
 const moment  = require('moment')
 const sqlExec = require('../../connection/sqlExSENIOR')
@@ -10,7 +10,7 @@ const updDownload = async (par_ctrc,data) => {
     try {
         let jComprovantes = JSON.stringify( data.map(i=>i.url) )
 
-        let sql = `UPDATE TEST..CONFIRMAFACIL 
+        let sql = `UPDATE SIC..CONFIRMAFACIL 
                     SET FLAG_COMPROVANTE  = ${flag},
                         JSON_COMPROVANTE  = '${jComprovantes}'
                     WHERE CTRC = '${par_ctrc}'`
@@ -36,7 +36,6 @@ const updDownload = async (par_ctrc,data) => {
         console.log(moment().format(),'- ERRO UPD FLAG - V2 - PREPARAÇÃO:',par_ctrc,'-',err.message )
         return Erro
     }
-
 }
 
 module.exports = updDownload

@@ -1,6 +1,6 @@
 // 13/10/2021 14:53 - BAIXA, REGISTRO DE ENTREGA - ("CONFIRMA FACIL V2")
 
-// TEST
+// PROD-15/102021
 
 const sqlExec       = require('../../connection/sqlExSENIOR')
 

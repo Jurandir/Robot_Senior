@@ -1,6 +1,6 @@
 // 15/10/2021 09:23 - ENVIA DADOS PROCESSADOS PARA API (119) - ("CONFIRMA FACIL V2")
 
-// TEST
+// PROD-15/10/2021
 
 const sqlQuery      = require('../connection/sqlSENIOR')
 const montaJSON     = require('./montaJSON')

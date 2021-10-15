@@ -1,6 +1,6 @@
 // 11/10/2021 10:36 - OCORRENCIAS MANUAIS - ("CONFIRMA FACIL V2")
 
-// TEST
+// PROD-15/10/2021
 
 const sqlExec       = require('../../connection/sqlExSENIOR')
 
@@ -35,7 +35,6 @@ const initOcorrencias = async () => {
         flag_livre = true
         return Erro
     } 
-
 }
 
 module.exports = initOcorrencias

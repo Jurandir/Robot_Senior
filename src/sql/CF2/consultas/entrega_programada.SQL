@@ -1,6 +1,6 @@
 -- 13/10/2021 11:31 -- ENTREGA PROGRAMADA - ("CONFIRMA FACIL V2")
 
--- TEST
+-- PROD-15/10/2021
 
 SELECT TOP 10 -- Limite de 10 linhas por lote de envio na API CF
 	 CO.ID                                        AS FLAG_ID
@@ -23,10 +23,10 @@ SELECT TOP 10 -- Limite de 10 linhas por lote de envio na API CF
 	,FORMAT(CF.DT_AGENDAMENTO,'HH:mm:ss')         AS ocorrencia_horaAgendamento
     ,CFF.TOKEN                                    AS TOKEN_ID 
 
-FROM TEST..CONFIRMAFACILOCORRENCIA    CO
-JOIN TEST..CONFIRMAFACIL              CF  ON CF.ID           = CO.CONFIRMAFACIL_ID
-JOIN softran_termaco.dbo.gtcconhe     CNH ON CNH.CdEmpresa   = CF.CdEmpresa   AND CNH.NrSeqControle = CF.NrSeqControle
-JOIN TEST..CONFIRMAFACILCLIENTES      CFF ON CFF.FLAG_ATIVO = 1 AND
+FROM SIC..CONFIRMAFACILOCORRENCIA    CO
+JOIN SIC..CONFIRMAFACIL              CF  ON CF.ID           = CO.CONFIRMAFACIL_ID
+JOIN softran_termaco.dbo.gtcconhe    CNH ON CNH.CdEmpresa   = CF.CdEmpresa   AND CNH.NrSeqControle = CF.NrSeqControle
+JOIN SIC..CONFIRMAFACILCLIENTES      CFF ON CFF.FLAG_ATIVO = 1 AND
                                           (( CFF.RAIZ = SUBSTRING(CF.EMBARCADOR,1,8)  ) OR 
                                           (  CFF.RAIZ = SUBSTRING(CF.DESTINATARIO,1,8) ) )
 

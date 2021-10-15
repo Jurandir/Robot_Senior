@@ -1,8 +1,8 @@
 // 13/10/2021 16:01 - AVISA A API PARA DOWNLOAD DO COMPROVANTE - PREPARA API LOCAL - ("CONFIRMA FACIL V2")
 
-// TEST
+// PROD-15/10/2021
 
-const cfg             = require('../../.config/confirmaFacil.json') // .config/confirmaFacil.json
+const cfg             = require('../../.config/confirmaFacil.json') 
 const preparaDownload = require('../metodsAPI/CF2/preparaDownload')
 const updDownload     = require('../metodsDB/CF2/updDownloadOK')
 const logEventos      = require('./logEventos')
@@ -34,7 +34,6 @@ const preparaLinkComprovante_CF2 = async () => {
                     if(api.success){
                         await updDownload( itn.CTRC, resp.data )
                         resposta  = { success: true, message: `Sucesso na solicitação !!!, CTRC: ${itn.CTRC}`,  rowsAffected: api.rows }
-                        // logEventos(cfg,`SUCCESS LINK V2:${api.message} - ${api.url}`,resp.data)
                     } else {
                         resposta  = { success: false, message: `Solicitação sem sucesso !!!, CTRC: ${itn.CTRC}`,  rowsAffected: 0 }
                     }
@@ -44,7 +43,6 @@ const preparaLinkComprovante_CF2 = async () => {
                     resp.data = []
                     logEventos(cfg,`ERROR LINK V2:${resp.err}`,'preparaLinkComprovante.js') 
             }   
-
         }        
         return varRet
 
@@ -53,7 +51,6 @@ const preparaLinkComprovante_CF2 = async () => {
         varRet.push(resposta)
         return varRet
     }
-    
 }
 
 module.exports = preparaLinkComprovante_CF2

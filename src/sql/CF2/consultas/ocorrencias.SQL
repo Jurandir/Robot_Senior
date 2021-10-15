@@ -1,6 +1,6 @@
 -- 13/10/2021 14:31 -- OCORRÊNCIAS MANUAIS - ("CONFIRMA FACIL V2")
 
--- TEST 
+-- PROD-15/10/2021
 
 SELECT TOP 10 -- Limite de 10 linhas por lote de envio na API CF
 	 CO.ID                                         AS FLAG_ID
@@ -9,7 +9,7 @@ SELECT TOP 10 -- Limite de 10 linhas por lote de envio na API CF
 	,CF.CHAVE                                      AS embarque_chave
 	,CF.EMBARCADOR                                 AS embarcador_cnpj
 	,CF.TRANSPORTADOR                              AS transportadora_cnpj
-	,CASE WHEN CO.OCORRENCIA_ID=102 THEN 128 ELSE CO.OCORRENCIA_ID END -- TESTA SE É TRANSBORDO
+	,CASE WHEN CO.OCORRENCIA_ID=102 THEN 128 ELSE CO.OCORRENCIA_ID END -- VERIFICA SE É TRANSBORDO
                                                    AS ocorrencia_tipoEntrega
 	,CASE WHEN CO.OCORRENCIA_DATA<CURRENT_TIMESTAMP 
 	      THEN FORMAT(CO.OCORRENCIA_DATA,'dd-MM-yyyy') ELSE FORMAT(CURRENT_TIMESTAMP ,'dd-MM-yyyy') END 
@@ -26,10 +26,10 @@ SELECT TOP 10 -- Limite de 10 linhas por lote de envio na API CF
                                                    AS ocorrencia_horaAgendamento
     ,CFF.TOKEN                                     AS TOKEN_ID 
 
-FROM TEST..CONFIRMAFACILOCORRENCIA  CO
-JOIN TEST..CONFIRMAFACIL            CF ON CF.ID          = CO.CONFIRMAFACIL_ID
+FROM SIC..CONFIRMAFACILOCORRENCIA   CO
+JOIN SIC..CONFIRMAFACIL             CF ON CF.ID          = CO.CONFIRMAFACIL_ID
 JOIN softran_termaco.dbo.gtcconhe  CNH ON CNH.CdEmpresa  = CF.CdEmpresa   AND CNH.NrSeqControle = CF.NrSeqControle
-JOIN TEST..CONFIRMAFACILCLIENTES   CFF ON CFF.FLAG_ATIVO = 1 AND
+JOIN SIC..CONFIRMAFACILCLIENTES    CFF ON CFF.FLAG_ATIVO = 1 AND
                                           (( CFF.RAIZ = SUBSTRING(CF.EMBARCADOR,1,8)  ) OR 
                                           (  CFF.RAIZ = SUBSTRING(CF.DESTINATARIO,1,8) ) )
 

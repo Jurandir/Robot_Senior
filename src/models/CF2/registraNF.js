@@ -1,6 +1,6 @@
 // 11/10/2021 11:57 - REGISTRA NF - PROCESSO INICIADO - ("CONFIRMA FACIL V2")
 
-// TEST
+// PROD-15/10/2021
 
 const fs             = require('fs')
 const path           = require('path')

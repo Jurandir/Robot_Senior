@@ -1,6 +1,6 @@
 // 14/10/2021 09:11 - ENCERRA PROCESSO - ("CONFIRMA FACIL V2")
 
-// TEST
+// PROD-15/10/2021
 
 const sqlExec       = require('../../connection/sqlExSENIOR')
 
@@ -35,7 +35,6 @@ const encerraProcessos = async () => {
         flag_livre = true
         return Erro
     } 
-
 }
 
 module.exports = encerraProcessos

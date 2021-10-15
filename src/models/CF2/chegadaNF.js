@@ -1,6 +1,6 @@
 // 11/10/2021 17:44 - CHEGADA NA CIDADE OU FILIAL DE DESTINO - ("CONFIRMA FACIL V2")
 
-// TEST
+// PROD-15/10/2021
 
 const fs             = require('fs')
 const path           = require('path')

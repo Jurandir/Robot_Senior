@@ -1,6 +1,6 @@
 -- 08/10/2021 16:21 - MONTA DADOS - ("CONFIRMA FACIL V2")
 
--- TEST
+-- PROD-15/10/2021
 
 SELECT DISTINCT  
 	 CNH.CdRemetente                                               as EMBARCADOR
@@ -33,8 +33,8 @@ JOIN softran_termaco.dbo.gtcnfcon  LNK  ON LNK.CdEmpresa   = CNH.CdEmpresa   AND
 JOIN softran_termaco.dbo.gtcnf     NFR  ON NFR.CdRemetente = LNK.CdInscricao AND NFR.NrSerie       = LNK.NrSerie AND NFR.NrNotaFiscal = LNK.NrNotaFiscal 
 JOIN softran_termaco.dbo.sisempre  EMP  ON EMP.CdEmpresa   = CNH.CdEmpresa
 JOIN softran_termaco.dbo.gtcconce  CTE  ON CTE.CdEmpresa   = CNH.CdEmpresa	 AND CTE.NrSeqControle = CNH.NrSeqControle
-LEFT JOIN TEST.dbo.CONFIRMAFACIL   NFE  ON NFE.CHAVE       = NFR.NrChaveAcessoNFe
-JOIN TEST..CONFIRMAFACILCLIENTES    CFF ON CFF.FLAG_ATIVO = 1 AND
+LEFT JOIN SIC..CONFIRMAFACIL       NFE  ON NFE.CHAVE       = NFR.NrChaveAcessoNFe
+JOIN SIC..CONFIRMAFACILCLIENTES    CFF  ON CFF.FLAG_ATIVO = 1 AND
                                           ((CFF.RAIZ = SUBSTRING(CNH.CdRemetente,1,8)) OR 
                                           (CFF.RAIZ = SUBSTRING(CNH.CdDestinatario,1,8)) OR
                                           (CFF.RAIZ = SUBSTRING(CNH.CdInscricao,1,8)))

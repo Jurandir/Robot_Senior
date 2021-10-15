@@ -1,6 +1,6 @@
 // 11/10/2021 13:40 - EMBARQUE API - ("CONFIRMA FACIL V2")
 
-// TEST
+// PROD-15/10/2021
 
 const moment  = require('moment')
 const loadAPI = require('../../helpers/loadAPI')
@@ -10,7 +10,7 @@ const cfg     = require('../../../.config/confirmaFacil.json')
 const embarque = async (body,cli) => {
     let method   = 'POST'
     let endpoint = ''
-    let server   =  'http://localhost:4999/test/embarque'         // cfg.embarqueURL    /// TEST
+    let server   =  cfg.embarqueURL    // PROD-15/10/2021
     if(cfg.run=='Test') {
        server  = 'http://localhost:4999/test/embarque' 
     } 

@@ -1,6 +1,6 @@
 // 13/10/2021 10:50 - ENTREGA PROGRAMADA - ("CONFIRMA FACIL V2")
 
-// TEST
+// PROD-15/10/2021
 
 const sqlExec       = require('../../connection/sqlExSENIOR')
 
@@ -35,7 +35,6 @@ const initEntregaProgramada = async () => {
         flag_livre = true
         return Erro
     } 
-
 }
 
 module.exports = initEntregaProgramada

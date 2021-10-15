@@ -1,6 +1,6 @@
 // 11/10/2021 16:18 - EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS - ("CONFIRMA FACIL V2")
 
-// TEST
+// PROD-15/10/2021
 
 const sqlExec       = require('../../connection/sqlExSENIOR')
 

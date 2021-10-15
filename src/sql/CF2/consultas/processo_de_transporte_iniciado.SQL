@@ -1,6 +1,6 @@
 -- 11/10/2021 13:10 - PROCESSO DE TRANSPORTE INICIADO - ("Confirma Facil V2")
 
--- TEST
+-- PROD-15/10/2021
 
 SELECT TOP 10 -- tem que ser no maximo 10, porque a API da CF somente aceita no maximo 10 ocorrencias por envio
      CO.ID                                        AS FLAG_ID
@@ -14,9 +14,9 @@ SELECT TOP 10 -- tem que ser no maximo 10, porque a API da CF somente aceita no 
 	,FORMAT(CO.OCORRENCIA_DATA,'HH:mm:ss')        AS ocorrencia_hrOcorrencia
 	,ISNULL(CO.OCORRENCIA_OBS,CO.OCORRENCIA_NOME) AS ocorrencia_comentario
 	,CFF.TOKEN                                    AS TOKEN_ID 
-FROM TEST..CONFIRMAFACILOCORRENCIA CO
-JOIN TEST..CONFIRMAFACIL           CF  ON CF.ID          = CO.CONFIRMAFACIL_ID
-JOIN TEST..CONFIRMAFACILCLIENTES   CFF ON CFF.FLAG_ATIVO = 1 AND
+FROM SIC..CONFIRMAFACILOCORRENCIA CO
+JOIN SIC..CONFIRMAFACIL           CF  ON CF.ID          = CO.CONFIRMAFACIL_ID
+JOIN SIC..CONFIRMAFACILCLIENTES   CFF ON CFF.FLAG_ATIVO = 1 AND
                                           (( CFF.RAIZ = SUBSTRING(CF.EMBARCADOR,1,8)  ) OR 
                                           (  CFF.RAIZ = SUBSTRING(CF.DESTINATARIO,1,8) ) )
 

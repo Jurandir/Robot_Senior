@@ -1,6 +1,6 @@
 -- 11/10/2021 17:47 - CHEGADA NA CIDADE OU FILIAL DE DESTINO - ("CONFIRMA FACIL V2")
 
--- TEST
+-- PROD-15/10/2021
 
 SELECT TOP 10 -- tem que ser no maximo 10, porque a API da CF somente aceita no maximo 10 ocorrencias por envio
      CO.ID                                        AS FLAG_ID
@@ -15,9 +15,9 @@ SELECT TOP 10 -- tem que ser no maximo 10, porque a API da CF somente aceita no 
 	,ISNULL(CO.OCORRENCIA_OBS,CO.OCORRENCIA_NOME) AS ocorrencia_comentario
 	,CFF.TOKEN                                    AS TOKEN_ID 
 
-FROM TEST..CONFIRMAFACILOCORRENCIA  CO
-JOIN TEST..CONFIRMAFACIL            CF ON CF.ID          = CO.CONFIRMAFACIL_ID
-JOIN TEST..CONFIRMAFACILCLIENTES   CFF ON CFF.FLAG_ATIVO = 1 AND
+FROM SIC..CONFIRMAFACILOCORRENCIA  CO
+JOIN SIC..CONFIRMAFACIL            CF ON CF.ID          = CO.CONFIRMAFACIL_ID
+JOIN SIC..CONFIRMAFACILCLIENTES   CFF ON CFF.FLAG_ATIVO = 1 AND
                                           (( CFF.RAIZ = SUBSTRING(CF.EMBARCADOR,1,8)  ) OR 
                                           (  CFF.RAIZ = SUBSTRING(CF.DESTINATARIO,1,8) ) )
 
@@ -29,4 +29,3 @@ WHERE CO.FLAG_SEND = 0
   AND CFF.RAIZ = '${raiz}'
 
 ORDER BY CFF.RAIZ,CO.OCORRENCIA_DATA
-

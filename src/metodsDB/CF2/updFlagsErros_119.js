@@ -1,6 +1,6 @@
 // 15/10/2021 09:21 - GRAVA RETORNO DE ERROS API (119) - ("CONFIRMA FACIL V2")
 
-// TEST
+// PROD-15/10/2021
 
 const moment  = require('moment')
 const sqlExec = require('../../connection/sqlExSENIOR')
@@ -26,7 +26,7 @@ const updFlagsErros = async (dados,response) => {
     }
     
     list.map( async (item) => {
-        let sql = `UPDATE TEST..CONFIRMAFACILOCORRENCIA 
+        let sql = `UPDATE SIC..CONFIRMAFACILOCORRENCIA 
                       SET FLAG_SEND          = ${flag},
                           DT_SEND            = CURRENT_TIMESTAMP,
                           RESPOSTA_MSG       = '${item.message}',
@@ -48,7 +48,6 @@ const updFlagsErros = async (dados,response) => {
         }
     })
     return result
-
 }
 
 module.exports = updFlagsErros

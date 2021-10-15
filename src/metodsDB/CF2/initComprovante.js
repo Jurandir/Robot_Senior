@@ -1,6 +1,6 @@
 // 13/10/2021 15:37 - COMPROVANTE DE ENTREGA - ("CONFIRMA FACIL V2")
 
-// TEST 
+// PROD-15/10/2021
 
 const sqlExec       = require('../../connection/sqlExSENIOR')
 

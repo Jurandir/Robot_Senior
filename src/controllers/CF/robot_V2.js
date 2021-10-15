@@ -39,7 +39,6 @@ const encerraProcessos      = require('../../metodsDB/CF2/encerraProcessos')
 
 const ajusteCTRC            = require('../../metodsDB/CF2/ajusteCTRC')
 
-
 const robot_V2 = async (loopRobot) =>{
     let time_inicio = process.uptime()
   
@@ -68,6 +67,7 @@ const robot_V2 = async (loopRobot) =>{
     await api_confirmacao_entrega()         // 001 - ENTREGA REALIZADA NORMALMENTE (API)
 
     await comprovante_entrega_BD()          // 999 - COMPROVANTE DE ENTREGA (BD)
+    /*
 
     await comprovante_entrega_FILE()        // 999 - COMPROVANTE DE ENTREGA (FILE,API LOCAL)
 
@@ -75,9 +75,13 @@ const robot_V2 = async (loopRobot) =>{
 
     await encerra_processo()                // XXX - ENCERRA PROCESSO DE MONITORAMENTO (BD)
 
-    await ajustaCTRC_canceladas()            // XXX - AJUSTA MONITORAMENTO CTRC SUBSTITUDOS (BD)
+    */
 
-    await api_conhecimento_Retido()          // 119 - CONHECIMENTO DE TRANSPORTE RETIDO (API)
+    await ajustaCTRC_canceladas()           // XXX - AJUSTA MONITORAMENTO CTRC SUBSTITUDOS (BD)
+
+    await api_conhecimento_Retido()         // 119 - CONHECIMENTO DE TRANSPORTE RETIDO (API)
+
+    
 
     let time_final = process.uptime()
     let time_total = Math.ceil(time_final-time_inicio)
@@ -158,7 +162,6 @@ const robot_V2 = async (loopRobot) =>{
       }   
       return 0
     }
-
 
     // BD - ENTREGA PROGRAMADA
     async function entrega_programada() {

@@ -1,6 +1,6 @@
 -- 01/09/2021 10:48 - OCORRENCIAS DIVERSAS - MANUAIS - ("Confirma Facil V2")
 
--- TEST
+-- PROD-15/10/2021
 
 SET XACT_ABORT ON
 
@@ -34,11 +34,11 @@ SELECT TOP 50
 
 FROM softran_termaco.dbo.gtcmoven         OUN                                                  -- Movimento das Ocorrencias
      JOIN softran_termaco.dbo.gtchisen    OCO ON OCO.cdhistoricoentrega = OUN.cdocorrencia     -- Ocorrencias
-     JOIN TEST..CONFIRMAFACIL           CF  ON CF.CdEmpresa = OUN.CdEmpresa AND CF.NrSeqControle = OUN.NrSeqControle 
-LEFT JOIN TEST..CONFIRMAFACILDEPARA     DP  ON DP.ID_SENIOR = OUN.CdOcorrencia               -- DE PARA ( SENIOR -> CONFIRMAFACIL )
-LEFT JOIN TEST..CONFIRMAFACILOCORRENCIA CO  ON CO.CdEmpresa = OUN.CdEmpresa AND CO.NrSeqControle = OUN.NrSeqControle AND CO.CdSequencia  = OUN.CdSequencia 
+     JOIN SIC..CONFIRMAFACIL           CF  ON CF.CdEmpresa = OUN.CdEmpresa AND CF.NrSeqControle = OUN.NrSeqControle 
+LEFT JOIN SIC..CONFIRMAFACILDEPARA     DP  ON DP.ID_SENIOR = OUN.CdOcorrencia               -- DE PARA ( SENIOR -> CONFIRMAFACIL )
+LEFT JOIN SIC..CONFIRMAFACILOCORRENCIA CO  ON CO.CdEmpresa = OUN.CdEmpresa AND CO.NrSeqControle = OUN.NrSeqControle AND CO.CdSequencia  = OUN.CdSequencia 
 WHERE (isnull(OCO.InExibehist, 0) = 0 OR OUN.CdOcorrencia=219)               -- 219 = AGUARDANDO AGENDAMENTO/SOLICITADO AGENDA
-  AND NOT EXISTS ( SELECT 1 FROM TEST..CONFIRMAFACILOCORRENCIA CO WHERE CO.CdEmpresa = OUN.CdEmpresa AND CO.NrSeqControle = OUN.NrSeqControle  AND CO.CdSequencia = OUN.CdSequencia )
+  AND NOT EXISTS ( SELECT 1 FROM SIC..CONFIRMAFACILOCORRENCIA CO WHERE CO.CdEmpresa = OUN.CdEmpresa AND CO.NrSeqControle = OUN.NrSeqControle  AND CO.CdSequencia = OUN.CdSequencia )
   AND OUN.CdOcorrencia not in (0,899)
   AND CF.FASE_ID < 5
 ORDER BY 
@@ -65,7 +65,7 @@ WHILE @@FETCH_STATUS = 0
 BEGIN      
       BEGIN TRANSACTION;
 
-         INSERT INTO TEST..CONFIRMAFACILOCORRENCIA ( 
+         INSERT INTO SIC..CONFIRMAFACILOCORRENCIA ( 
              CONFIRMAFACIL_ID, 
              OCORRENCIA_ID, 
              OCORRENCIA_NOME, 

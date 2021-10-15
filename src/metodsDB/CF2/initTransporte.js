@@ -1,12 +1,12 @@
 // 11/10/2021 09:52 - PROCESSO DE TRANSPORTE INICIADO - ("CONFIRMA FACIL V2")
 
-// TEST
+// PROD-15/01/2021
 
 const sqlExec       = require('../../connection/sqlExSENIOR')
 
 const fs                 = require('fs')
 const path               = require('path')
-const sqlFileName        =  path.join(__dirname, '../../sql/CF2/rotinas/geraProcessoTransporteIniciado.SQL')
+const sqlFileName        = path.join(__dirname, '../../sql/CF2/rotinas/geraProcessoTransporteIniciado.SQL')
 const sqlInitTransporte  = fs.readFileSync(sqlFileName, "utf8")
 
 let flag_livre      = true

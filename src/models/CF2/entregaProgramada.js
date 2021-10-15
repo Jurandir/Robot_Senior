@@ -1,6 +1,6 @@
 // 13/10/2021 11:30 - ENTREGA PROGRAMADA - ("CONFIRMA FACIL V2")
 
-// -- TEST 
+// -- PROD-15/10/2021 
 
 const fs             = require('fs')
 const path           = require('path')
@@ -41,7 +41,6 @@ const entregaProgramada = async () => {
         }    
     }
     return retorno
-
 }
 
 module.exports = entregaProgramada

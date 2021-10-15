@@ -1,6 +1,6 @@
 -- 13/10/2021 13:52 - EM ROTA PARA ENTREGA - ("CONFIRMA FACIL V2")
 
--- TEST
+-- PROD-15/10/2021
 
 SELECT TOP 10 -- Limite de 10 linhas por lote de envio na API CF
 	 CO.ID                                        AS FLAG_ID
@@ -15,9 +15,9 @@ SELECT TOP 10 -- Limite de 10 linhas por lote de envio na API CF
 	,ISNULL(CO.OCORRENCIA_OBS,CO.OCORRENCIA_NOME) AS ocorrencia_comentario
     ,CFF.TOKEN                                    AS TOKEN_ID 
 
-FROM TEST..CONFIRMAFACILOCORRENCIA CO
-JOIN TEST..CONFIRMAFACIL           CF ON CF.ID          = CO.CONFIRMAFACIL_ID
-JOIN TEST..CONFIRMAFACILCLIENTES  CFF ON CFF.FLAG_ATIVO = 1 AND
+FROM SIC..CONFIRMAFACILOCORRENCIA CO
+JOIN SIC..CONFIRMAFACIL           CF ON CF.ID          = CO.CONFIRMAFACIL_ID
+JOIN SIC..CONFIRMAFACILCLIENTES  CFF ON CFF.FLAG_ATIVO = 1 AND
                                           (( CFF.RAIZ = SUBSTRING(CF.EMBARCADOR,1,8)  ) OR 
                                           (  CFF.RAIZ = SUBSTRING(CF.DESTINATARIO,1,8) ) )
 
