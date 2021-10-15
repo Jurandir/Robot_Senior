@@ -42,7 +42,7 @@ const ajusteCTRC            = require('../../metodsDB/CF2/ajusteCTRC')
 
 const robot_V2 = async (loopRobot) =>{
     let time_inicio = process.uptime()
-   
+  
     await captura_nfs()                     // XXX - INICIA PROCESSO DE MONITORAMENTO (BD)
     await transporte_iniciado()             // 000 - PROCESSO DE TRANSPORTE INICIADO (BD)
 

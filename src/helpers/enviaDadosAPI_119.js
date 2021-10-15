@@ -1,12 +1,12 @@
-// 11/10/2021 13:45 - ENVIA DADOS PROCESSADOS PARA API  - ("CONFIRMA FACIL V2")
+// 15/10/2021 09:23 - ENVIA DADOS PROCESSADOS PARA API (119) - ("CONFIRMA FACIL V2")
 
 // TEST
 
 const sqlQuery      = require('../connection/sqlSENIOR')
 const montaJSON     = require('./montaJSON')
 const embarque      = require('../metodsAPI/CF2/embarque')
-const updFlagsEnvio = require('../metodsDB/CF2/updFlagsEnvio')
-const updFlagsErros = require('../metodsDB/CF2/updFlagsErros')
+const updFlagsEnvio = require('../metodsDB/CF2/updFlagsEnvio_119')
+const updFlagsErros = require('../metodsDB/CF2/updFlagsErros_119')
 
 const enviaDadosAPI_119 = async (cli,base,sql,debug) => {
     let resposta = { success: false, rowsAffected: 0 }
@@ -32,13 +32,13 @@ const enviaDadosAPI_119 = async (cli,base,sql,debug) => {
             console.log('UPDATE',UPDATE)
         }
                
-        let msg = `Query:${ROWS.length} JSON:${LIST.length} API:${EMBARQUE.success} Flag:${UPDATE.success}`
+        let msg = `Query:${ROWS.length} JSON:${LIST.length} API:${EMBARQUE.success} Flag:${UPDATE.success} Ocor: 119`
 
         resposta  = { success: UPDATE.success, message: msg,  rowsAffected: UPDATE.rowsAffected , embarque: EMBARQUE }
 
     } catch (err) {
         
-        console.log(moment().format(),'- (enviaDadosAPI_CF2) ERRO:',err)
+        console.log(moment().format(),'- (enviaDadosAPI_119) ERRO:',err)
 
         resposta = { success: false, message: err.message, rowsAffected:-1 }
     }    

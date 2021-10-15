@@ -24,10 +24,10 @@ JOIN TEST..CONFIRMAFACILCLIENTES  CFF ON CFF.FLAG_ATIVO = 1 AND
                                           (( CFF.RAIZ = SUBSTRING(CF.EMBARCADOR,1,8)  ) OR 
                                           (  CFF.RAIZ = SUBSTRING(CF.DESTINATARIO,1,8) ) )
 
-WHERE CO.FLAG_SEND      = 1    -- Já enviado (119)
-  AND CO.OCORRENCIA_ID  = 119  -- Codigo ConfirmaFacil
-  AND CO.OCORRENCIA_OBS <> 'ENTREGA REALIZADA'
-  AND CF.FASE_ID < 9
+WHERE CO.FLAG_SEND                   = 1    -- Já enviado (119)
+  AND CO.OCORRENCIA_ID               = 119  -- Codigo ConfirmaFacil
+  AND ISNULL(CO.OCORRENCIA_OBS,'*') <> 'ENTREGA REALIZADA'
+  AND CF.FASE_ID                     < 9
   AND NOT EXISTS (SELECT 1 FROM TEST..CONFIRMAFACILOCORRENCIA ENT 
                    WHERE ENT.CONFIRMAFACIL_ID = CO.CONFIRMAFACIL_ID 
 				     AND ENT.OCORRENCIA_ID=1)
