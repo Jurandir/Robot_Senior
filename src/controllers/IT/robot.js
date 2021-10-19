@@ -21,9 +21,10 @@ const initComprovante        = require('../../metodsDB/IT/initComprovante')
 const preparaComprovante     = require('../../controllers/IT/preparaComprovantes')
 const comprovantes           = require('../../models/IT/comprovantes')
 const baixaEntrega           = require('../../models/IT/baixaEntrega')
+const baixaEntregaOcorrencia = require('../../models/IT/baixaEntregaOcorrencia')
 const ocorrencias            = require('../../models/IT/ocorrencias')
 const encerraProcessos       = require('../../metodsDB/IT/encerraProcessos')
-
+const ajusteCTRC             = require('../../metodsDB/IT/ajusteCTRC')
 
 // const initEntregaProgramada = require('../../metodsDB/IT/initEntregaProgramada')
 // const entregaProgramada     = require('../../models/IT/entregaProgramada')
@@ -41,8 +42,7 @@ const robot = async (cli,cfg,uptime) =>{
         console.log(moment().format(),'- Robô em Execução: (iTrack)',cli.count,' - ',timeOUT,'s')
    }
    cli.count--   
-
-                                         /// "ENTREGA PROGRAMADA" NÃO FEITA ROTINA ESPECIFICA (91)
+                                          /// "ENTREGA PROGRAMADA" NÃO FEITA ROTINA ESPECIFICA (91)
 
     await captura_nfs()                   // XXX - INICIA PROCESSO DE MONITORAMENTO (BD CLIENTES ITRACK)
     await valida_idCargaPK(cfg)           // XXX - PESQUISA NA API ITRACK O "IDCARGAPK" OU REGISTRA NOVA CARGA
@@ -57,13 +57,14 @@ const robot = async (cli,cfg,uptime) =>{
     await em_rota_entrega()               // 100 - EM ROTA PARA ENTREGA (BD)                           --- 808
     await api_em_rota_entrega()           // 100 - EM ROTA PARA ENTREGA (API)                          --- 808
     await confirmacao_entrega()           // 001 - ENTREGA REALIZADA NORMALMENTE (BD)
-    await api_confirmacao_entrega()       // 001 - ENTREGA REALIZADA NORMALMENTE (API)
+    //  (Versão OLD)-- await api_confirmacao_entrega()       // 001 - ENTREGA REALIZADA NORMALMENTE (API)
+    await api_confirmacao_entrega_v2()    // 001 - ENTREGA REALIZADA NORMALMENTE (API) - ENDPOINT user/carga/entrega/danfe 
     await comprovante_entrega_BD()        // 999 - COMPROVANTE DE ENTREGA (BD)
     await comprovante_entrega_FILE()      // 999 - COMPROVANTE DE ENTREGA (FILE - API LOCAL)
     await API_comprovante_entrega()       // 999 - COMPROVANTE DE ENTREGA (API)
     await API_baixa_entrega()             // 999 - BAIXA ENTREGAS SEM COMPROVANTES (API)
     await encerra_processo()              // XXX - ENCERRA PROCESSO DE MONITORAMENTO (BD)
-
+    await ajustaCTRC_canceladas()         // XXX - MONITORAMENTO AJUSTE - CTRC CANCELADA POR NOVA CTRC (BD)
 
    let time_final = process.uptime()
    let time_total = Math.ceil(time_final-time_inicio)
@@ -182,6 +183,17 @@ const robot = async (cli,cfg,uptime) =>{
           return 1
      }   
 
+     // API - (001) - ENTREGA REALIZADA NORMALMENTE - ENDPOINT user/carga/entrega/danfe 
+     async function api_confirmacao_entrega_v2() {
+          let ret = await baixaEntregaOcorrencia()
+          ret.forEach(itn => {
+               let log = jsonLOG(itn)
+               let msg = { success: true, response: log }
+               logEventos(cfg,`(API - OCORRENCIA DE ENTREGA, COM BAIXA NA API) - iTrack:`,msg)
+          })
+          return 1
+     }   
+     
      // COMPROVANTE DE ENTREGA
      async function comprovante_entrega_BD() {
           let retInitComprovante = await initComprovante()
@@ -214,7 +226,6 @@ const robot = async (cli,cfg,uptime) =>{
           return 1
      }
 
-     API_baixa_entrega
      // BAIXA ENTREGAS SEM COMPROVANTES
      async function API_baixa_entrega() {
           let ret = await baixaEntrega()
@@ -240,6 +251,13 @@ const robot = async (cli,cfg,uptime) =>{
      async function encerra_processo() {
           let retEncerraProcessos = await encerraProcessos()
           logEventos(cfg,'(BD - ENCERRA PROCESSOS) - iTrack:',retEncerraProcessos)
+          return 1
+     }
+
+     // MONITORAMENTO AJUSTE - CTRC CANCELADA POR NOVA CTRC
+     async function ajustaCTRC_canceladas() {
+          let ret = await ajusteCTRC()
+          logEventos(cfg,'(BD - AJUSTE DE CANCELAMENTO DA CTRC) - iTrack:',ret)
           return 1
      }
 

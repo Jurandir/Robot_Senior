@@ -20,6 +20,7 @@ const valida_idCargaPK = async (cfg) => {
    WHERE DF.IDCARGA = 0
      AND ( DF.DT_UPDATE    IS NULL OR DATEDIFF(minute,DF.DT_UPDATE   , CURRENT_TIMESTAMP) > 30) ---UPDATE    depois de 30 min da ultima tentativa
      AND ( DF.DT_VALIDACAO IS NULL OR DATEDIFF(minute,DF.DT_VALIDACAO, CURRENT_TIMESTAMP) > 30) ---VALIDACAO depois de 30 min da ultima tentativa
+     AND ( DF.DT_ENTREGA   IS NULL OR DATEDIFF(MONTH, DF.DT_ENTREGA,   CURRENT_TIMESTAMP) < 10) ---Pesquisa até 10 dias apos a data da entrega     
     `
     try {
 

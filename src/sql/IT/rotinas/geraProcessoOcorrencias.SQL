@@ -30,10 +30,9 @@ SELECT TOP 10
 FROM softran_termaco.dbo.gtcmoven      OUN                                                  -- Movimento das Ocorrencias
      JOIN softran_termaco.dbo.gtchisen OCO ON OCO.cdhistoricoentrega = OUN.cdocorrencia     -- Ocorrencias
      JOIN SIC.dbo.ITRACK_DANFE          IT ON IT.CdEmpresa = OUN.CdEmpresa AND IT.NrSeqControle = OUN.NrSeqControle 
-LEFT JOIN SIC.dbo.ITRACK_OCORRENCIA     CO ON CO.CdEmpresa = OUN.CdEmpresa AND CO.NrSeqControle = OUN.NrSeqControle AND CO.CdSequencia  = OUN.CdSequencia 
 WHERE 
       (isnull(OCO.InExibehist, 0) = 0 OR OUN.CdOcorrencia=219)               -- 219 = AGUARDANDO AGENDAMENTO/SOLICITADO AGENDA
-  AND NOT EXISTS ( SELECT 1 FROM SIC.dbo.ITRACK_OCORRENCIA CO WHERE CO.CdEmpresa = OUN.CdEmpresa AND CO.NrSeqControle = OUN.NrSeqControle  AND CO.CdSequencia = OUN.CdSequencia )
+  AND NOT EXISTS ( SELECT 1 FROM SIC..ITRACK_OCORRENCIA CO    WHERE CO.CdEmpresa = OUN.CdEmpresa AND CO.NrSeqControle = OUN.NrSeqControle  AND CO.CdSequencia = OUN.CdSequencia AND CO.OCORRENCIA_ID = OUN.CdOcorrencia ) 
   AND OUN.CdOcorrencia NOT IN ( 000,210,801,899,999 )
   AND IT.FASE_ID < 5
 ORDER BY 

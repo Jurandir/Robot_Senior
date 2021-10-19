@@ -1,7 +1,8 @@
--- 04/10/2021 16:34 - BAIXA ENTREGAS SEM COMPROVANTES ("ITRACK")
+-- 19/10/2021 14:33 - BAIXA ENTREGAS VIA OCORRENCIA 01 ("ITRACK")  
+-- FORMATADO PARA O ENDPOINT : user/carga/entrega/danfe
 
 SELECT TOP 50 
-    'BAIXA REALIZADA'                                      as content_observacao
+    'ENTREGA REALIZADA NORMALMENTE'                        as content_observacao
 --	,FORMAT(CO.OCORRENCIA_DATA,'yyyy-MM-ddThh:mm:ss-03')   as content_dataInicioEntrega
     ,'[]'                                                  as content_fotosComprovantes
 	,ISNULL(CO.RECEBEDOR_NOME,'COLABORADOR RESPONSAVEL')   as content_nomeRecebedor
@@ -24,7 +25,8 @@ LEFT JOIN softran_termaco.dbo.CCERomIt ITR ON  ITR.CdEmpresaColetaEntrega = DF.C
 LEFT JOIN softran_termaco.dbo.CCERoman ROM ON ROM.CdEmpresa = ITR.CdEmpresa AND ROM.CdRomaneio = ITR.CdRomaneio AND ROM.CdRota = ITR.CdRota
 LEFT JOIN softran_termaco.dbo.GTCFunDp MOT ON MOT.NrCPF = ROM.NrCPFMotorista
 WHERE DF.IDCARGA          > 0
-  AND CO.OCORRENCIA_ID    = 999 
-  AND CO.FLAG_SEND        = 0 
-  AND DATEDIFF(hour,CO.DT_CREATE, CURRENT_TIMESTAMP) > 26
+  AND CO.OCORRENCIA_ID    = 1  -- CODIGO SÊNIOR ( ENTREGA REALIZADA NORMALMENTE )
+  AND CO.FLAG_SEND        = 0
+  AND DF.FASE_ID          < 9
+  AND ISNULL(CO.RESPOSTA_STATUS,0)  <> -1
 ORDER BY CO.OCORRENCIA_DATA

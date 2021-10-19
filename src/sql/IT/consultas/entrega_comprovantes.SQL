@@ -1,7 +1,7 @@
 -- 20/09/2021 14:03 - ENTREGA COMPROVANTE (ITRACK)
 SELECT TOP 20
     'ENTREGA REALIZADA'                                    as content_observacao
-	,FORMAT(CO.OCORRENCIA_DATA,'yyyy-MM-ddThh:mm:ss-03')   as content_dataInicioEntrega
+	--,FORMAT(CO.OCORRENCIA_DATA,'yyyy-MM-ddThh:mm:ss-03')   as content_dataInicioEntrega
     ,DF.JSON_COMPROVANTE                                   as content_fotosComprovantes
 	,ISNULL(CO.RECEBEDOR_NOME,'COLABORADOR RESPONSAVEL')   as content_nomeRecebedor
     ,DF.CHAVE                                              as content_danfe
