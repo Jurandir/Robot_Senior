@@ -51,7 +51,7 @@ const robot = async (cli,cfg,uptime) =>{
    // CHECOU NO DESTINO / FILIAL DE ENTREGA / DESCARREGAMENTO
    async function chegou_CD_Destino() {
       let ret = await initFilialDestino()
-      logEventos(cfg,'(BD - CHECOU NO DESTINO / FILIAL DE ENTREGA / DESCARREGAMENTO ) - Sênior -> "JOHN DEERE":',ret) 
+      logEventos(cfg,'(BD - CHEGOU NO DESTINO / FILIAL DE ENTREGA / DESCARREGAMENTO ) - Sênior -> "JOHN DEERE":',ret) 
       return ret
    }
 

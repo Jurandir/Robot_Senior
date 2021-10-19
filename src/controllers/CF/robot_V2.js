@@ -67,15 +67,12 @@ const robot_V2 = async (loopRobot) =>{
     await api_confirmacao_entrega()         // 001 - ENTREGA REALIZADA NORMALMENTE (API)
 
     await comprovante_entrega_BD()          // 999 - COMPROVANTE DE ENTREGA (BD)
-    /*
-
+    
     await comprovante_entrega_FILE()        // 999 - COMPROVANTE DE ENTREGA (FILE,API LOCAL)
 
     await api_comprovante_entrega()         // 999 - COMPROVANTE DE ENTREGA (API)
 
     await encerra_processo()                // XXX - ENCERRA PROCESSO DE MONITORAMENTO (BD)
-
-    */
 
     await ajustaCTRC_canceladas()           // XXX - AJUSTA MONITORAMENTO CTRC SUBSTITUDOS (BD)
 

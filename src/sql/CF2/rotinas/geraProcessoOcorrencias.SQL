@@ -38,7 +38,7 @@ FROM softran_termaco.dbo.gtcmoven         OUN                                   
 LEFT JOIN SIC..CONFIRMAFACILDEPARA     DP  ON DP.ID_SENIOR = OUN.CdOcorrencia               -- DE PARA ( SENIOR -> CONFIRMAFACIL )
 LEFT JOIN SIC..CONFIRMAFACILOCORRENCIA CO  ON CO.CdEmpresa = OUN.CdEmpresa AND CO.NrSeqControle = OUN.NrSeqControle AND CO.CdSequencia  = OUN.CdSequencia 
 WHERE (isnull(OCO.InExibehist, 0) = 0 OR OUN.CdOcorrencia=219)               -- 219 = AGUARDANDO AGENDAMENTO/SOLICITADO AGENDA
-  AND NOT EXISTS ( SELECT 1 FROM SIC..CONFIRMAFACILOCORRENCIA CO WHERE CO.CdEmpresa = OUN.CdEmpresa AND CO.NrSeqControle = OUN.NrSeqControle  AND CO.CdSequencia = OUN.CdSequencia )
+  AND NOT EXISTS ( SELECT 1 FROM SIC..CONFIRMAFACILOCORRENCIA CO WHERE CO.CdEmpresa = OUN.CdEmpresa AND CO.NrSeqControle = OUN.NrSeqControle  AND CO.CdSequencia = OUN.CdSequencia AND CO.OCORRENCIA_ID = ISNULL(DP.ID_CONFIRMAFACIL,OUN.CdOcorrencia)) -- AJUSTE-18-10-2021
   AND OUN.CdOcorrencia not in (0,899)
   AND CF.FASE_ID < 5
 ORDER BY 

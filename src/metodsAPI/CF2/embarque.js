@@ -21,13 +21,14 @@ const embarque = async (body,cli) => {
     let base = ret
 
     if(!ret.success) {
-        console.log(moment().format(),'FALHA CF V2 - (embarque.js) RET:',ret)
         base = {
             success: false,
             status: 500,
             message: ret.err,
-            data: ret.data
+            data: ret.data.config.data,
+            err: ret.err
         }
+        console.log(moment().format(),'FALHA CF V2 - (embarque.js) RET:',base)
     }    
 
     try {
