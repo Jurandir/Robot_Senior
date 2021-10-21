@@ -71,7 +71,7 @@ BEGIN TRY
             JOIN SIC.dbo.ORION_CTE            OCT ON OCT.CdEmpresa = OUN.CdEmpresa AND OCT.NrSeqControle = OUN.NrSeqControle 
             JOIN SIC.dbo.ORION_DEPARA         DPA ON DPA.OCORRENCIA_ID = OUN.CdOcorrencia
         WHERE 
-        NOT EXISTS ( SELECT 1 FROM SIC.dbo.ORION_OCORRENCIAS CO WHERE CO.CdEmpresa = OUN.CdEmpresa AND CO.NrSeqControle = OUN.NrSeqControle  AND CO.CdSequencia = OUN.CdSequencia )
+        NOT EXISTS ( SELECT 1 FROM SIC.dbo.ORION_OCORRENCIAS CO WHERE CO.CdEmpresa = OUN.CdEmpresa AND CO.NrSeqControle = OUN.NrSeqControle  AND CO.CdSequencia = OUN.CdSequencia AND CO.CdOcorrencia = OUN.CdOcorrencia )
         AND OCT.FASE_ID < 5
         ORDER BY 
         CAST(CONCAT(FORMAT(OUN.DtMovimento,'yyyy-MM-dd'),' ', FORMAT(OUN.HRMovimento,'HH:mm:ss')) as datetime) 
