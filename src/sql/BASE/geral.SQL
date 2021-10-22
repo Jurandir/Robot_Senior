@@ -103,5 +103,6 @@ LEFT JOIN softran_termaco.dbo.GTCSITCG p  ON p.CdSituacaoCarga    = a.CdSituacao
 WHERE isnull(e.InExibehist, 0) = 0
 	-- AND b.nrnotafiscal=1517772 -- NUMERO NF
 	AND a.nrdoctofiscal = 4183    -- CTRC / Conhecimento
+	-- AND NrChaveAcessoNFe = '31210912744404000500550010003864851100072086'
   -- AND  a.CdEmpresa = 1 
   -- AND a.NrSeqControle = 1 

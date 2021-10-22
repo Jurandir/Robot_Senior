@@ -36,10 +36,10 @@ FROM softran_termaco.dbo.gtcmoven         OUN                                   
      JOIN softran_termaco.dbo.gtchisen    OCO ON OCO.cdhistoricoentrega = OUN.cdocorrencia     -- Ocorrencias
      JOIN SIC..CONFIRMAFACIL           CF  ON CF.CdEmpresa = OUN.CdEmpresa AND CF.NrSeqControle = OUN.NrSeqControle 
 LEFT JOIN SIC..CONFIRMAFACILDEPARA     DP  ON DP.ID_SENIOR = OUN.CdOcorrencia               -- DE PARA ( SENIOR -> CONFIRMAFACIL )
-LEFT JOIN SIC..CONFIRMAFACILOCORRENCIA CO  ON CO.CdEmpresa = OUN.CdEmpresa AND CO.NrSeqControle = OUN.NrSeqControle AND CO.CdSequencia  = OUN.CdSequencia 
+LEFT JOIN SIC..CONFIRMAFACILOCORRENCIA CO  ON CO.CONFIRMAFACIL_ID = CF.ID AND CO.CdEmpresa = OUN.CdEmpresa AND CO.NrSeqControle = OUN.NrSeqControle  AND CO.CdSequencia = OUN.CdSequencia AND CO.OCORRENCIA_ID = ISNULL(DP.ID_CONFIRMAFACIL,OUN.CdOcorrencia) -- AJUSTE-18-10-2021
 WHERE (isnull(OCO.InExibehist, 0) = 0 OR OUN.CdOcorrencia=219)               -- 219 = AGUARDANDO AGENDAMENTO/SOLICITADO AGENDA
-  AND NOT EXISTS ( SELECT 1 FROM SIC..CONFIRMAFACILOCORRENCIA CO WHERE CO.CdEmpresa = OUN.CdEmpresa AND CO.NrSeqControle = OUN.NrSeqControle  AND CO.CdSequencia = OUN.CdSequencia AND CO.OCORRENCIA_ID = ISNULL(DP.ID_CONFIRMAFACIL,OUN.CdOcorrencia)) -- AJUSTE-18-10-2021
   AND OUN.CdOcorrencia not in (0,899)
+  AND CO.CdEmpresa is null  -- não existe em "CO"
   AND CF.FASE_ID < 5
 ORDER BY 
    CAST(CONCAT(FORMAT(OUN.DtMovimento,'yyyy-MM-dd'),' ', FORMAT(OUN.HRMovimento,'HH:mm:ss')) as datetime) 
