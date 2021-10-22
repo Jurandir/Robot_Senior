@@ -41,6 +41,15 @@ const embarque = async (body,cli) => {
         console.log(moment().format(),'- "ENVIO API" -',cli.NOME)
         console.log(moment().format(),'- SUCCESS - (API CF-V2 EMBARQUE) - RESPONSE:',`( STATUS:${base.status} )`,base.message)
     } else {
+        
+        if(ret.data==undefined) {
+            ret.data= { response : { data: [] }}
+        }
+
+        if(ret.data.response.data==undefined) {
+            ret.data = { response : { data: [] }}
+        }
+
         base = ret.data.response.data
         console.log(moment().format(),'- (embarque.js) - RETORNO API CF V2- Erro ao importar todos os dados, PATH:/v2/embarque.')
 
