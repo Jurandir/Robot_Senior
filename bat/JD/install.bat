@@ -3,7 +3,7 @@
 C:
 CD \NodeJS\ROBOS\Robot_Senior
 
-SET SERVICENAME=Node_BOT_Senior_ConfirmaFacil
+SET SERVICENAME=Node_BOT_Senior_JohnDeere
 
 SET NSSM="%CD%\nssm\nssm.exe"
 
@@ -12,9 +12,9 @@ ECHO INSTALLING SERVICE %SERVICENAME%
 %NSSM% stop %SERVICENAME%
 %NSSM% remove %SERVICENAME% confirm
 %NSSM% install %SERVICENAME% %SERVICENAME%
-%NSSM% set %SERVICENAME% Application %CD%\bat\CF\initializer.bat
+%NSSM% set %SERVICENAME% Application %CD%\bat\JD\initializer.bat
 %NSSM% set %SERVICENAME% AppDirectory %CD%
-%NSSM% set %SERVICENAME% Description "Node Windows Service for BOT Senior ConfirmaFacil"
+%NSSM% set %SERVICENAME% Description "Node Windows Service for BOT Senior JohnDeere"
 %NSSM% set %SERVICENAME% Start SERVICE_AUTO_START
 %NSSM% set %SERVICENAME% AppStopMethodSkip 0
 %NSSM% set %SERVICENAME% AppStopMethodConsole 0
@@ -23,8 +23,8 @@ ECHO INSTALLING SERVICE %SERVICENAME%
 %NSSM% set %SERVICENAME% AppThrottle 0
 %NSSM% set %SERVICENAME% AppExit Default Ignore
 %NSSM% set %SERVICENAME% AppRestartDelay 0
-%NSSM% set %SERVICENAME% AppStdout %CD%\logs\CF\%SERVICENAME%.log
-%NSSM% set %SERVICENAME% AppStderr %CD%\logs\CF\%SERVICENAME%.log
+%NSSM% set %SERVICENAME% AppStdout %CD%\logs\JD\%SERVICENAME%.log
+%NSSM% set %SERVICENAME% AppStderr %CD%\logs\JD\%SERVICENAME%.log
 %NSSM% set %SERVICENAME% AppStdoutCreationDisposition 4
 %NSSM% set %SERVICENAME% AppStderrCreationDisposition 4
 %NSSM% set %SERVICENAME% AppRotateFiles 1

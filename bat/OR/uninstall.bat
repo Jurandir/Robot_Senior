@@ -3,7 +3,7 @@
 C:
 CD \NodeJS\ROBOS\Robot_Senior
 
-SET SERVICENAME=Node_BOT_Senior_ConfirmaFacil
+SET SERVICENAME=Node_BOT_Senior_Orion
 SET NSSM="%CD%\nssm\nssm.exe"
 
 ECHO INSTALLING SERVICE %SERVICENAME%

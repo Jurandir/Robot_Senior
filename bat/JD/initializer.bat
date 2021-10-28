@@ -4,4 +4,4 @@ SET Path=C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\Syst
 C:
 CD \NodeJS\ROBOS\Robot_Senior
 
-node ConfirmaFacil.js
+node JohnDeere.js

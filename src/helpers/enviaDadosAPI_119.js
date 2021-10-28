@@ -2,6 +2,7 @@
 
 // PROD-15/10/2021
 
+const moment        = require('moment')
 const sqlQuery      = require('../connection/sqlSENIOR')
 const montaJSON     = require('./montaJSON')
 const embarque      = require('../metodsAPI/CF2/embarque')
