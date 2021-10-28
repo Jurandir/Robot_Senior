@@ -1,7 +1,8 @@
 // 13/10/2021 11:30 - ENTREGA PROGRAMADA - ("CONFIRMA FACIL V2")
 
-// -- PROD-15/10/2021 
+// -- PROD-15/10/2021
 
+const moment         = require('moment')
 const fs             = require('fs')
 const path           = require('path')
 const sqlFileName    =  path.join(__dirname, '../../sql/CF2/consultas/entrega_programada.SQL')

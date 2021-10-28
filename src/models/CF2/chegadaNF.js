@@ -2,6 +2,7 @@
 
 // PROD-15/10/2021
 
+const moment         = require('moment')
 const fs             = require('fs')
 const path           = require('path')
 const sqlFileName    =  path.join(__dirname, '../../sql/CF2/consultas/chegada_na_cidade_ou_filial_destino.SQL')
