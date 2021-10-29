@@ -26,6 +26,11 @@ const base = () => {
 const entregaProgramada = async () => {
     let retorno = []
     let listCli = await getClientes()                             // Lista de Clientes CF
+
+    if(!Array.isArray(listCli)) {
+      console.log(moment().format(),'conhecimentoRetido.js - getClientes():',listCli)    
+      return retorno
+    }
   
     for await (cli of listCli ) {                                 // Loop Clientes CF
         let raiz   = cli.RAIZ

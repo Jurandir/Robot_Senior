@@ -2,7 +2,7 @@
 
 // PROD-15/10/2021
 
-const moment                 = require('moment')
+const moment         = require('moment')
 const fs             = require('fs')
 const path           = require('path')
 const sqlFileName    = path.join(__dirname, '../../sql/CF2/consultas/comprovantes.SQL')

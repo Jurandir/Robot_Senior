@@ -37,7 +37,11 @@ FROM softran_termaco.dbo.gtcmoven         OUN                                   
      JOIN SIC..CONFIRMAFACIL           CF  ON CF.CdEmpresa = OUN.CdEmpresa AND CF.NrSeqControle = OUN.NrSeqControle 
 LEFT JOIN SIC..CONFIRMAFACILDEPARA     DP  ON DP.ID_SENIOR = OUN.CdOcorrencia               -- DE PARA ( SENIOR -> CONFIRMAFACIL )
 LEFT JOIN SIC..CONFIRMAFACILOCORRENCIA CO  ON CO.CONFIRMAFACIL_ID = CF.ID AND CO.CdEmpresa = OUN.CdEmpresa AND CO.NrSeqControle = OUN.NrSeqControle  AND CO.CdSequencia = OUN.CdSequencia AND CO.OCORRENCIA_ID = ISNULL(DP.ID_CONFIRMAFACIL,OUN.CdOcorrencia) -- AJUSTE-18-10-2021
-WHERE (isnull(OCO.InExibehist, 0) = 0 OR OUN.CdOcorrencia=219)               -- 219 = AGUARDANDO AGENDAMENTO/SOLICITADO AGENDA
+WHERE (isnull(OCO.InExibehist, 0) = 0 OR OUN.CdOcorrencia IN (219,112,031,105) )     
+                                                           -- 219 = AGUARDANDO AGENDAMENTO/SOLICITADO AGENDA
+                                                           -- 112 = ENTREGA PARCIAL COM RESSALVA 
+                                                           -- 031 = ENTREGA COM INDENIZACAO EFETUADA 
+                                                           -- 105 = CLIENTE RETIROU MERCADORIA EM DEPOSITO – ENTREGUE
   AND OUN.CdOcorrencia not in (0,899)
   AND CO.CdEmpresa is null  -- não existe em "CO"
   AND CF.FASE_ID < 5
