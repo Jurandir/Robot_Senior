@@ -14,6 +14,11 @@ async function enviaDados(itn) {
 
     let dados = await sqlQuery(sqlInit)
 
+    if(!Array.isArray(dados)) {
+        console.log(moment().format(),'enviaDados.js - enviaDados():',dados)    
+        return 0
+    }
+
     for await (let itn of dados) {
         let ret_json = await montaXML(itn)
         console.log(moment().format(),'- Arquivo :',ret_json.fullName) 
