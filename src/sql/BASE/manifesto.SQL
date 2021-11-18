@@ -1,5 +1,5 @@
 SELECT  TOP 10 
-   ,n.NrPlaca
+   n.NrPlaca
    ,*
 FROM softran_termaco.dbo.gtcconhe a
 JOIN softran_termaco.dbo.GTCManCn m ON m.CdEmpresa = a.CdEmpresa AND m.NrSeqControle = a.NrSeqControle
