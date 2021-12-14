@@ -27,17 +27,32 @@ SELECT TOP 10
 	,OUN.NrSeqControle       AS NrSeqControle
 	,OUN.CdSequencia         AS CdSequencia
 
-FROM softran_termaco.dbo.gtcmoven      OUN                                                  -- Movimento das Ocorrencias
-     JOIN softran_termaco.dbo.gtchisen OCO ON OCO.cdhistoricoentrega = OUN.cdocorrencia     -- Ocorrencias
-     JOIN SIC.dbo.ITRACK_DANFE          IT ON IT.CdEmpresa = OUN.CdEmpresa AND IT.NrSeqControle = OUN.NrSeqControle 
-WHERE 
-      (isnull(OCO.InExibehist, 0) = 0 OR OUN.CdOcorrencia=219)               -- 219 = AGUARDANDO AGENDAMENTO/SOLICITADO AGENDA
-  AND NOT EXISTS ( SELECT 1 FROM SIC..ITRACK_OCORRENCIA CO    WHERE CO.ITRACK_DANFE_ID = IT.ID AND CO.CdEmpresa = OUN.CdEmpresa AND CO.NrSeqControle = OUN.NrSeqControle  AND CO.CdSequencia = OUN.CdSequencia AND CO.OCORRENCIA_ID = OUN.CdOcorrencia ) 
+FROM SIC.dbo.ITRACK_DANFE           IT
+JOIN softran_termaco.dbo.GTCNf     NFR ON NFR.NrChaveAcessoNFe   = IT.CHAVE               -- NOTA FISCAL
+JOIN softran_termaco.dbo.gtcnfcon  LNK ON NFR.CdRemetente        = LNK.CdInscricao AND 
+                                          NFR.NrSerie            = LNK.NrSerie     AND 
+										  NFR.NrNotaFiscal       = LNK.NrNotaFiscal       -- Link NF x CTRC
+JOIN softran_termaco.dbo.gtcconhe  CNH ON CNH.CdEmpresa          = LNK.CdEmpresa   AND 
+                                          CNH.NrSeqControle      = LNK.NrSeqControle      -- CTRC
+JOIN softran_termaco.dbo.gtcconce  CTE ON CTE.CdEmpresa          = CNH.CdEmpresa	 AND 
+                                          CTE.NrSeqControle      = CNH.NrSeqControle      -- CTE  
+JOIN softran_termaco.dbo.gtcmoven  OUN ON OUN.CdEmpresa          = CNH.CdEmpresa   AND
+                                          OUN.NrSeqControle      = CNH.NrSeqControle      -- Movimento das Ocorrencias
+JOIN softran_termaco.dbo.gtchisen  OCO ON OCO.cdhistoricoentrega = OUN.cdocorrencia       -- Ocorrencias
+WHERE 1=1
+  AND ( CNH.InTipoEmissao in (00,01,02,03,09,11,12,14) or ( CNH.InTipoEmissao = 05 and CNH.InTpCTE = 00) )
+  AND CTE.insituacaosefaz = 100
+  AND  (isnull(OCO.InExibehist, 0) = 0 OR OUN.CdOcorrencia=219)               -- 219 = AGUARDANDO AGENDAMENTO/SOLICITADO AGENDA
+  AND NOT EXISTS ( SELECT 1 FROM SIC..ITRACK_OCORRENCIA CO    WHERE CO.ITRACK_DANFE_ID = IT.ID             AND 
+                                                                    CO.CdEmpresa       = OUN.CdEmpresa     AND 
+																	CO.NrSeqControle   = OUN.NrSeqControle AND 
+																	CO.CdSequencia     = OUN.CdSequencia   AND 
+																	CO.OCORRENCIA_ID = OUN.CdOcorrencia ) 
   AND OUN.CdOcorrencia NOT IN ( 000,210,801,899,999 )
   AND IT.FASE_ID < 5
-ORDER BY 
+ORDER BY
+   IT.ID,
    CAST(CONCAT(FORMAT(OUN.DtMovimento,'yyyy-MM-dd'),' ', FORMAT(OUN.HRMovimento,'HH:mm:ss')) as datetime) 
-
 ;	
 
 OPEN Ocorrencia_Cursor;  
