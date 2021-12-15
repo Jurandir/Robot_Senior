@@ -1,4 +1,4 @@
--- 10/09/2021 10:33 - OCORRENCIAS DIVERSAS - MANUAIS (iTrack)
+-- 15/12/2021 14:34 - OCORRENCIAS DIVERSAS - MANUAIS (iTrack)
 SET XACT_ABORT ON
 
 DECLARE @ITRACK_DANFE_ID  as INT
@@ -18,11 +18,11 @@ SELECT TOP 10
      IT.ID                   AS ITRACK_DANFE_ID
 	,CAST(CONCAT(FORMAT(OUN.DtMovimento,'yyyy-MM-dd'),' ', FORMAT(OUN.HRMovimento,'HH:mm:ss')) as datetime) 
 	                         AS OCORRENCIA_DATA
-	,OUN.CdOcorrencia        AS OCORRENCOA_ID
+  ,(CASE WHEN OUN.CdOcorrencia=105 THEN 001 ELSE OUN.CdOcorrencia END) AS OCORRENCOA_ID
 	,OCO.DsHistoricoEntrega  AS OCORRENCIA_NOME
 	,OUN.DsComplementoOcorr  AS OCORRENCIA_OBS
-    ,OUN.NrDoctoIdentPessoal AS RECEBEDOR_DOC
-    ,OUN.DsContato           AS RECEBEDOR_NOME
+  ,OUN.NrDoctoIdentPessoal AS RECEBEDOR_DOC
+  ,OUN.DsContato           AS RECEBEDOR_NOME
 	,OUN.CdEmpresa           AS CdEmpresa
 	,OUN.NrSeqControle       AS NrSeqControle
 	,OUN.CdSequencia         AS CdSequencia
@@ -31,7 +31,7 @@ FROM SIC.dbo.ITRACK_DANFE           IT
 JOIN softran_termaco.dbo.GTCNf     NFR ON NFR.NrChaveAcessoNFe   = IT.CHAVE               -- NOTA FISCAL
 JOIN softran_termaco.dbo.gtcnfcon  LNK ON NFR.CdRemetente        = LNK.CdInscricao AND 
                                           NFR.NrSerie            = LNK.NrSerie     AND 
-										  NFR.NrNotaFiscal       = LNK.NrNotaFiscal       -- Link NF x CTRC
+										                      NFR.NrNotaFiscal       = LNK.NrNotaFiscal       -- Link NF x CTRC
 JOIN softran_termaco.dbo.gtcconhe  CNH ON CNH.CdEmpresa          = LNK.CdEmpresa   AND 
                                           CNH.NrSeqControle      = LNK.NrSeqControle      -- CTRC
 JOIN softran_termaco.dbo.gtcconce  CTE ON CTE.CdEmpresa          = CNH.CdEmpresa	 AND 
@@ -43,8 +43,9 @@ WHERE 1=1
   AND ( CNH.InTipoEmissao in (00,01,02,03,09,11,12,14) or ( CNH.InTipoEmissao = 05 and CNH.InTpCTE = 00) )
   AND CTE.insituacaosefaz = 100
   AND  (isnull(OCO.InExibehist, 0) = 0 OR OUN.CdOcorrencia=219)               -- 219 = AGUARDANDO AGENDAMENTO/SOLICITADO AGENDA
-  AND NOT EXISTS ( SELECT 1 FROM SIC..ITRACK_OCORRENCIA CO    WHERE CO.ITRACK_DANFE_ID = IT.ID             AND 
-                                                                    CO.CdEmpresa       = OUN.CdEmpresa     AND 
+  AND NOT EXISTS ( SELECT 1 FROM SIC..ITRACK_OCORRENCIA CO    
+                            WHERE CO.ITRACK_DANFE_ID = IT.ID             AND 
+                                  CO.CdEmpresa       = OUN.CdEmpresa     AND 
 																	CO.NrSeqControle   = OUN.NrSeqControle AND 
 																	CO.CdSequencia     = OUN.CdSequencia   AND 
 																	CO.OCORRENCIA_ID = OUN.CdOcorrencia ) 
@@ -128,3 +129,5 @@ CLOSE Ocorrencia_Cursor
 ;  
 DEALLOCATE Ocorrencia_Cursor
 ;  
+-- REGRAS APLICADAS: 
+-- 2.2 -  Ocorrência 105-CLIENTE RETIROU MERCADORIA EM DEPOSITO - ENTREGUE deve ter "de > para" 001-ENTREGA REALIZADA NORMALMENTE
