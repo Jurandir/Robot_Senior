@@ -1,4 +1,5 @@
 // 08/09/2021 13:52 - INICIA PROCESSO DE MONITORAMENTO (BD)
+// 20/12/2021 - iTrack Ajustes concluidos
 
 const sqlExec       = require('../../connection/sqlExSENIOR')
 
