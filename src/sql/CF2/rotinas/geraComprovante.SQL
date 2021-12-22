@@ -15,8 +15,8 @@ BEGIN TRY
           ,999                               AS OCORRENCIA_ID
           ,'COMPROVANTE DE ENTREGA'          AS OCORRENCIA_NOME
           ,CO.OCORRENCIA_DATA                AS OCORRENCIA_DATA
-          ,CF.CdEmpresa
-          ,CF.NrSeqControle
+          ,CO.CdEmpresa
+          ,CO.NrSeqControle
           ,2
          FROM SIC..CONFIRMAFACIL CF
 		     JOIN SIC..CONFIRMAFACILOCORRENCIA CO ON CO.CONFIRMAFACIL_ID = CF.ID AND CO.OCORRENCIA_ID = 1 AND CO.FLAG_SEND = 1

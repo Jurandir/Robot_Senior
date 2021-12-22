@@ -21,7 +21,7 @@ const updFlagsErros = async (dados,response) => {
 
     if(!list) {
         list = []
-        console.log(moment().format(),'- ERRO - updFlagsErros.js ')
+        console.log(moment().format(),'- ERRO - updFlagsErros.js ',result)
         return result
     }
     
