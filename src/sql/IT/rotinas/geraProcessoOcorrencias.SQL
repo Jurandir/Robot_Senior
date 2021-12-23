@@ -48,7 +48,7 @@ WHERE 1=1
                                   CO.CdEmpresa       = OUN.CdEmpresa     AND 
 																	CO.NrSeqControle   = OUN.NrSeqControle AND 
 																	CO.CdSequencia     = OUN.CdSequencia   AND 
-																	CO.OCORRENCIA_ID = OUN.CdOcorrencia ) 
+																	CO.OCORRENCIA_ID   = (CASE WHEN OUN.CdOcorrencia=105 THEN 001 ELSE OUN.CdOcorrencia END) ) 
   AND OUN.CdOcorrencia NOT IN ( 000,210,801,899,999 )
   AND IT.FASE_ID < 5
 ORDER BY
