@@ -51,7 +51,8 @@ JOIN softran_termaco.dbo.GTCMan        MAN ON MAN.NrManifesto     = LMA.NrManife
 LEFT JOIN softran_termaco.dbo.sisempre FDT ON FDT.cdempresa       = CNH.cdempresadestino -- Filial Destino
 
 WHERE  
-      CNH.InTipoEmissao   = 00                     --- CTRC Normal
+     -- CNH.InTipoEmissao   = 00                     --- CTRC Normal
+     ( CNH.InTipoEmissao in (00,01,02,03,09,11,12,14) or ( CNH.InTipoEmissao = 05 and CNH.InTpCTE = 00) )      
   AND CTE.insituacaosefaz = 100                    --- REGISTRADO NA SEFAZ
   AND SUBSTRING( CNH.CdInscricao,1,8) ='89674782'  --- JOHN DEERE BRASIL LTDA (89674782001391)
   AND NOT EXISTS ( SELECT 1 FROM SIC..JOHNDEERE_INFO INF
@@ -69,3 +70,4 @@ UPDATE SIC..JOHNDEERE_INFO
  WHERE CONTROLNUMBER = '000000000'
 ;
  
+-- 28/12/2021 10:00 - Ajustado tipo de conhecimento

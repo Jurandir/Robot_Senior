@@ -44,8 +44,9 @@ LEFT JOIN softran_termaco.dbo.sisempre FDT ON FDT.cdempresa       = CNH.cdempres
 JOIN softran_termaco.dbo.GTCManCn      LMA ON LMA.CdEmpresa       = CNH.CdEmpresa AND LMA.NrSeqControle = CNH.NrSeqControle
 JOIN softran_termaco.dbo.GTCMan        MAN ON MAN.NrManifesto     = LMA.NrManifesto
 WHERE  
-      CNH.InTipoEmissao = 00                      --- CTRC Normal
-  AND CNH.InImpressao   = 1                       --- Impresso
+--      CNH.InTipoEmissao = 00                      --- CTRC Normal
+--  AND CNH.InImpressao   = 1                       --- Impresso
+     ( CNH.InTipoEmissao in (00,01,02,03,09,11,12,14) or ( CNH.InTipoEmissao = 05 and CNH.InTpCTE = 00) ) 
   AND MOV.CdOcorrencia  = 102	                  --- "CHEGADA NA FILIAL DE TRANSBORDO"
   AND SUBSTRING( CNH.CdInscricao,1,8) ='89674782' --- JOHN DEERE BRASIL LTDA (89674782001391)
   AND NOT EXISTS ( SELECT 1 FROM SIC..JOHNDEERE_INFO INF
@@ -64,3 +65,5 @@ UPDATE SIC..JOHNDEERE_INFO
    SET CONTROLNUMBER = FORMAT( CODEINSERT ,'000000000') 
  WHERE CONTROLNUMBER = '000000000'
 ;
+
+-- 28/12/2021 10:05 - Ajustado tipo de conhecimento e desconsidera impressão
