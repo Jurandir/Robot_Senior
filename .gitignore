@@ -1,5 +1,8 @@
 /node_modules
-/config
+./config
 .env
 /log
 /logs
+./config/dbERP.json
+./config/dbSENIOR.json
+./config/dbTMS.json
