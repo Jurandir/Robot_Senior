@@ -3,6 +3,6 @@
 .env
 /log
 /logs
-./config/dbERP.json
-./config/dbSENIOR.json
-./config/dbTMS.json
+./.config/dbERP.json
+./.config/dbSENIOR.json
+./.config/dbTMS.json
