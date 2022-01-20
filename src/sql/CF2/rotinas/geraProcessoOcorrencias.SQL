@@ -36,7 +36,7 @@ FROM SIC..CONFIRMAFACIL            CF
 JOIN softran_termaco.dbo.GTCNf     NFR ON NFR.NrChaveAcessoNFe   = CF.CHAVE               -- NOTA FISCAL
 JOIN softran_termaco.dbo.gtcnfcon  LNK ON NFR.CdRemetente        = LNK.CdInscricao AND 
                                           NFR.NrSerie            = LNK.NrSerie     AND 
-					                      NFR.NrNotaFiscal       = LNK.NrNotaFiscal       -- Link NF x CTRC
+					                                NFR.NrNotaFiscal       = LNK.NrNotaFiscal       -- Link NF x CTRC
 JOIN softran_termaco.dbo.gtcconhe  CNH ON CNH.CdEmpresa          = LNK.CdEmpresa   AND 
                                           CNH.NrSeqControle      = LNK.NrSeqControle      -- CTRC
 JOIN softran_termaco.dbo.gtcconce  CTE ON CTE.CdEmpresa          = CNH.CdEmpresa	 AND 

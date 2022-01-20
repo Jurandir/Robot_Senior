@@ -28,6 +28,7 @@ SELECT DISTINCT
 	,CNH.NrSeqControle                                             as NrSeqControle
 	,0                                                             as FASE_ID
 	,2                                                             as VER_ID
+	,CFF.CNPJ                                                      as BASE_CNPJ
 FROM softran_termaco.dbo.gtcconhe  CNH
 JOIN softran_termaco.dbo.gtcnfcon  LNK  ON LNK.CdEmpresa   = CNH.CdEmpresa   AND LNK.NrSeqControle = CNH.NrSeqControle
 JOIN softran_termaco.dbo.gtcnf     NFR  ON NFR.CdRemetente = LNK.CdInscricao AND NFR.NrSerie       = LNK.NrSerie AND NFR.NrNotaFiscal = LNK.NrNotaFiscal 
