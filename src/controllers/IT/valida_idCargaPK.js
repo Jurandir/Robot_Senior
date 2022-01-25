@@ -21,7 +21,9 @@ const valida_idCargaPK = async (cfg) => {
      AND ( DF.DT_UPDATE    IS NULL OR DATEDIFF(minute,DF.DT_UPDATE   , CURRENT_TIMESTAMP) > 30) ---UPDATE    depois de 30 min da ultima tentativa
      AND ( DF.DT_VALIDACAO IS NULL OR DATEDIFF(minute,DF.DT_VALIDACAO, CURRENT_TIMESTAMP) > 30) ---VALIDACAO depois de 30 min da ultima tentativa
      AND ( DF.DT_ENTREGA   IS NULL OR DATEDIFF(MONTH, DF.DT_ENTREGA,   CURRENT_TIMESTAMP) < 10) ---Pesquisa até 10 dias apos a data da entrega     
-    `
+     
+     ORDER BY DF.DT_EMISSAO DESC
+     `
     try {
 
         let params
@@ -33,7 +35,7 @@ const valida_idCargaPK = async (cfg) => {
             let api = await get_IdCargaPK(itn.CHAVE,itn.TOKEN)
 
             if(api.success) {
-                if(api.data.data.count) {
+                if( api.data.success && api.data.data.count) {
                     params = {
                         idCargaPK     : api.data.data.list[0].carga.idCargaPk, 
                         CdEmpresa     : itn.CdEmpresa, 

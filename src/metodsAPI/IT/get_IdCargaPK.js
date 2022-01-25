@@ -7,12 +7,21 @@ const server   =  (config.run=='Test') ? config.testeURL : config.producaoURL
 
 const get_IdCargaPK = async (danfe,token) => {
 
+    let urlToken = token
+
     let params = {
-        token: token ,
+        token:  urlToken,
         danfe: danfe,
     }
 
-    return await loadAPI(method,endpoint,server,params)
+    let ret = await loadAPI(method,endpoint,server,params)
+    
+    // console.log('token',token)
+    // console.log('url token',urlToken)
+    console.log('danfe',danfe)
+    console.log('ret',ret)
+    
+    return ret
 
 //   let temp = 'https://integracao.itrackbrasil.com.br/ws' 
 //   return await loadAPI(method,endpoint,temp,params)

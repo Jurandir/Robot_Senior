@@ -14,7 +14,7 @@ DECLARE @NrSeqControle    as BIGINT
 DECLARE @CdSequencia      as INT
 
 DECLARE Ocorrencia_Cursor CURSOR FOR 
-SELECT TOP 10
+SELECT TOP 150
      IT.ID                   AS ITRACK_DANFE_ID
 	,CAST(CONCAT(FORMAT(OUN.DtMovimento,'yyyy-MM-dd'),' ', FORMAT(OUN.HRMovimento,'HH:mm:ss')) as datetime) 
 	                         AS OCORRENCIA_DATA

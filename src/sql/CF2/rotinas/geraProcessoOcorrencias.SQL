@@ -2,6 +2,7 @@
 -- PROD-15/10/2021
 
 -- Confirma Facil (20/12/2021)
+-- Ajuste DePara Sênior (24/01/2022)
 
 SET XACT_ABORT ON
 
@@ -19,11 +20,12 @@ DECLARE @CdSequencia                as INT
 
 
 DECLARE Ocorrencia_Cursor CURSOR FOR 
+
 SELECT TOP 50
      CF.ID                   AS CONFIRMAFACIL_ID
 	,CAST(CONCAT(FORMAT(OUN.DtMovimento,'yyyy-MM-dd'),' ', FORMAT(OUN.HRMovimento,'HH:mm:ss')) as datetime) 
 	                         AS OCORRENCIA_DATA
-    ,ISNULL(DP.ID_CONFIRMAFACIL,OUN.CdOcorrencia) AS OCORRENCOA_ID
+    ,ISNULL(DP.CdHistoricoRemetente,OUN.CdOcorrencia) AS OCORRENCIA_ID   --- AJUSTE (DEPARA)
 	,OCO.DsHistoricoEntrega  AS OCORRENCIA_NOME
 	,OUN.DsComplementoOcorr  AS OCORRENCIA_OBS
     ,OUN.NrDoctoIdentPessoal AS RECEBEDOR_DOC
@@ -44,30 +46,27 @@ JOIN softran_termaco.dbo.gtcconce  CTE ON CTE.CdEmpresa          = CNH.CdEmpresa
 JOIN softran_termaco.dbo.gtcmoven  OUN ON OUN.CdEmpresa          = CNH.CdEmpresa   AND
                                           OUN.NrSeqControle      = CNH.NrSeqControle      -- Movimento das Ocorrencias
 JOIN softran_termaco.dbo.gtchisen  OCO ON OCO.cdhistoricoentrega = OUN.cdocorrencia       -- Ocorrencias
-LEFT JOIN SIC..CONFIRMAFACILDEPARA  DP ON DP.ID_SENIOR           = OUN.CdOcorrencia       -- DE PARA ( SENIOR -> CONFIRMAFACIL )
+LEFT JOIN softran_termaco.dbo.GTCVHist DP  ON DP.CdInscricao = CF.BASE_CNPJ and DP.CdHistoricoEntrega = OUN.cdocorrencia --- AJUSTE (DEPARA)
 
 WHERE 1=1
   AND ( CNH.InTipoEmissao in (00,01,02,03,09,11,12,14) or ( CNH.InTipoEmissao = 05 and CNH.InTpCTE = 00) )
   AND CTE.insituacaosefaz = 100 
-  
-  AND (isnull(OCO.InExibehist, 0) = 0 OR OUN.CdOcorrencia IN (219,112,031,105) )     
-                                                           -- 219 = AGUARDANDO AGENDAMENTO/SOLICITADO AGENDA
-                                                           -- 112 = ENTREGA PARCIAL COM RESSALVA 
-                                                           -- 031 = ENTREGA COM INDENIZACAO EFETUADA 
-                                                           -- 105 = CLIENTE RETIROU MERCADORIA EM DEPOSITO – ENTREGUE
+
+  AND ( isnull(OCO.InExibehist, 0) = 0 AND isnull(DP.InGeraOcorrencia, 1) = 1 ) --- AJUSTE (DEPARA)
 
   AND NOT EXISTS ( SELECT 1 FROM SIC..CONFIRMAFACILOCORRENCIA CO  
                             WHERE CO.CONFIRMAFACIL_ID = CF.ID             AND 
                                   CO.CdEmpresa        = OUN.CdEmpresa     AND 
 								  CO.NrSeqControle    = OUN.NrSeqControle AND 
-								  CO.CdSequencia      = OUN.CdSequencia   AND 
-								  CO.OCORRENCIA_ID    = ISNULL(DP.ID_CONFIRMAFACIL,OUN.CdOcorrencia) ) 
+								  CO.CdSequencia      = OUN.CdSequencia   AND
+								  CO.OCORRENCIA_ID    = ISNULL(DP.CdHistoricoRemetente,OUN.CdOcorrencia )  ) --- AJUSTE (DEPARA) 
 
   AND OUN.CdOcorrencia NOT IN ( 000,210,801,899,999 )
   AND CF.FASE_ID < 5
 ORDER BY
    CF.ID,
    CAST(CONCAT(FORMAT(OUN.DtMovimento,'yyyy-MM-dd'),' ', FORMAT(OUN.HRMovimento,'HH:mm:ss')) as datetime) 
+
 ;	
 
 OPEN Ocorrencia_Cursor;  
