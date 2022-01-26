@@ -1,6 +1,6 @@
 -- 09/09/2021 17:38 - PROCESSO DE TRANSPORTE INICIADO - ITRACK
 
-SELECT TOP 10
+SELECT TOP 50
      DF.CHAVE                                              as content_danfe
 	,DF.IDCARGA                                            as content_idCargaFk
 	,FORMAT(CO.OCORRENCIA_DATA,'yyyy-MM-ddThh:mm:ss-03')   as content_dataOcorrencia

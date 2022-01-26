@@ -1,6 +1,7 @@
 -- 13/10/2021 13:29 - EM ROTA PARA ENTREGA - ("CONFIRMA FACIL V2")
 
 -- PROD-15/10/2021
+-- Ajuste DePara (Sênior) - 26/01/2022
 
 BEGIN TRY
     BEGIN TRANSACTION
@@ -10,12 +11,13 @@ BEGIN TRY
            SET CF.FASE_ID = 4,
                CF.DT_UPDATE = CURRENT_TIMESTAMP
           FROM SIC..CONFIRMAFACIL CF
-          JOIN SIC..CONFIRMAFACILDEPARA DP ON DP.ID_SENIOR = 100 -- Codigo no Sênior      
          WHERE CF.FASE_ID = 3 AND CF.DT_CHEGADA IS NOT NULL 
-           AND EXISTS (SELECT 1 FROM SIC..CONFIRMAFACILOCORRENCIA CO 
-                        WHERE CO.CONFIRMAFACIL_ID = CF.ID 
-                          AND CO.OCORRENCIA_ID = DP.ID_CONFIRMAFACIL )
-        -- CASO A (FASE < OU = 3) E EXISTIR OCORRENCIA = (DP.ID_CONFIRMAFACIL) GERADA, MUDA PARA FASE = 4        
+           AND EXISTS ( SELECT 1 
+                          FROM      SIC..CONFIRMAFACILOCORRENCIA CO
+                          LEFT JOIN softran_termaco.dbo.GTCVHist DP  ON DP.CdInscricao        = CF.BASE_CNPJ AND 
+                                                                        DP.CdHistoricoEntrega = 100 -- (CdHistoricoEntrega) Codigo no Sênior 
+                         WHERE CO.CONFIRMAFACIL_ID = CF.ID  
+                           AND CO.OCORRENCIA_ID    = ISNULL(DP.CdHistoricoRemetente, 100 ) )        -- (CdHistoricoRemetente) Codigo no Cliente 
         ;
     END
     ;
@@ -24,11 +26,14 @@ BEGIN TRY
         UPDATE CO
            SET OCORRENCIA_OBS =  CONCAT('A CAMINHO DO DESTINATÁRIO EM : ',CEP.DsLocal,' / ',CEP.DsUF)
           FROM SIC..CONFIRMAFACILOCORRENCIA     CO
-          JOIN SIC..CONFIRMAFACILDEPARA         DP ON DP.ID_SENIOR  = 100 -- Codigo no Sênior
-          JOIN softran_termaco.dbo.GTCConhe    CNH ON CNH.CdEmpresa = CO.CdEmpresa AND CNH.NrSeqControle = CO.NrSeqControle
-     LEFT JOIN softran_termaco.dbo.siscep      CEP ON CEP.NrCep     = CNH.NrCepEntrega  -- CEP Local Entrega
-         WHERE CO.OCORRENCIA_ID = DP.ID_CONFIRMAFACIL
-           AND CO.FLAG_SEND = 0 
+          JOIN softran_termaco.dbo.GTCVHist     DP ON DP.CdInscricao        = CF.BASE_CNPJ AND 
+                                                      DP.CdHistoricoEntrega = 100 -- (CdHistoricoEntrega) Codigo no Sênior (EM ROTA PARA ENTREGA)
+          JOIN softran_termaco.dbo.GTCConhe    CNH ON CNH.CdEmpresa     = CO.CdEmpresa AND 
+                                                      CNH.NrSeqControle = CO.NrSeqControle
+     LEFT JOIN softran_termaco.dbo.siscep      CEP ON CEP.NrCep         = CNH.NrCepEntrega  -- CEP Local Entrega
+         WHERE 
+               CO.OCORRENCIA_ID = ISNULL(DP.CdHistoricoRemetente, 100 ) ) -- (CdHistoricoRemetente) Codigo no Cliente
+           AND CO.FLAG_SEND     = 0 
            AND CO.OCORRENCIA_OBS IS NULL 
     END
     ;

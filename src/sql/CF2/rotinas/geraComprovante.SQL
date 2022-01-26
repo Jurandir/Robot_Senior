@@ -1,6 +1,7 @@
 -- 13/10/2021 15:40 - COMPROVANTE DE ENTREGA - ("CONFIRMA FACIL V2")
 
 -- PROD-15/10/2021
+-- Ajustes ( não aplicado o DePara ) - 26/01/2022
 
 SET XACT_ABORT ON
 
