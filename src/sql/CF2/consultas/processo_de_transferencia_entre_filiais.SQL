@@ -1,6 +1,7 @@
 -- 11/10/2021 16:20 - EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS -- ("CONFIRMA FACIL V2")
 
 -- PROD-15/10/2021
+-- Ajuste (DePara Sênior) - 28/01/2022
 
 SELECT TOP 10 -- tem que ser no maximo 10, porque a API da CF somente aceita no maximo 10 ocorrencias por envio
 	 CO.ID                                        AS FLAG_ID
@@ -22,7 +23,12 @@ JOIN SIC..CONFIRMAFACILCLIENTES   CFF ON CFF.FLAG_ATIVO = 1 AND
                                           (  CFF.RAIZ = SUBSTRING(CF.DESTINATARIO,1,8) ) )
 
 WHERE CO.FLAG_SEND = 0
-  AND CO.OCORRENCIA_ID = 128  -- codigo na ConfirmaFacil
+  -- AND CO.OCORRENCIA_ID = 128  -- codigo na ConfirmaFacil
+  AND CO.OCORRENCIA_ID = (SELECT TOP 1 X.CdHistoricoRemetente -- Codigo ConfirmaFacil 
+                            FROM softran_termaco.dbo.GTCVHist X
+                            JOIN SIC..CONFIRMAFACILCLIENTES   C ON C.CNPJ = X.CdInscricao
+                           WHERE X.CdHistoricoEntrega IN (128,101,102) -- EM TRANSFERENCIA ENTRE FILIAIS / CHEGADA NA FILIAL DE TRANSBORDO
+                             AND C.RAIZ = CFF.RAIZ )
   AND CF.FASE_ID < 9
 
   AND CFF.DT_VALIDADE  > CURRENT_TIMESTAMP   -- TOKEN valido

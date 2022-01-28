@@ -25,7 +25,13 @@ JOIN SIC..CONFIRMAFACILCLIENTES  CFF ON CFF.FLAG_ATIVO = 1 AND
                                           (  CFF.RAIZ = SUBSTRING(CF.DESTINATARIO,1,8) ) )
 
 WHERE CO.FLAG_SEND                   in (1,2)    -- 1 = Já enviado (119), 2 = tentou enviar e deu erro
-  AND CO.OCORRENCIA_ID               = 119  -- Codigo ConfirmaFacil
+--  AND CO.OCORRENCIA_ID               = 119  -- Codigo ConfirmaFacil
+  AND CO.OCORRENCIA_ID = (SELECT TOP 1 X.CdHistoricoRemetente -- Codigo ConfirmaFacil 
+                            FROM softran_termaco.dbo.GTCVHist X
+                            JOIN SIC..CONFIRMAFACILCLIENTES   C ON C.CNPJ = X.CdInscricao
+                           WHERE X.CdHistoricoEntrega in ( 84,119 ) -- ENTREGA RETIDA PARA CONFERENCIA
+                             AND C.RAIZ = CFF.RAIZ )  
+
   AND ISNULL(CO.OCORRENCIA_OBS,'*') <> 'ENTREGA REALIZADA'
   AND CF.FASE_ID                     < 9
   AND NOT EXISTS (SELECT 1 FROM SIC..CONFIRMAFACILOCORRENCIA ENT 

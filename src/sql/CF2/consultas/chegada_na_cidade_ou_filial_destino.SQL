@@ -22,7 +22,13 @@ JOIN SIC..CONFIRMAFACILCLIENTES   CFF ON CFF.FLAG_ATIVO = 1 AND
                                           (  CFF.RAIZ = SUBSTRING(CF.DESTINATARIO,1,8) ) )
 
 WHERE CO.FLAG_SEND = 0
-  AND CO.OCORRENCIA_ID = 098 -- Codigo ConfirmaFacil
+--  AND CO.OCORRENCIA_ID = 098 -- Codigo ConfirmaFacil
+  AND CO.OCORRENCIA_ID = (SELECT TOP 1 X.CdHistoricoRemetente -- Codigo ConfirmaFacil 
+                            FROM softran_termaco.dbo.GTCVHist X
+                            JOIN SIC..CONFIRMAFACILCLIENTES   C ON C.CNPJ = X.CdInscricao
+                           WHERE X.CdHistoricoEntrega = 98
+                             AND C.RAIZ = CFF.RAIZ )  
+
   AND CF.FASE_ID < 9
 
   AND CFF.DT_VALIDADE  > CURRENT_TIMESTAMP   -- TOKEN valido

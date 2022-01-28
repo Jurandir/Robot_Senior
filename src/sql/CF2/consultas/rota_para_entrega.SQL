@@ -1,6 +1,7 @@
 -- 13/10/2021 13:52 - EM ROTA PARA ENTREGA - ("CONFIRMA FACIL V2")
 
 -- PROD-15/10/2021
+-- Ajuste (DePara Sênior) - 28/01/2022
 
 SELECT TOP 10 -- Limite de 10 linhas por lote de envio na API CF
 	 CO.ID                                        AS FLAG_ID
@@ -22,7 +23,12 @@ JOIN SIC..CONFIRMAFACILCLIENTES  CFF ON CFF.FLAG_ATIVO = 1 AND
                                           (  CFF.RAIZ = SUBSTRING(CF.DESTINATARIO,1,8) ) )
 
 WHERE CO.FLAG_SEND     = 0
-  AND CO.OCORRENCIA_ID = 110  -- Codigo ConfirmaFacil
+  -- AND CO.OCORRENCIA_ID = 110  -- Codigo ConfirmaFacil
+  AND CO.OCORRENCIA_ID = (SELECT TOP 1 X.CdHistoricoRemetente -- Codigo ConfirmaFacil 
+                            FROM softran_termaco.dbo.GTCVHist X
+                            JOIN SIC..CONFIRMAFACILCLIENTES   C ON C.CNPJ = X.CdInscricao
+                           WHERE X.CdHistoricoEntrega = 110
+                             AND C.RAIZ = CFF.RAIZ )
   AND CF.FASE_ID < 9
   AND CAST( CO.OCORRENCIA_DATA AS date ) <= CAST( CURRENT_TIMESTAMP AS date ) -- Testa envio apenas apos não está no futuro
 
