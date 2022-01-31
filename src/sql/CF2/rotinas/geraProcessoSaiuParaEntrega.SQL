@@ -26,13 +26,14 @@ BEGIN TRY
         UPDATE CO
            SET OCORRENCIA_OBS =  CONCAT('A CAMINHO DO DESTINATÁRIO EM : ',CEP.DsLocal,' / ',CEP.DsUF)
           FROM SIC..CONFIRMAFACILOCORRENCIA     CO
+          JOIN SIC..CONFIRMAFACIL               CF ON CF.ID                 = CO.CONFIRMAFACIL_ID
           JOIN softran_termaco.dbo.GTCVHist     DP ON DP.CdInscricao        = CF.BASE_CNPJ AND 
                                                       DP.CdHistoricoEntrega = 100 -- (CdHistoricoEntrega) Codigo no Sênior (EM ROTA PARA ENTREGA)
           JOIN softran_termaco.dbo.GTCConhe    CNH ON CNH.CdEmpresa     = CO.CdEmpresa AND 
                                                       CNH.NrSeqControle = CO.NrSeqControle
      LEFT JOIN softran_termaco.dbo.siscep      CEP ON CEP.NrCep         = CNH.NrCepEntrega  -- CEP Local Entrega
          WHERE 
-               CO.OCORRENCIA_ID = ISNULL(DP.CdHistoricoRemetente, 100 ) ) -- (CdHistoricoRemetente) Codigo no Cliente
+               CO.OCORRENCIA_ID = ISNULL(DP.CdHistoricoRemetente, 100 ) -- (CdHistoricoRemetente) Codigo no Cliente
            AND CO.FLAG_SEND     = 0 
            AND CO.OCORRENCIA_OBS IS NULL 
     END

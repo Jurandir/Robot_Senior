@@ -47,7 +47,7 @@ BEGIN TRY
 		JOIN softran_termaco.dbo.sisempre    EMP ON EMP.CdEmpresa = CNH.CdEmpresaDestino -- Filial Destino
 		LEFT JOIN softran_termaco.dbo.siscep CEP ON CEP.NrCep     = EMP.NrCEP
        WHERE CO.OCORRENCIA_OBS IS NULL 
-         AND CO.OCORRENCIA_ID = ISNULL(DP.CdHistoricoRemetente, 089 ) ) -- (CdHistoricoRemetente) Codigo no Cliente
+         AND CO.OCORRENCIA_ID = ISNULL(DP.CdHistoricoRemetente, 089 ) -- (CdHistoricoRemetente) Codigo no Cliente
 
     END
     ;

@@ -44,7 +44,7 @@ BEGIN TRY
           JOIN softran_termaco.dbo.sisempre  ORIG ON ORIG.CdEmpresa = CNH.CdEmpresa        -- Filial Origem
           JOIN softran_termaco.dbo.sisempre  DEST ON DEST.CdEmpresa = CNH.CdEmpresaDestino -- Filial Destino
          WHERE CO.OCORRENCIA_OBS IS NULL 
-           AND CO.OCORRENCIA_ID = ISNULL(DP.CdHistoricoRemetente, 101 ) ) -- (CdHistoricoRemetente) Codigo no Cliente 
+           AND CO.OCORRENCIA_ID = ISNULL(DP.CdHistoricoRemetente, 101 ) -- (CdHistoricoRemetente) Codigo no Cliente 
         ;        
 
     COMMIT TRANSACTION
