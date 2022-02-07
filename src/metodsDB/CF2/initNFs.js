@@ -25,7 +25,7 @@ const initNFs = async () => {
     ${sqlInitNF}
     WHERE 
          -- CNH.InTipoEmissao in ( 00, 11 , 12 ) 
-         ( CNH.InTipoEmissao in (00,01,02,03,09,11,12,14) or ( CNH.InTipoEmissao = 05 and CNH.InTpCTE = 00) )
+         ( CNH.InTipoEmissao in (00,01,02,03,09,11,12,13,14) or ( CNH.InTipoEmissao = 05 and CNH.InTpCTE = 00) )
      AND CNH.DtEmissao  BETWEEN (CURRENT_TIMESTAMP${faixa_down}) AND (CURRENT_TIMESTAMP${faixa_up})
      AND NFR.NrChaveAcessoNFe IS NOT NULL  
      AND CTE.insituacaosefaz = 100

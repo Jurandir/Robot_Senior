@@ -10,7 +10,7 @@ const logEventos      = require('../../helpers/logEventos')
 
 const valida_idCargaPK = async (cfg) => {                                                
     let sql = `
-    SELECT TOP 100 DF.* ,TK.TOKEN
+    SELECT TOP 150 DF.* ,TK.TOKEN
 	,(SELECT TOP 1 1 FROM SIC.dbo.ITRACK_CLIENTE CL 
 	  WHERE (CL.RAIZ_CNPJ=SUBSTRING(DF.EMBARCADOR,1,8) 
 	     OR CL.RAIZ_CNPJ=SUBSTRING(DF.DESTINATARIO,1,8))
@@ -18,12 +18,12 @@ const valida_idCargaPK = async (cfg) => {
     FROM SIC.dbo.ITRACK_DANFE DF
     JOIN SIC.dbo.ITRACK_TOKEN TK ON TK.CNPJ = DF.TRANSPORTADOR
    WHERE DF.IDCARGA = 0
-     AND (DATEDIFF(day, DF.DT_EMISSAO,   CURRENT_TIMESTAMP) < 30 )                              ---Pesquisa até 30 dias apos a data da emissão 
+     AND (DATEDIFF(day, DF.DT_EMISSAO,   CURRENT_TIMESTAMP) < 60 )                              ---Pesquisa até 60 dias apos a data da emissão 
      AND ( DF.DT_UPDATE    IS NULL OR DATEDIFF(minute,DF.DT_UPDATE   , CURRENT_TIMESTAMP) > 30) ---UPDATE    depois de 30 min da ultima tentativa
      AND ( DF.DT_VALIDACAO IS NULL OR DATEDIFF(minute,DF.DT_VALIDACAO, CURRENT_TIMESTAMP) > 30) ---VALIDACAO depois de 30 min da ultima tentativa
      AND ( DF.DT_ENTREGA   IS NULL OR DATEDIFF(day, DF.DT_ENTREGA,   CURRENT_TIMESTAMP) < 15)   ---Pesquisa até 15 dias apos a data da entrega     
 
-     ORDER BY DF.DT_EMISSAO DESC
+     ORDER BY DF.DT_UPDATE --  DF.DT_EMISSAO DESC
      `
     try {
 

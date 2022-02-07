@@ -6,7 +6,18 @@ const endpoint = '/User/Carga/Tracking/Ocorrencia/Danfe'
 const server   =  (config.run=='Test') ? config.testeURL : config.producaoURL
 
 const enviaOcorrencias = async (body) => {
-    return await loadAPI(method,endpoint,server,body)
+
+    if(!body.content.idCargaFk) {
+        delete body.content.idCargaFk
+    }
+
+    // console.log('BODY:',body)
+
+    let ret = await loadAPI(method,endpoint,server,body)
+
+    // console.log('RET:',ret)    
+
+    return ret 
 }
 
 module.exports = enviaOcorrencias

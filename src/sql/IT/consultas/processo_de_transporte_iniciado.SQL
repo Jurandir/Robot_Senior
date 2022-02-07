@@ -1,5 +1,7 @@
 -- 09/09/2021 17:38 - PROCESSO DE TRANSPORTE INICIADO - ITRACK
 
+-- testes 01/02/2022
+
 SELECT TOP 50
      DF.CHAVE                                              as content_danfe
 	,DF.IDCARGA                                            as content_idCargaFk
@@ -19,4 +21,5 @@ WHERE DF.IDCARGA          > 0
   AND DF.FASE_ID          <= 1
   AND DF.FLAG_COMPROVANTE = 0
   AND ISNULL(CO.RESPOSTA_STATUS,0)  <> -1
-ORDER BY CO.OCORRENCIA_DATA
+
+ORDER BY CO.OCORRENCIA_DATA 

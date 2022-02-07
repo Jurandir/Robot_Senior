@@ -49,7 +49,7 @@ JOIN softran_termaco.dbo.gtchisen  OCO ON OCO.cdhistoricoentrega = OUN.cdocorren
 LEFT JOIN softran_termaco.dbo.GTCVHist DP  ON DP.CdInscricao = CF.BASE_CNPJ and DP.CdHistoricoEntrega = OUN.cdocorrencia --- AJUSTE (DEPARA)
 
 WHERE 1=1
-  AND ( CNH.InTipoEmissao in (00,01,02,03,09,11,12,14) or ( CNH.InTipoEmissao = 05 and CNH.InTpCTE = 00) )
+  AND ( CNH.InTipoEmissao in (00,01,02,03,09,11,12,13,14) or ( CNH.InTipoEmissao = 05 and CNH.InTpCTE = 00) )
   AND CTE.insituacaosefaz = 100 
 
   AND ( isnull(OCO.InExibehist, 0) = 0 AND isnull(DP.InGeraOcorrencia, 1) = 1 ) --- AJUSTE (DEPARA)

@@ -8,7 +8,7 @@ const path          = require('path')
 const sqlFileName   =  path.join(__dirname, '../../sql/IT/consultas/montaITRACK.SQL')
 const sqlInitNF     = fs.readFileSync(sqlFileName, "utf8")
 
-const faixa_down = '-30'
+const faixa_down = '-35'
 const faixa_up   = '+1'
 
 let flag_livre      = true
@@ -18,11 +18,11 @@ const initNFs = async (cli) => {
    let sql = `
     INSERT INTO SIC.dbo.ITRACK_DANFE ( EMBARCADOR,	NUMERO, SERIE,
      CHAVE, DT_EMISSAO, DT_EMBARQUE, DT_CHEGADA, DT_ENTREGA, DT_PREVISAO, DT_PREV_ORIGINAL,
-     VALOR, CTRC, DESTINATARIO, TRANSPORTADOR, DT_UPDATE, CdEmpresa, NrSeqControle, FASE_ID )
+     VALOR, CTRC, DESTINATARIO, TRANSPORTADOR, DT_UPDATE, CdEmpresa, NrSeqControle, FASE_ID, BASE_CNPJ )
     ${sqlInitNF}
     WHERE 
          -- CNH.InTipoEmissao in ( 00, 11 , 12 )
-         ( CNH.InTipoEmissao in (00,01,02,03,09,11,12,14) or ( CNH.InTipoEmissao = 05 and CNH.InTpCTE = 00) )
+         ( CNH.InTipoEmissao in (00,01,02,03,09,11,12,13,14) or ( CNH.InTipoEmissao = 05 and CNH.InTpCTE = 00) )
      AND ( EXISTS (SELECT 1 FROM SIC.dbo.ITRACK_CLIENTE WHERE RAIZ_CNPJ=SUBSTRING(CNH.CdRemetente,1,8) ) OR 
          EXISTS (SELECT 1 FROM SIC.dbo.ITRACK_CLIENTE WHERE RAIZ_CNPJ=SUBSTRING(CNH.CdDestinatario,1,8) ) OR 
          EXISTS (SELECT 1 FROM SIC.dbo.ITRACK_CLIENTE WHERE RAIZ_CNPJ=SUBSTRING(CNH.CdInscricao,1,8) ) )

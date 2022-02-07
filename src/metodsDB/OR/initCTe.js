@@ -23,7 +23,7 @@ const initCTe = async () => {
 
     WHERE 
     -- CNH.InTipoEmissao IN ( 00, 11 , 12 )
-    ( CNH.InTipoEmissao in (00,01,02,03,09,11,12,14) or ( CNH.InTipoEmissao = 05 and CNH.InTpCTE = 00) )
+    ( CNH.InTipoEmissao in (00,01,02,03,09,11,12,13,14) or ( CNH.InTipoEmissao = 05 and CNH.InTpCTE = 00) )
     AND ORI.NrChaveAcessoCTeOrigem  IS NOT NULL
     AND ( EXISTS (SELECT 1 FROM SIC.dbo.ORION_CLIENTES WHERE CNPJ_RAIZ=SUBSTRING(CNH.CdRemetente   ,1,8) ) OR 
           EXISTS (SELECT 1 FROM SIC.dbo.ORION_CLIENTES WHERE CNPJ_RAIZ=SUBSTRING(CNH.CdDestinatario,1,8) ) OR 

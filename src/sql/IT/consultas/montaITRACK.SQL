@@ -1,4 +1,5 @@
 -- 08/09/2021 13:59 - INICIA PROCESSO DE MONITORAMENTO (montaITRACK)
+-- 07/02/2022 16:02 - Ajuste incluir campo (BASE_CNPJ)
 
 SELECT DISTINCT  
 	 SUBSTRING(isnull(NFR.CdRemetente,'')+CNH.CdRemetente,1,14)    as EMBARCADOR
@@ -25,6 +26,7 @@ SELECT DISTINCT
 	,CNH.CdEmpresa                                                 as CdEmpresa
 	,CNH.NrSeqControle                                             as NrSeqControle
 	,0                                                             as FASE_ID
+	,NFE.BASE_CNPJ                                                 as BASE_CNPJ
 FROM softran_termaco.dbo.gtcconhe  CNH
 JOIN softran_termaco.dbo.gtcnfcon  LNK  ON LNK.CdEmpresa   = CNH.CdEmpresa   AND LNK.NrSeqControle = CNH.NrSeqControle
 JOIN softran_termaco.dbo.gtcnf     NFR  ON NFR.CdRemetente = LNK.CdInscricao AND NFR.NrSerie       = LNK.NrSerie AND NFR.NrNotaFiscal = LNK.NrNotaFiscal 

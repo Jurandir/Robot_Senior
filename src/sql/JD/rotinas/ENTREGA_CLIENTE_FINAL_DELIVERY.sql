@@ -61,7 +61,7 @@ JOIN softran_termaco.dbo.GTCMan        MAN ON MAN.NrManifesto     = LMA.NrManife
 WHERE  
 --      CNH.InTipoEmissao = 00                      --- CTRC Normal
 --  AND CNH.InImpressao   = 1                       --- Impresso
-  ( CNH.InTipoEmissao in (00,01,02,03,09,11,12,14) or ( CNH.InTipoEmissao = 05 and CNH.InTpCTE = 00) )
+  ( CNH.InTipoEmissao in (00,01,02,03,09,11,12,13,14) or ( CNH.InTipoEmissao = 05 and CNH.InTpCTE = 00) )
   AND MOV.CdOcorrencia  = 1         	            --- "ENTREGA REALIZADA NORMALMENTE"
   AND SUBSTRING( CNH.CdInscricao,1,8) ='89674782' --- JOHN DEERE BRASIL LTDA (89674782001391)
   
