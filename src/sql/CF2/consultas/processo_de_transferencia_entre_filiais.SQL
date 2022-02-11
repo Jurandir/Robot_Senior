@@ -24,11 +24,11 @@ JOIN SIC..CONFIRMAFACILCLIENTES   CFF ON CFF.FLAG_ATIVO = 1 AND
 
 WHERE CO.FLAG_SEND = 0
   -- AND CO.OCORRENCIA_ID = 128  -- codigo na ConfirmaFacil
-  AND CO.OCORRENCIA_ID = (SELECT TOP 1 X.CdHistoricoRemetente -- Codigo ConfirmaFacil 
+    AND CO.OCORRENCIA_ID IN (SELECT DISTINCT X.CdHistoricoRemetente -- Codigo ConfirmaFacil 
                             FROM softran_termaco.dbo.GTCVHist X
                             JOIN SIC..CONFIRMAFACILCLIENTES   C ON C.CNPJ = X.CdInscricao
                            WHERE X.CdHistoricoEntrega IN (128,101,102) -- EM TRANSFERENCIA ENTRE FILIAIS / CHEGADA NA FILIAL DE TRANSBORDO
-                             AND C.RAIZ = CFF.RAIZ )
+                             AND C.RAIZ = CFF.RAIZ )							 
   AND CF.FASE_ID < 9
 
   AND CFF.DT_VALIDADE  > CURRENT_TIMESTAMP   -- TOKEN valido

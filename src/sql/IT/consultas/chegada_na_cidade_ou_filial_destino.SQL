@@ -1,7 +1,8 @@
 -- 10/09/2021 18:41 - (098) - CHEGADA NA CIDADE OU FILIAL DE DESTINO - ITRACK
+-- 08/02/2022 15:18 - Ajuste (DePara) Sênior
 
-SELECT TOP 50
-     DF.CHAVE                                              as content_danfe
+SELECT TOP 100
+   DF.CHAVE                                              as content_danfe
 	,DF.IDCARGA                                            as content_idCargaFk
 	,FORMAT(CO.OCORRENCIA_DATA,'yyyy-MM-ddThh:mm:ss-03')   as content_dataOcorrencia
 	,CO.OCORRENCIA_ID                                      as content_idOcorrenciaPk
@@ -14,7 +15,11 @@ FROM SIC.dbo.ITRACK_DANFE DF
 JOIN SIC.dbo.ITRACK_OCORRENCIA CO ON CO.ITRACK_DANFE_ID = DF.ID
 JOIN SIC.dbo.ITRACK_TOKEN      TK ON TK.CNPJ = DF.TRANSPORTADOR
 WHERE DF.IDCARGA          > 0
-  AND CO.OCORRENCIA_ID    = 098 -- Codigo ConfirmaFacil
+  -- AND CO.OCORRENCIA_ID    = 098 -- Codigo ConfirmaFacil
+  AND CO.OCORRENCIA_ID = (SELECT TOP 1 X.CdHistoricoRemetente -- Codigo cliente iTrack 
+                            FROM softran_termaco.dbo.GTCVHist X
+                           WHERE X.CdHistoricoEntrega = 098 
+                             AND X.CdInscricao = DF.BASE_CNPJ ) 
   AND CO.FLAG_SEND        = 0
   AND DF.FASE_ID          < 9
   AND ISNULL(CO.RESPOSTA_STATUS,0)  <> -1

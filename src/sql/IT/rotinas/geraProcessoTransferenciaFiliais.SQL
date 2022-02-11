@@ -1,4 +1,6 @@
 -- 10/09/2021 10:11 - EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS - SÊNIOR - (iTrack)
+-- 08/02/2022 10:40 - Ajuste (DePara) Sênior
+
 SET XACT_ABORT ON
 
 BEGIN 
@@ -22,19 +24,25 @@ BEGIN TRY
          WHERE 
                FASE_ID = 1 
            AND DT_EMBARQUE IS NOT NULL
-           AND EXISTS ( SELECT 1 FROM SIC.dbo.ITRACK_OCORRENCIA CO 
-                         WHERE CO.ITRACK_DANFE_ID = IT.ID AND CO.OCORRENCIA_ID = 101 ) 
-        -- CASO A (FASE = 1) E EXISTIR OCORRENCIA = (101) GERADA, MUDA PARA FASE = 2
+           AND EXISTS ( SELECT 1 
+                          FROM      SIC..ITRACK_OCORRENCIA CO
+                          LEFT JOIN softran_termaco.dbo.GTCVHist DP  ON DP.CdInscricao        = IT.BASE_CNPJ AND 
+                                                                        DP.CdHistoricoEntrega = 101 -- (CdHistoricoEntrega) Codigo no Sênior (EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS)
+                         WHERE CO.ITRACK_DANFE_ID = IT.ID  
+                           AND CO.OCORRENCIA_ID   = ISNULL(DP.CdHistoricoRemetente, 101 ) ) -- (CdHistoricoRemetente) Codigo no Cliente 
         ;
 
         UPDATE CO
            SET OCORRENCIA_OBS = CONCAT('EM TRÂNSITO ENTRE FILIAIS: ',ORIG.dsApelido,'/',DEST.dsApelido) 
           FROM SIC.dbo.ITRACK_OCORRENCIA CO
+          JOIN SIC.dbo.ITRACK_DANFE            IT ON IT.ID                 = CO.ITRACK_DANFE_ID
+          JOIN softran_termaco.dbo.GTCVHist    DP ON DP.CdInscricao        = IT.BASE_CNPJ AND 
+                                                     DP.CdHistoricoEntrega = 101 -- (CdHistoricoEntrega) Codigo no Sênior (EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS)
           JOIN softran_termaco.dbo.gtcconhe   CNH ON CNH.CdEmpresa  = CO.CdEmpresa AND CNH.NrSeqControle = CO.NrSeqControle
           JOIN softran_termaco.dbo.sisempre  ORIG ON ORIG.CdEmpresa = CNH.CdEmpresa        -- Filial Origem
           JOIN softran_termaco.dbo.sisempre  DEST ON DEST.CdEmpresa = CNH.CdEmpresaDestino -- Filial Destino
          WHERE CO.OCORRENCIA_OBS IS NULL 
-           AND CO.OCORRENCIA_ID = 101 -- Codigo no Sênior
+           AND CO.OCORRENCIA_ID = ISNULL(DP.CdHistoricoRemetente, 101 ) -- (CdHistoricoRemetente) Codigo no Cliente 
         ;        
 
     COMMIT TRANSACTION

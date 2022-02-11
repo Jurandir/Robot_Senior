@@ -1,4 +1,4 @@
--- 13/10/2021 13:52 - EM ROTA PARA ENTREGA - ("CONFIRMA FACIL V2")
+-- 13/10/2021 13:52 - EM ROTA PARA ENTREGA - ("CONFIRMA FACIL V2") (Sênior Cod: 100)
 
 -- PROD-15/10/2021
 -- Ajuste (DePara Sênior) - 28/01/2022
@@ -27,7 +27,7 @@ WHERE CO.FLAG_SEND     = 0
   AND CO.OCORRENCIA_ID = (SELECT TOP 1 X.CdHistoricoRemetente -- Codigo ConfirmaFacil 
                             FROM softran_termaco.dbo.GTCVHist X
                             JOIN SIC..CONFIRMAFACILCLIENTES   C ON C.CNPJ = X.CdInscricao
-                           WHERE X.CdHistoricoEntrega = 110
+                           WHERE X.CdHistoricoEntrega = 100 -- Codigo Sênior
                              AND C.RAIZ = CFF.RAIZ )
   AND CF.FASE_ID < 9
   AND CAST( CO.OCORRENCIA_DATA AS date ) <= CAST( CURRENT_TIMESTAMP AS date ) -- Testa envio apenas apos não está no futuro

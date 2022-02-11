@@ -1,4 +1,5 @@
 -- 31/08/2021 16:26 - (098) - CHEGADA NA CIDADE OU FILIAL DE DESTINO - ITRACK
+-- 08/02/2022 11:34 - Ajuste (DePara) Sênior
 
 SET XACT_ABORT ON
 
@@ -23,35 +24,28 @@ BEGIN TRY
               DT_UPDATE = CURRENT_TIMESTAMP
         FROM SIC.dbo.ITRACK_DANFE IT
         WHERE IT.FASE_ID <= 2 AND IT.DT_CHEGADA IS NOT NULL
-          AND EXISTS ( SELECT 1 FROM SIC.dbo.ITRACK_OCORRENCIA CO WHERE CO.ITRACK_DANFE_ID = IT.ID AND CO.OCORRENCIA_ID = 098 ) 
-        -- CASO A (FASE < OU = 2) E EXISTIR OCORRENCIA = 098 GERADA, MUDA PARA FASE = 3        
+          AND EXISTS ( SELECT 1 
+                         FROM      SIC..ITRACK_OCORRENCIA CO
+                         LEFT JOIN softran_termaco.dbo.GTCVHist DP ON DP.CdInscricao        = IT.BASE_CNPJ AND 
+                                                                      DP.CdHistoricoEntrega = 098 -- (CdHistoricoEntrega) Codigo no Sênior (EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS)
+                         WHERE CO.ITRACK_DANFE_ID = IT.ID  
+                           AND CO.OCORRENCIA_ID   = ISNULL(DP.CdHistoricoRemetente, 098 ) ) -- (CdHistoricoRemetente) Codigo no Cliente         
         ;
     END
     ;
 
     BEGIN
-       /* Anterior (Codigo Refatorado)
-        UPDATE CO
-           SET OCORRENCIA_OBS =  
-                              (SELECT TOP 1 CONCAT('CHEGADA EM : ',n.DsLocal,' / ',n.DsUF)
-                                 FROM softran_termaco.dbo.GTCConhe a
-                            LEFT JOIN softran_termaco.dbo.sisempre m ON m.cdempresa = a.cdempresadestino -- Filial Destino
-                            LEFT JOIN softran_termaco.dbo.siscep   n ON n.nrcep     = m.nrcep
-                                WHERE a.CdEmpresa = CO.CdEmpresa 
-                                  AND a.NrSeqControle = CO.NrSeqControle )
-        FROM SIC.dbo.ITRACK_OCORRENCIA CO
-       WHERE CO.OCORRENCIA_OBS IS NULL 
-         AND CO.OCORRENCIA_ID = 098 -- Codigo no Sênior
-        */
         UPDATE CO
            SET OCORRENCIA_OBS = CONCAT('CHEGADA EM : ',n.DsLocal,' / ',n.DsUF) 
-        FROM SIC.dbo.ITRACK_OCORRENCIA     CO
-        JOIN softran_termaco.dbo.GTCConhe  a ON a.CdEmpresa = CO.CdEmpresa AND a.NrSeqControle = CO.NrSeqControle 
-        JOIN softran_termaco.dbo.SISEMPRE  m ON m.CdEmpresa = a.CdEmpresaDestino -- Filial Destino
-        JOIN softran_termaco.dbo.SISCep    n ON n.NrCep     = m.NrCep
-       WHERE CO.OCORRENCIA_ID = 098 -- Codigo no Sênior
-         AND CO.OCORRENCIA_OBS IS NULL         
-
+        FROM SIC.dbo.ITRACK_OCORRENCIA      CO
+          JOIN SIC.dbo.ITRACK_DANFE         IT ON IT.ID                 = CO.ITRACK_DANFE_ID
+          JOIN softran_termaco.dbo.GTCVHist DP ON DP.CdInscricao        = IT.BASE_CNPJ AND 
+                                                  DP.CdHistoricoEntrega = 098 -- (CdHistoricoEntrega) Codigo no Sênior (EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS)
+        JOIN softran_termaco.dbo.GTCConhe    a ON a.CdEmpresa = CO.CdEmpresa AND a.NrSeqControle = CO.NrSeqControle 
+        JOIN softran_termaco.dbo.SISEMPRE    m ON m.CdEmpresa = a.CdEmpresaDestino -- Filial Destino
+        JOIN softran_termaco.dbo.SISCep      n ON n.NrCep     = m.NrCep
+       WHERE CO.OCORRENCIA_OBS IS NULL
+         AND CO.OCORRENCIA_ID = ISNULL(DP.CdHistoricoRemetente, 098 ) -- (CdHistoricoRemetente) Codigo no Cliente 
     END
     ;
 

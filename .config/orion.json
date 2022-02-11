@@ -1,7 +1,7 @@
 {
     "run": "Production",
     "versao": "1.0",
-    "time": 50000,
+    "time": 150000,
     "validade": 5400000,
     "comprovanteURL": "http://200.217.161.8:4999",
     "debug": "OFF",

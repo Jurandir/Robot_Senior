@@ -1,6 +1,6 @@
 -- 04/10/2021 16:34 - BAIXA ENTREGAS SEM COMPROVANTES ("ITRACK")
 
-SELECT TOP 50 
+SELECT TOP 100 
     'BAIXA REALIZADA'                                      as content_observacao
 --	,FORMAT(CO.OCORRENCIA_DATA,'yyyy-MM-ddThh:mm:ss-03')   as content_dataInicioEntrega
     ,'[]'                                                  as content_fotosComprovantes

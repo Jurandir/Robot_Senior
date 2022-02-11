@@ -48,7 +48,7 @@ const robot = async (cli,cfg,uptime) =>{
     await valida_idCargaPK(cfg)           // XXX - PESQUISA NA API ITRACK O "IDCARGAPK" OU REGISTRA NOVA CARGA
     await transporte_iniciado()           // 000 - PROCESSO DE TRANSPORTE INICIADO (BD)
     await api_registra_NFs()              // 000 - PROCESSO DE TRANSPORTE INICIADO (API)
-    /*
+
     await ocorrencias_manuais()           // XXX - OCORRENCIAS MANUAIS - SÊNIOR (DB)
     await transferencia_entre_filiais()   // 101 - EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS (BD) --- 302
     await api_transferencia_NFs()         // 101 - EM PROCESSO DE TRANSFERENCIA ENTRE AS FILIAIS (API) --- 302
@@ -66,7 +66,7 @@ const robot = async (cli,cfg,uptime) =>{
     await API_baixa_entrega()             // 999 - BAIXA ENTREGAS SEM COMPROVANTES (API)
     await encerra_processo()              // XXX - ENCERRA PROCESSO DE MONITORAMENTO (BD)
     await ajustaCTRC_canceladas()         // XXX - MONITORAMENTO AJUSTE - CTRC CANCELADA POR NOVA CTRC (BD)
-    */
+    
 
    let time_final = process.uptime()
    let time_total = Math.ceil(time_final-time_inicio)

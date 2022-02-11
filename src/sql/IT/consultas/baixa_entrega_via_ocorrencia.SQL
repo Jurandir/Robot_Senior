@@ -1,7 +1,7 @@
 -- 19/10/2021 14:33 - BAIXA ENTREGAS VIA OCORRENCIA 01 ("ITRACK")  
 -- FORMATADO PARA O ENDPOINT : user/carga/entrega/danfe
 
-SELECT TOP 50 
+SELECT TOP 100 
     'ENTREGA REALIZADA NORMALMENTE'                        as content_observacao
 --	,FORMAT(CO.OCORRENCIA_DATA,'yyyy-MM-ddThh:mm:ss-03')   as content_dataInicioEntrega
     ,'[]'                                                  as content_fotosComprovantes
