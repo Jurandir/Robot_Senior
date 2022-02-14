@@ -17,14 +17,14 @@ DECLARE @CdSequencia      as INT
 
 DECLARE Ocorrencia_Cursor CURSOR FOR 
 SELECT TOP 150
-     IT.ID                   AS ITRACK_DANFE_ID
+     IT.ID                    AS ITRACK_DANFE_ID
   	,CAST(CONCAT(FORMAT(OUN.DtMovimento,'yyyy-MM-dd'),' ', FORMAT(OUN.HRMovimento,'HH:mm:ss')) as datetime) 
 	                           AS OCORRENCIA_DATA
     ,ISNULL(DP.CdHistoricoRemetente,OUN.CdOcorrencia) AS OCORRENCIA_ID   --- AJUSTE (DEPARA)
 	  ,OCO.DsHistoricoEntrega  AS OCORRENCIA_NOME
 	  ,OUN.DsComplementoOcorr  AS OCORRENCIA_OBS
-    ,OUN.NrDoctoIdentPessoal AS RECEBEDOR_DOC
-    ,OUN.DsContato           AS RECEBEDOR_NOME
+    ,OUN.NrDoctoIdentPessoal  AS RECEBEDOR_DOC
+    ,OUN.DsContato            AS RECEBEDOR_NOME
 	  ,OUN.CdEmpresa           AS CdEmpresa
 	  ,OUN.NrSeqControle       AS NrSeqControle
 	  ,OUN.CdSequencia         AS CdSequencia
@@ -32,8 +32,8 @@ SELECT TOP 150
 FROM SIC.dbo.ITRACK_DANFE               IT
 JOIN softran_termaco.dbo.GTCNf          NFR ON NFR.NrChaveAcessoNFe   = IT.CHAVE               -- NOTA FISCAL
 JOIN softran_termaco.dbo.gtcnfcon       LNK ON NFR.CdRemetente        = LNK.CdInscricao AND 
-                                              NFR.NrSerie            = LNK.NrSerie     AND 
-										      NFR.NrNotaFiscal       = LNK.NrNotaFiscal       -- Link NF x CTRC
+                                               NFR.NrSerie            = LNK.NrSerie     AND 
+										                 NFR.NrNotaFiscal       = LNK.NrNotaFiscal       -- Link NF x CTRC
 JOIN softran_termaco.dbo.gtcconhe      CNH ON CNH.CdEmpresa          = LNK.CdEmpresa   AND 
                                               CNH.NrSeqControle      = LNK.NrSeqControle      -- CTRC
 JOIN softran_termaco.dbo.gtcconce      CTE ON CTE.CdEmpresa          = CNH.CdEmpresa	 AND 
@@ -53,11 +53,11 @@ WHERE 1=1
   AND NOT EXISTS ( SELECT 1 FROM SIC..ITRACK_OCORRENCIA CO  
                             WHERE CO.ITRACK_DANFE_ID = IT.ID             AND 
                                   CO.CdEmpresa        = OUN.CdEmpresa     AND 
-								  CO.NrSeqControle    = OUN.NrSeqControle AND 
-								  CO.CdSequencia      = OUN.CdSequencia   AND
-								  CO.OCORRENCIA_ID    = ISNULL(DP.CdHistoricoRemetente,OUN.CdOcorrencia ) ) --- AJUSTE (DEPARA) 
+								          CO.NrSeqControle    = OUN.NrSeqControle AND 
+								          CO.CdSequencia      = OUN.CdSequencia   AND
+								          CO.OCORRENCIA_ID    = ISNULL(DP.CdHistoricoRemetente,OUN.CdOcorrencia ) ) --- AJUSTE (DEPARA) 
 
-  AND OUN.CdOcorrencia NOT IN ( 000,210,801,899,999 )
+  AND OUN.CdOcorrencia NOT IN ( 000,210,801,899,999 ) --Codigos no Sênior
   AND IT.FASE_ID < 5
 ORDER BY
    IT.IDCARGA DESC,

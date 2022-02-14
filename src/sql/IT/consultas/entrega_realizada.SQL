@@ -2,7 +2,7 @@
 -- 11/02/2022 15:41 - Ajustes (DePara) Sênior
 
 SELECT TOP 100
-     DF.CHAVE                                              as content_danfe
+   DF.CHAVE                                              as content_danfe
 	,DF.IDCARGA                                            as content_idCargaFk
 	,FORMAT(CO.OCORRENCIA_DATA,'yyyy-MM-ddThh:mm:ss-03')   as content_dataOcorrencia
 	,CO.OCORRENCIA_ID                                      as content_idOcorrenciaPk
@@ -18,7 +18,7 @@ WHERE DF.IDCARGA          > 0
   -- AND CO.OCORRENCIA_ID    = 1  -- CODIGO SÊNIOR
   AND CO.OCORRENCIA_ID = (SELECT TOP 1 X.CdHistoricoRemetente -- Codigo cliente iTrack 
                             FROM softran_termaco.dbo.GTCVHist X
-                           WHERE X.CdHistoricoEntrega = 1 
+                           WHERE X.CdHistoricoEntrega = 1 -- Codigo Sênior
                              AND X.CdInscricao = DF.BASE_CNPJ )   
   AND CO.FLAG_SEND        = 0
   AND DF.FASE_ID          < 9

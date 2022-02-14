@@ -39,7 +39,7 @@ const preparaComprovantes = async () => {
         let dadosComp =  await sqlQuery( sqlComp ) 
         let lenArray  = dadosComp.length
 
-        console.log('preparaComprovantes (dadosComp)',dadosComp,lenArray)   //// teste
+        // console.log('preparaComprovantes (dadosComp)',dadosComp,lenArray)   //// teste
 
         if(!lenArray) {
             retorno.message = dadosComp.Erro ? dadosComp.Erro : 'Sem dados !!!'
@@ -53,7 +53,7 @@ const preparaComprovantes = async () => {
             let ctrc                     = itn.CTRC
             let download                 = await downloadComprovante(ctrc)
 
-            console.log('preparaComprovantes (downloadComprovante)',download,ctrc)    /// teste
+            // console.log('preparaComprovantes (downloadComprovante)',download,ctrc)    /// teste
 
             let alinks                   = download.data.map(i=>i.url)
             let slinks                   = JSON.stringify(alinks)
