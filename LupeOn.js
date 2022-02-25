@@ -6,40 +6,22 @@ const moment = require('moment')
 
 moment.locale('pt-br')        
 
-const colors      = require('colors')
-const lt          = require('long-timeout')
-const config      = require('./.config/lupeon.json')  
-const getClientes = require('./src/metodsDB/LU/getClientes')
-const getToken    = require('./src/metodsDB/LU/getToken')
-const updToken    = require('./src/metodsDB/LU/updToken')
-const login       = require('./src/metodsAPI/LU/login')
-const robot       = require('./src/controllers/LU/robot')
-const label       = `"Lupe-ON - V.01"`.green.bold
+const colors            = require('colors')
+const lt                = require('long-timeout')
+const config            = require('./.config/lupeon.json')  
+const renovaCredenciais = require('./src/controllers/LU/renovaCredenciais')
+const robot             = require('./src/controllers/LU/robot')
+const label             = `"Lupe-ON - V.01"`.green.bold
 
 const titulo  = ` Robô - `.yellow.bgBlue.bold+`" Lupe-ON - V.01 "`.white.bgBlue.bold+` - Sênior - ${config.versao} `.yellow.bgBlue.bold 
 
 process.stdout.write('\x1B[2J\x1B[0f')
 console.log(titulo)
 
-// Loop renovação dos token de acesso dos clientes
+// Loop renovação dos tokens 
 async function renovaToken(loopToken) {
-    let lista = await getClientes()
-    for await ( itn of lista ) {
-        let params = {
-            loginURL: config.loginURL,
-            user: itn.EMAIL,
-            pwd: itn.SENHA,
-            id: itn.ID
-        }
-        let ret = await login(params)
-        if(ret.success){
-            itn.TOKEN = ret.data.resposta.token
-            let grv = await updToken(itn)
-            console.log(moment().format(),`- ( TOKEN RENOVADO "${itn.TOKEN}" - ${grv.message} )`,itn.ID,itn.NOME)
-        } else {
-            console.log(moment().format(),`- ( PROBLEMAS AO TOKEN RENOVADO )`,itn.ID,itn.NOME,ret) 
-        }
-    }
+    
+    renovaCredenciais()
 
     let proxima   = new Date()
     let intervalo = proxima.getMilliseconds() + config.validade
@@ -66,7 +48,7 @@ async function runInit () {
     await renovaToken(0)      
 
     // Run Loop Robot
-    await runRobot()
+//    await runRobot()
 }
 
 runInit()

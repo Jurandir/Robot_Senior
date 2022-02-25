@@ -32,7 +32,8 @@ const renovaCredenciais = async () => {
             api = await login(credenciais)
             retorno.success = retorno.success && api.success
 
-            let ExpiresIn = new Date(Date.now()+ 1*60*60*1000) // soma 1 hora
+            // let ExpiresIn = new Date(Date.now()+ 1*60*60*1000) // soma 1 hora
+            let ExpiresIn = new Date(Date.now() + api.data.ExpiresIn * 1000 ) // soma retorno da API em milesegundos
             let validade  = moment(ExpiresIn).format('YYYY-MM-DD HH:mm:ss')
 
             upd = {
@@ -45,6 +46,12 @@ const renovaCredenciais = async () => {
             update = await updToken(upd)
 
             retorno.success = retorno.success && update.success
+
+            if(retorno.success) {
+                console.log(moment().format(),`- ( TOKEN RENOVADO ) - ID: ${token.ID} - Validade:`,validade)
+            } else {
+                console.log(moment().format(),`- ( PROBLEMAS AO TOKEN RENOVADO )`,token.ID)
+            }
 
             retorno.data.push({
                 tokens: tokens,
