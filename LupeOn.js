@@ -48,7 +48,7 @@ async function runInit () {
     await renovaToken(0)      
 
     // Run Loop Robot
-//    await runRobot()
+    await runRobot()
 }
 
 runInit()

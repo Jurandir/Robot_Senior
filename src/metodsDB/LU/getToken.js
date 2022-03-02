@@ -3,10 +3,7 @@
 const sqlQuery = require('../../connection/sqlSENIOR')
 
 const getToken = async () => {
-    let sql = `SELECT * FROM SIC..LUPEON_TOKEN`
-
-    console.log('> getToken')
- 
+    let sql = `SELECT * FROM SIC..LUPEON_TOKEN` 
     try {
         let result = await sqlQuery(sql)         
         return result  

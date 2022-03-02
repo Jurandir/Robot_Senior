@@ -6,5 +6,6 @@
     "loginURL": "http://apilupeon.lupeon.com.br/Security/Token",
     "embarqueURL": "http://apilupeon.lupeon.com.br/Transportador/POD",
     "comprovanteURL": "http://201.49.34.12:5000/downloads/images",
+    "base64URL":"http://200.217.161.8:4999/api/preparaDownload",
     "debug": "OFF"
 }

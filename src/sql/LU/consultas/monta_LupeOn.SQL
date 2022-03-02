@@ -32,11 +32,11 @@ JOIN softran_termaco.dbo.gtcnfcon  LNK  ON LNK.CdEmpresa   = CNH.CdEmpresa   AND
 JOIN softran_termaco.dbo.gtcnf     NFR  ON NFR.CdRemetente = LNK.CdInscricao AND NFR.NrSerie       = LNK.NrSerie AND NFR.NrNotaFiscal = LNK.NrNotaFiscal 
 JOIN softran_termaco.dbo.sisempre  EMP  ON EMP.CdEmpresa   = CNH.CdEmpresa
 JOIN softran_termaco.dbo.gtcconce  CTE  ON CTE.CdEmpresa   = CNH.CdEmpresa	 AND CTE.NrSeqControle = CNH.NrSeqControle
---LEFT JOIN SIC..LUPEON_NFE       NFE  ON NFE.CHAVE       = NFR.NrChaveAcessoNFe
-JOIN SIC..LUPEON_CLIENTE    CFF  ON CFF.FLAG_ATIVO = 1 AND
-                                          ((CFF.RAIZ = SUBSTRING(CNH.CdRemetente,1,8)) OR 
-                                          (CFF.RAIZ = SUBSTRING(CNH.CdDestinatario,1,8)) OR
-                                          (CFF.RAIZ = SUBSTRING(CNH.CdInscricao,1,8)))
+LEFT JOIN SIC..LUPEON_NFE          NFE  ON NFE.CHAVE       = NFR.NrChaveAcessoNFe
+JOIN SIC..LUPEON_CLIENTE           CFF  ON CFF.FLAG_ATIVO = 1 AND
+                                           ((CFF.RAIZ = SUBSTRING(CNH.CdRemetente,1,8)) OR 
+                                           ( CFF.RAIZ = SUBSTRING(CNH.CdDestinatario,1,8)) OR
+                                           ( CFF.RAIZ = SUBSTRING(CNH.CdInscricao,1,8)))
 
 
 
