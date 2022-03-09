@@ -3,12 +3,12 @@ const axios   = require('axios')
 async function loadAPI(method, endpoint, server, params, token, headers ) {
     let config = { headers: { "Content-Type": 'application/json' }, timeout: 180000 }
     
-    if(token) {
-        config.headers.Authorization = `${token}`
-    } 
-
     if(headers) {
         config.headers = headers
+    } 
+
+    if(token) {
+        config.headers.Authorization = `${token}`
     } 
         
     let ret

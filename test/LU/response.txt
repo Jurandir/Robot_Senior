@@ -1,0 +1,9 @@
+{
+	"success": true,
+	"data": {
+		"status": "Failed",
+		"data": "Ocorreu um erro na sua solicitação: Exception: String or binary data would be truncated.\r\nThe statement has been terminated."
+	},
+	"err": "",
+	"url": "http://apilupeon.lupeon.com.br/Transportador/POD"
+}

@@ -2,6 +2,7 @@
 const sqlQuery      = require('../../src/connection/sqlSENIOR')
 const cfg           = require('../../.config/lupeon.json')
 const loadAPI       = require('../../src/helpers/loadAPI')
+const fs            = require('fs')
 
 const loadBase64 = async (ctrc) => {
     let method   = 'GET'
@@ -21,8 +22,22 @@ const sendPOD = async (credenciais) => {
     let token    = credenciais.TOKEN
     let server   = cfg.embarqueURL
     let params   = credenciais.BODY
+    let headers  = { CompanyId: credenciais.CompanyId }
    
-    let ret = await loadAPI(method,endpoint,server,params,0,{ CompanyId: credenciais.CompanyId, Authorization: token  })
+    let ret = await loadAPI(method,endpoint,server,params,token,headers)
+
+    let log ={
+        dados: credenciais,
+        method: method,   
+        endpoint: endpoint,
+        token: token,   
+        server: server,  
+        params: params,  
+        headers: headers,
+        response: ret 
+    }
+
+    fs.writeFileSync("parametros.txt"  , JSON.stringify(log, null, '\t') )
 
     return ret
 
@@ -61,7 +76,7 @@ const updComprovante = async ({CTRC,flag,data}) => {
                     JSON_COMPROVANTE  = '${jComprovantes}'
                 WHERE CTRC = '${CTRC}'`
 
-    console.log('updComprovante:',sql)
+    // console.log('updComprovante:',sql)
     
     // runSQL(sql,'LU updComprovante')
 
@@ -77,7 +92,7 @@ const updEnvio = async ({ID,flag,message,code,protocolo}) => {
                     RESPOSTA_PROTOCOLO = '${protocolo}'
                 WHERE ID = ${ID}
                 `
-    console.log('updEnvio:',sql)
+    // console.log('updEnvio:',sql)
     
     // runSQL(sql,'LU updEnvio')
 
@@ -101,7 +116,7 @@ const runSQL = async (sql,rotine) => {
 }
 
 const montaJson = async (itn) => {
-    let ret = {
+    let ret = [{
             EmbarcadorCNPJ: itn.EMBARCADOR,
             Embarcador: itn.EMBARCADOR_NOME,
             TransportadoraCNPJ: itn.TRANSPORTADOR,
@@ -113,7 +128,11 @@ const montaJson = async (itn) => {
             DataOcorrencia: itn.OCORRENCIA_DATA,
             ImgComprovante: itn.ImgComprovante,
             ExtensaoDoc: itn.ExtensaoDoc
-    }
+    }]
+    
+    fs.writeFileSync("base64.txt", itn.ImgComprovante)
+    fs.writeFileSync("body.txt"  , JSON.stringify(ret, null, '\t') )
+
     return ret
 }
 
@@ -128,7 +147,7 @@ dadosComprovantes().then( async (list) => {
             itn.ImgComprovante = apiLocal.data[0].base64              // `${apiLocal.data[0].base64}`.substring(0,80)
             itn.ExtensaoDoc    = apiLocal.data[0].file.split('.')[1]
             let body           = await montaJson(itn)
-            console.log(body.ChaveNFe)
+            console.log('body.ChaveNFe:',body[0].ChaveNFe)
 
             let params = {CTRC:ctrc, flag:1, data: apiLocal.data}
 
@@ -142,10 +161,14 @@ dadosComprovantes().then( async (list) => {
 
             let apiLupeOn = await sendPOD(credenciais)
 
+            fs.writeFileSync("response.txt"  , JSON.stringify(apiLupeOn, null, '\t') )
+
+
             // "status": "Failed"
 
             // console.log(apiLupeOn.data.response.data)
-            console.log(apiLupeOn.data.response)
+            // console.log(apiLupeOn.data.response.data)
+            console.log(apiLupeOn)
 
 
 
