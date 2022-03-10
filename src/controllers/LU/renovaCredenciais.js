@@ -48,9 +48,9 @@ const renovaCredenciais = async () => {
             retorno.success = retorno.success && update.success
 
             if(retorno.success) {
-                console.log(moment().format(),`- ( TOKEN RENOVADO ) - ID: ${token.ID} - Validade:`,validade)
+                console.log(moment().format(),`- ( TOKEN RENOVADO ) - CompanyId: ${token.ID} - Validade:`,validade)
             } else {
-                console.log(moment().format(),`- ( PROBLEMAS AO TOKEN RENOVADO )`,token.ID)
+                console.log(moment().format(),`- ( PROBLEMAS AO TOKEN RENOVADO ) - CompanyId:`,token.ID)
             }
 
             retorno.data.push({
