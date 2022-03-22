@@ -33,7 +33,8 @@ LEFT JOIN softran_termaco.dbo.sisempre FDT ON FDT.cdempresa       = CNH.cdempres
 WHERE  
       CNH.InTipoEmissao   = 00                     --- CTRC Normal
   AND CTE.insituacaosefaz = 100                    --- REGISTRADO NA SEFAZ
-  AND SUBSTRING( CNH.CdInscricao,1,8) ='89674782'  --- JOHN DEERE BRASIL LTDA (89674782001391)
+  -- AND SUBSTRING( CNH.CdInscricao,1,8) ='89674782'  --- JOHN DEERE BRASIL LTDA (89674782001391)
+  AND EXISTS (SELECT 1 FROM SIC..JOHNDEERE_CLIENTES CLI WHERE CLI.CNPJ = CNH.CdInscricao) -----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<  
   AND NOT EXISTS ( SELECT 1 FROM SIC..JOHNDEERE_INFO INF
                     WHERE INF.EVENTTYPE      = 'SHIP' 
                       AND INF.NrManifesto    = MAN.NrManifesto

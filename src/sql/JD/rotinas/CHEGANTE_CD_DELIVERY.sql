@@ -22,7 +22,8 @@ NFR.nrnotafiscal            AS INVOICENUMBER,
 ''                    AS COMMERCIALINVOICENUMBER,
 'JDP'                 AS CUSTOMER,
 'DELIVERY'            AS EVENTTYPE,
-'89674782001391'      AS RAILHEAD,
+-- '89674782001391'      AS RAILHEAD,
+CNH.CdInscricao       AS RAILHEAD,   ---- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 FDT.NrCGCCPF          AS DELIVERYLOC, 
 CONCAT(FORMAT(MOV.DtMovimento,'yyyyMMdd'),FORMAT(MOV.HrMovimento,'HHmmss')) AS DEALERDELIVERYDATE,
 '0' AS SENDXML
@@ -48,7 +49,8 @@ WHERE
 --  AND CNH.InImpressao   = 1                       --- Impresso
      ( CNH.InTipoEmissao in (00,01,02,03,09,11,12,13,14) or ( CNH.InTipoEmissao = 05 and CNH.InTpCTE = 00) ) 
   AND MOV.CdOcorrencia  = 102	                  --- "CHEGADA NA FILIAL DE TRANSBORDO"
-  AND SUBSTRING( CNH.CdInscricao,1,8) ='89674782' --- JOHN DEERE BRASIL LTDA (89674782001391)
+  -- AND SUBSTRING( CNH.CdInscricao,1,8) ='89674782' --- JOHN DEERE BRASIL LTDA (89674782001391)
+  AND EXISTS (SELECT 1 FROM SIC..JOHNDEERE_CLIENTES CLI WHERE CLI.CNPJ = CNH.CdInscricao) -----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<  
   AND NOT EXISTS ( SELECT 1 FROM SIC..JOHNDEERE_INFO INF
                     WHERE INF.EVENTTYPE      = 'DELIVERY' 
                       AND INF.NrManifesto    = MAN.NrManifesto
