@@ -26,7 +26,8 @@ const baixaEntrega = async () => {
             if(env.data && env.data.message){
 
               if (env.data.message == 'Erro inesperado, tente novamente mais tarde' ) {
-                  env.data.success = true
+                  env.data.message = `${env.data.message} / Baixa Entrega Sem Comprovante`
+                  env.data.success = false
               }
 
             } else {

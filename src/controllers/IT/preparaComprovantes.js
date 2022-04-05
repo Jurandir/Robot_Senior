@@ -25,7 +25,8 @@ const preparaComprovantes = async () => {
     }
 
     let tempo = Math.floor( Math.random() * 07 + 3 ) // Soteia um numero de 3 a 10 minutos
-    let lista = Math.floor( Math.random() * 20 + 5 ) // Soteia um numero de 5 a 25 registros
+    let lista = 100  
+    //  Math.floor( Math.random() * 20 + 5 ) // Soteia um numero de 5 a 25 registros
 
     let sqlComp = `
         SELECT TOP ${lista} * 

@@ -18,6 +18,7 @@ WHERE DF.IDCARGA > 0
   AND CO.FLAG_SEND = 0
   AND DF.FASE_ID < 9
   -- AND CO.OCORRENCIA_ID NOT IN ( 000,001,100,101,89,210,801,899,999 )  -- CODIGOS (ROBOT AUTOMATICO)
+  AND CO.OCORRENCIA_ID <> 999
   AND CO.OCORRENCIA_ID NOT IN (SELECT DISTINCT X.CdHistoricoRemetente -- Codigo cliente iTrack 
                             FROM softran_termaco.dbo.GTCVHist X
                            WHERE X.CdHistoricoEntrega IN ( 000,001,100,101,89,210,801,899,999 ) -- Codigos Sênior
