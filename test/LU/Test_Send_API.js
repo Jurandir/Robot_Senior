@@ -21,7 +21,7 @@ renovaCredenciais().then( ()=> {
             
             if(apiLocal.success) {
                 itn.ImgComprovante = apiLocal.data[0].base64  
-                itn.ExtensaoDoc    = apiLocal.data[0].file.split('.')[1]
+                itn.ExtensaoDoc    = '.'+apiLocal.data[0].file.split('.')[1]
                 let body           = await montaJsonPOD(itn)
         
                 let params = {CTRC:ctrc, flag:1, data: apiLocal.data}

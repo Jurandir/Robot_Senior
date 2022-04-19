@@ -21,6 +21,7 @@ const listSendComprovantes = async () => {
     JOIN  SIC..LUPEON_TOKEN   tkn ON tkn.ID   = 373
     WHERE oc.OCORRENCIA_ID = 999
       AND nfe.FASE_ID = 6
+      AND oc.FLAG_SEND IN (0,2)
     `
     let ret = await sqlQuery(sql)
     return ret    
