@@ -1,7 +1,7 @@
 {
     "run": "Production",
     "versao": "1.0",
-    "time": 30000,
+    "time": 300000,
     "validade": 5400000,
     "loginURL": "http://apilupeon.lupeon.com.br/Security/Token",
     "embarqueURL": "http://apilupeon.lupeon.com.br/Transportador/POD",

@@ -2,7 +2,7 @@ const sqlQuery      = require('../../connection/sqlSENIOR')
 
 const listSendComprovantes = async () => {
     let sql = `
-    SELECT TOP 1 
+    SELECT TOP 50
                  oc.ID
     ,            nfe.EMBARCADOR
     ,            cli.NOME AS EMBARCADOR_NOME
