@@ -20,9 +20,12 @@ const envioPOD = async () => {
 
                 console.log(moment().format(), `- COMPROVANTE CTRC: "${ctrc}" - Base64:`, apiLocal.success)
 
-                if (apiLocal.success) {
+                if ((apiLocal.success) && (apiLocal.data[0].success) ){
+
                     itn.ImgComprovante = apiLocal.data[0].base64
-                    itn.ExtensaoDoc = '.' + apiLocal.data[0].file.split('.')[1]
+                    let temp_ext = apiLocal.data[0].file
+                    itn.ExtensaoDoc = '.'+`${temp_ext}`.split('.')[1]
+
                     let body = await montaJsonPOD(itn)
 
                     let params = { CTRC: ctrc, flag: 1, data: apiLocal.data }
