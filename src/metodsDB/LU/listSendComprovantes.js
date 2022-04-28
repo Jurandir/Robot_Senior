@@ -22,6 +22,7 @@ const listSendComprovantes = async () => {
     WHERE oc.OCORRENCIA_ID = 999
       AND nfe.FASE_ID = 6
       AND oc.FLAG_SEND IN (0,2)
+      AND DATEDIFF(day,OCORRENCIA_DATA, CURRENT_TIMESTAMP) <= 60  -- Pesquisa durante 60 dias
     `
     let ret = await sqlQuery(sql)
     return ret    

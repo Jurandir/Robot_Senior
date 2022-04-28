@@ -5,6 +5,7 @@ const logEventos             = require('../../helpers/logEventos')
 const cfg                    = require('../../../.config/lupeon.json')    
 const initNFs                = require('../../metodsDB/LU/initNFs')                 
 const initComprovante        = require('../../metodsDB/LU/initComprovante')
+const fechaFase              = require('../../metodsDB/LU/updFechaFase')
 const envioPOD               = require('./envioPOD')
 
 const robot = async (loopRobot) =>{
@@ -13,6 +14,7 @@ const robot = async (loopRobot) =>{
     await captura_nfs()                     // XXX - INICIA PROCESSO DE MONITORAMENTO (BD)
     await prepara_comprovantes()            // 999 - PREPARA COMPROVANTES (BD)
     await envio_api_POD()                   // API - ENVIA POD
+    await fechaFase()                       // Finaliza acompanhamento p/ comprovantes enviados
 
     let time_final = process.uptime()
     let time_total = Math.ceil(time_final-time_inicio)
