@@ -1,0 +1,12 @@
+{
+	"timestamp": "2022-05-04T09:27:01.176",
+	"status": 200,
+	"message": [
+		{
+			"message": "Ocorrência salva com sucesso",
+			"posicao": 0
+		}
+	],
+	"path": "/v2/embarque",
+	"protocolo": "d5aad140-0492-48c3-8175-1b8117507f6b"
+}

@@ -52,7 +52,7 @@ WHERE 1=1
   AND ( CNH.InTipoEmissao in (00,01,02,03,09,11,12,13,14) or ( CNH.InTipoEmissao = 05 and CNH.InTpCTE = 00) )
   AND CTE.insituacaosefaz = 100 
 
-  AND ( isnull(OCO.InExibehist, 0) = 0 AND isnull(DP.InGeraOcorrencia, 1) = 1 ) --- AJUSTE (DEPARA)
+  AND ( (isnull(OCO.InExibehist, 0) = 0 AND DP.InGeraOcorrencia IS NULL) OR isnull(DP.InGeraOcorrencia, 0) = 1 ) --- AJUSTE (DEPARA)
 
   AND NOT EXISTS ( SELECT 1 FROM SIC..CONFIRMAFACILOCORRENCIA CO  
                             WHERE CO.CONFIRMAFACIL_ID = CF.ID             AND 
