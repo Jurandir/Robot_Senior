@@ -1,6 +1,6 @@
 -- 23/09/2021 16:08 - OCORRÊNCIAS INICIAIS NÃO ENVIADAS - ("ORION/CEVA")
 
-SELECT TOP 100
+SELECT TOP 150
      AC.LOGIN                                       AS "login"
     ,AC.SENHA                                       AS "senha"
     ,CO.CHAVEORIGINAL                               AS "chave"
